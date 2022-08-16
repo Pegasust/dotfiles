@@ -1,11 +1,10 @@
-local function_component = require "function_component"
 -- What: Mono-file nvim configuration file
 -- Why: Easy to see through everything without needing to navigate thru files
 -- Features:
 -- - LSP
 -- - Auto-complete (in insert mode: ctrl-space, navigate w/ Tab+S-Tab, confirm: Enter)
 -- - cmd: ":Format" to format
--- -  
+-- - Harpoon marks: Navigate through main files within each project 
 
 -- Basic settings of vim
 vim.cmd([[
@@ -19,8 +18,9 @@ set incsearch
 set scrolloff=15
 set signcolumn=yes
 set colorcolumn=80
-set background=dark
+set background=light
 ]])
+vim.opt.lazyredraw = true
 vim.opt.termguicolors = true
 vim.opt.cursorline = true
 -- some plugins misbehave when we do swap files
@@ -36,6 +36,7 @@ vim.g.mapleader = ' '
 -- basic keymaps
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true }) -- since we're using space for leader
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>)') -- make :terminal escape out
+vim.keymap.set({'n','i','v'}, '<c-l>', '<Cmd>:mode<Cr>') -- redraw on every mode
 
 -- diagnostics (errors/warnings to be shown)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
@@ -75,6 +76,7 @@ Plug('lewis6991/gitsigns.nvim') -- add git info to sign columns
 Plug('tpope/vim-fugitive') -- git commands in nvim
 Plug('williamboman/mason.nvim') -- LSP, debuggers,... package manager
 Plug('williamboman/mason-lspconfig.nvim') -- lsp config for mason
+Plug('ThePrimeagen/harpoon') -- 1-click through marked files per project
 
 -- UI & colorscheme
 Plug('gruvbox-community/gruvbox')
@@ -171,11 +173,6 @@ require('nvim-treesitter.configs').setup {
       },
     },
   },
-  text = function ()
-    
-  end(),
-  CanWinBeReordered,
-
 }
 
 -- LSP settings
