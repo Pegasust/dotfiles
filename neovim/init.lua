@@ -1,3 +1,4 @@
+local function_component = require "function_component"
 -- What: Mono-file nvim configuration file
 -- Why: Easy to see through everything without needing to navigate thru files
 -- Features:
@@ -29,7 +30,6 @@ vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.undofile = true
 vim.opt.completeopt = 'menuone,noselect'
 vim.opt.clipboard = "unnamedplus"
-vim.opt.lazyredraw = true
 
 vim.g.mapleader = ' '
 
@@ -171,6 +171,10 @@ require('nvim-treesitter.configs').setup {
       },
     },
   },
+  text = function ()
+    
+  end(),
+  CanWinBeReordered,
 
 }
 
