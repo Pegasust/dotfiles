@@ -1,3 +1,11 @@
+-- What: Mono-file nvim configuration file
+-- Why: Easy to see through everything without needing to navigate thru files
+-- Features:
+-- - LSP
+-- - Auto-complete (in insert mode: ctrl-space, navigate w/ Tab+S-Tab, confirm: Enter)
+-- - cmd: ":Format" to format
+-- -  
+
 -- Basic settings of vim
 vim.cmd([[
 set number relativenumber
@@ -13,13 +21,19 @@ set colorcolumn=80
 set background=dark
 ]])
 vim.opt.termguicolors = true
+vim.opt.cursorline = true
 -- some plugins misbehave when we do swap files
 vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.undofile = true
 vim.opt.completeopt = 'menuone,noselect'
+vim.opt.clipboard = "unnamedplus"
+vim.opt.lazyredraw = true
+
+
 vim.g.mapleader = ' '
+vim.g.gruvbox_termcolors=16
 
 -- basic keymaps
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true }) -- since we're using space for leader
@@ -47,9 +61,10 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
 Plug('nvim-lua/plenary.nvim')
 
 -- plugins
-Plug('nvim-treesitter/nvim-treesitter') -- language parser engine
+Plug('nvim-treesitter/nvim-treesitter') -- language parser engine for highlighting
 Plug('nvim-treesitter/nvim-treesitter-textobjects') -- more text objects
 Plug('nvim-telescope/telescope.nvim', { tag = '0.1.0' }) -- file browser
+Plug('nvim-telescope/telescope-fzf-native.nvim', {['do'] = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=release && cmake --build build --config Release && cmake --install build --prefix build'})
 -- cmp: auto-complete/suggestions
 Plug('neovim/nvim-lspconfig') -- built-in LSP configurations
 Plug('hrsh7th/cmp-nvim-lsp')
@@ -88,9 +103,13 @@ end
 -- Comment.nvim
 require('Comment').setup()
 -- lukas-reineke/indent-blankline.nvim
-require('indent_blankline').setup {
-  char = '┊',
-  show_trailing_blankline_indent = false,
+vim.opt.list = true
+vim.opt.listchars:append "space:⋅"
+vim.opt.listchars:append "eol:↴"
+
+require("indent_blankline").setup {
+    show_end_of_line = true,
+    space_char_blankline = " ",
 }
 -- telescope
 require('telescope').setup {
@@ -99,7 +118,15 @@ require('telescope').setup {
       i = {
         ['<C-u>'] = false,
         ['<C-d>'] = false,
-      }
+      },
+    },
+  },
+  extensions = {
+    fzf = {
+      fuzzy = true,   -- allow fuzzy matches
+      override_generic_sorter = true,
+      override_file_sorter = true,
+      case_mode = 'smart_case'
     }
   }
 }
@@ -118,19 +145,20 @@ remap('n', '<leader>fh', function()
   require('telescope.builtin').help_tags()
 end, { desc = '[F]ind [H]elp' })
 remap('n', '<leader>fd', function()
-  require('telescope.builtin').live_grep()
+  require('telescope.builtin').diagnostics()
 end, { desc = '[F]ind [D]iagnostics' })
 -- treesitter
 require('nvim-treesitter.configs').setup {
-  ensure_installed = { 'lua', 'typescript', 'rust', 'go', 'python' },
+  ensure_installed = { 'lua', 'typescript', 'rust', 'go', 'python', 'prisma' },
   highlight = { enable = true },
   indent = { enable = true },
   incremental_selection = {
     enable = true,
-    keymap = {
+    keymaps = {
       init_selection = '<c-space>',
       node_incremental = '<c-space>',
-      node_decremental = '<c-backspace>'
+      node_decremental = '<c-backspace>',
+      scope_incremental = '<c-S>'
     }
   },
   textobjects = {
@@ -195,7 +223,7 @@ end
 -- nvim-cmp supports additional completion capabilities
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 -- default language servers
-local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua' }
+local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', "prisma-language-server" }
 require("mason").setup({
   ui = {
     icons = {
@@ -207,34 +235,39 @@ require("mason").setup({
 })
 require('mason-lspconfig').setup({
   ensure_installed = servers,
-  -- automatic_installation = true
+  automatic_installation = true
 })
-for _, lsp in ipairs(servers) do
-  require('lspconfig')[lsp].setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-  }
-end
--- config overwrites
-require('lspconfig').sumneko_lua.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  settings = {
-    Lua = {
-      runtime = {
-        version = "LuaJIT",
-        path = vim.split(package.path, ";"),
-      },
-      diagnostics = {
-        globals = {"vim"}
-      },
-      workspace = {
-        library = vim.api.nvim_get_runtime_file('', true)
-      },
-      telemetry = {enable = false}
+require('mason-lspconfig').setup_handlers({
+  -- default handler
+  function(server_name)
+    require('lspconfig')[server_name].setup {
+      on_attach = on_attach,
+      capabilities = capabilities,
     }
-  }
-}
+  end,
+  ["sumneko_lua"] = function()
+    require('lspconfig').sumneko_lua.setup {
+      on_attach = on_attach,
+      capabilities = capabilities,
+      settings = {
+        Lua = {
+          runtime = {
+            version = "LuaJIT",
+            path = vim.split(package.path, ";"),
+          },
+          diagnostics = {
+            globals = { "vim" }
+          },
+          workspace = {
+            library = vim.api.nvim_get_runtime_file('', true)
+          },
+          telemetry = { enable = false }
+        }
+      }
+    }
+  end
+})
+
 -- nvim-cmp
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
@@ -291,9 +324,5 @@ require('gitsigns').setup {
 require('lualine').setup {
   options = {
     icons_enabled = true,
-    theme = 'onedark',
-    component_separators = '|',
-    section_separators = '',
   },
 }
-
