@@ -31,9 +31,7 @@ vim.opt.completeopt = 'menuone,noselect'
 vim.opt.clipboard = "unnamedplus"
 vim.opt.lazyredraw = true
 
-
 vim.g.mapleader = ' '
-vim.g.gruvbox_termcolors=16
 
 -- basic keymaps
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true }) -- since we're using space for leader
