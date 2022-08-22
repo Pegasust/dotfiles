@@ -4,7 +4,7 @@
 -- - LSP
 -- - Auto-complete (in insert mode: ctrl-space, navigate w/ Tab+S-Tab, confirm: Enter)
 -- - cmd: ":Format" to format
--- - Harpoon marks: Navigate through main files within each project 
+-- - Harpoon marks: Navigate through main files within each project
 
 -- Basic settings of vim
 vim.cmd([[
@@ -36,7 +36,7 @@ vim.g.mapleader = ' '
 -- basic keymaps
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true }) -- since we're using space for leader
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>)') -- make :terminal escape out
-vim.keymap.set({'n','i','v'}, '<c-l>', '<Cmd>:mode<Cr>') -- redraw on every mode
+vim.keymap.set({ 'n', 'i', 'v' }, '<c-l>', '<Cmd>:mode<Cr>') -- redraw on every mode
 
 -- diagnostics (errors/warnings to be shown)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
@@ -63,7 +63,9 @@ Plug('nvim-lua/plenary.nvim')
 Plug('nvim-treesitter/nvim-treesitter') -- language parser engine for highlighting
 Plug('nvim-treesitter/nvim-treesitter-textobjects') -- more text objects
 Plug('nvim-telescope/telescope.nvim', { tag = '0.1.0' }) -- file browser
-Plug('nvim-telescope/telescope-fzf-native.nvim', {['do'] = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=release && cmake --build build --config Release && cmake --install build --prefix build'})
+Plug('nvim-telescope/telescope-fzf-native.nvim',
+  { ['do'] = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=release && cmake --build build --config Release && cmake --install build --prefix build' })
+Plug('nvim-telescope/telescope-file-browser.nvim')
 -- cmp: auto-complete/suggestions
 Plug('neovim/nvim-lspconfig') -- built-in LSP configurations
 Plug('hrsh7th/cmp-nvim-lsp')
@@ -108,10 +110,11 @@ vim.opt.listchars:append "space:⋅"
 vim.opt.listchars:append "eol:↴"
 
 require("indent_blankline").setup {
-    show_end_of_line = true,
-    space_char_blankline = " ",
+  show_end_of_line = true,
+  space_char_blankline = " ",
 }
 -- telescope
+local fb_actions = require "telescope".extensions.file_browser.actions
 require('telescope').setup {
   defaults = {
     mappings = {
@@ -123,30 +126,75 @@ require('telescope').setup {
   },
   extensions = {
     fzf = {
-      fuzzy = true,   -- allow fuzzy matches
+      fuzzy = true, -- allow fuzzy matches
       override_generic_sorter = true,
       override_file_sorter = true,
       case_mode = 'smart_case'
+    },
+    file_browser = {
+      theme = "ivy",
+      hiject_netrw = true, -- disables netrw and use file-browser instead
+      mappings = {
+        ["i"] = {}, -- disable any shortcut in insert mode for now
+        ["n"] = {
+          ["c"] = fb_actions.create,
+          ["r"] = fb_actions.rename,
+          ["m"] = fb_actions.move,
+          ["y"] = fb_actions.copy,
+          ["d"] = fb_actions.remove,
+          ["o"] = fb_actions.open,
+          ["g"] = fb_actions.goto_parent_dir,
+          ["e"] = fb_actions.goto_home_dir,
+          ["w"] = fb_actions.goto_cwd,
+          ["t"] = fb_actions.change_cwd,
+          ["f"] = fb_actions.toggle_browser,
+          ["h"] = fb_actions.toggle_hidden,
+          ["s"] = fb_actions.toggle_all,
+        }
+      }
     }
   }
 }
 pcall(require('telescope').load_extension, 'fzf')
+pcall(require('telescope').load_extension, 'file_browser')
 remap('n', '<C-p>', '<cmd>Telescope<cr>', { desc = 'Open Telescope general search' })
+
+remap('n', '<leader>fm', function()
+  require("telescope").extensions.file_browser.file_browser()
+end, { desc = '[F]ile [M]utation' })
+
 remap('n', '<leader>ff', function()
-  require('telescope.builtin').find_files()
-end, { desc = '[F]ind [F]iles' })
+  require('telescope.builtin').find_files({
+        hidden = false,
+        no_ignore = false,
+        follow = false,
+    })
+end, { desc = '[F]ind [F]ile' })
+
+remap('n', '<leader>fa', function()
+    require('telescope.builtin').find_files({
+        hidden = true,
+        no_ignore = true,
+        follow = true,
+    })
+end, { desc =  '[F]ind [A]ll files' })
+
 remap('n', '<leader>fg', function()
   require('telescope.builtin').live_grep()
 end, { desc = '[F]ind by [G]rep' })
+
 remap('n', '<leader>fb', function()
   require('telescope.builtin').buffers()
 end, { desc = '[F]ind existing [B]uffers' })
+
 remap('n', '<leader>fh', function()
   require('telescope.builtin').help_tags()
 end, { desc = '[F]ind [H]elp' })
+
 remap('n', '<leader>fd', function()
   require('telescope.builtin').diagnostics()
 end, { desc = '[F]ind [D]iagnostics' })
+
 -- treesitter
 require('nvim-treesitter.configs').setup {
   ensure_installed = { 'lua', 'typescript', 'rust', 'go', 'python', 'prisma' },
@@ -174,6 +222,13 @@ require('nvim-treesitter.configs').setup {
     },
   },
 }
+-- harpoon: mark significant files & switch between them
+remap('n', '<leader>m', function() require('harpoon.mark').add_file() end)
+remap('n', '<leader>hf', function() require('harpoon.ui').nav_file(1) end)
+remap('n', '<leader>hj', function() require('harpoon.ui').nav_file(2) end)
+remap('n', '<leader>hd', function() require('harpoon.ui').nav_file(3) end)
+remap('n', '<leader>hk', function() require('harpoon.ui').nav_file(4) end)
+remap('n', '<leader>hh', function() require('harpoon.ui').toggle_quick_menu() end)
 
 -- LSP settings
 --  This function gets run when an LSP connects to a particular buffer.
