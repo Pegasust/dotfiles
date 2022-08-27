@@ -29,7 +29,7 @@ vim.opt.backup = false
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.undofile = true
 vim.opt.completeopt = 'menuone,noselect'
-vim.opt.clipboard = "unnamedplus"
+-- vim.opt.clipboard = "unnamedplus"
 
 vim.g.mapleader = ' '
 
@@ -89,12 +89,13 @@ Plug('lukas-reineke/indent-blankline.nvim') -- identation lines on blank lines
 Plug('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
 Plug('saadparwaiz1/cmp_luasnip') -- snippet engine
 Plug('L3MON4D3/LuaSnip') -- snippet engine
+Plug('mickael-menu/zk-nvim') -- Zettelkasten
 
 ---------
 vim.call('plug#end')
 
 -- color, highlighting, UI stuffs
-vim.cmd.colorscheme('gruvbox')
+vim.cmd([[ colorscheme gruvbox ]])
 
 -- plugin keymaps
 local function remap(mode, key_cmd, binded_fn, opts)
@@ -155,6 +156,10 @@ require('telescope').setup {
     }
   }
 }
+
+require('zk').setup({
+})
+
 pcall(require('telescope').load_extension, 'fzf')
 pcall(require('telescope').load_extension, 'file_browser')
 remap('n', '<C-p>', '<cmd>Telescope<cr>', { desc = 'Open Telescope general search' })
@@ -224,11 +229,30 @@ require('nvim-treesitter.configs').setup {
 }
 -- harpoon: mark significant files & switch between them
 remap('n', '<leader>m', function() require('harpoon.mark').add_file() end)
-remap('n', '<leader>hf', function() require('harpoon.ui').nav_file(1) end)
-remap('n', '<leader>hj', function() require('harpoon.ui').nav_file(2) end)
-remap('n', '<leader>hd', function() require('harpoon.ui').nav_file(3) end)
-remap('n', '<leader>hk', function() require('harpoon.ui').nav_file(4) end)
+local function harpoon_nav(key, nav_file_index, lead_keybind)
+    lead_keybind = lead_keybind or '<leader>h'
+    assert(type(key) == "string", "expect key to be string(keybind)")
+    assert(type(nav_file_index) == "number" and nav_file_index >= 1, "expect 1-indexed number for file index")
+    return remap('n', lead_keybind .. key, function() require('harpoon.ui').nav_file(nav_file_index) end)
+end
+-- remap letters to index. Inspired by alternating number of Dvorak programmer
+-- best practices: try to keep marked files to be around 4
+harpoon_nav('f', 1)
+harpoon_nav('j', 2)
+harpoon_nav('d', 3)
+harpoon_nav('k', 4)
 remap('n', '<leader>hh', function() require('harpoon.ui').toggle_quick_menu() end)
+-- harpoon: navigate by numbers
+harpoon_nav('1',1)
+harpoon_nav('2',2)
+harpoon_nav('3',3)
+harpoon_nav('4',4)
+harpoon_nav('5',5)
+harpoon_nav('6',6)
+harpoon_nav('7',7)
+harpoon_nav('8',8)
+harpoon_nav('9',9)
+harpoon_nav('0',10)
 
 -- LSP settings
 --  This function gets run when an LSP connects to a particular buffer.
