@@ -385,13 +385,14 @@ end)
 --  match_ctor: string | {match= :string,...} | "" | nil
 require('zk.commands').add("ZkGrep", function(match_ctor)
     -- handle polymorphic `match_ctor`
-    local grep_str = ""
+    local grep_str = match_ctor
     local match
     if match_ctor == nil or match_ctor == '' then
         vim.fn.inputsave()
         grep_str = vim.fn.input('Grep string: >')
         vim.fn.inputrestore()
-
+        match = { match = grep_str }
+    elseif type(match_ctor) == 'string' then
         match = { match = grep_str }
     end
     require('zk').edit(match, { title = "Grep: '" .. grep_str .. "'" })
