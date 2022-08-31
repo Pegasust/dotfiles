@@ -43,6 +43,7 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float) -- opens diag in box (floating)
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist) -- opens list of diags
+vim.keymap.set('n', '<leader>wq', vim.diagnostic.setqflist) -- workspace diags
 
 
 -- vim-plug
@@ -156,21 +157,6 @@ require('telescope').setup {
     }
   }
 }
-
-require('zk').setup({
-  picker = "telescope",
-  lsp = {
-    config = {
-      cmd = {"zk", "lsp"},
-      name = "zk",
-    },
-    auto_attach = {
-      enabled = true,
-      filetypes = {"markdown"},
-
-    },
-  }
-})
 
 pcall(require('telescope').load_extension, 'fzf')
 pcall(require('telescope').load_extension, 'file_browser')
@@ -357,6 +343,20 @@ require('mason-lspconfig').setup_handlers({
     }
   end
 })
+require('zk').setup({
+    picker = "telescope",
+    lsp = {
+        config = {
+            cmd = {"zk", "lsp"},
+            name = "zk",
+            on_attach = on_attach,
+        },
+        auto_attach = {
+            enable = true,
+            filetypes = {"markdown"}
+        },
+    },
+})
 
 -- nvim-cmp
 local cmp = require 'cmp'
@@ -416,3 +416,4 @@ require('lualine').setup {
     icons_enabled = true,
   },
 }
+
