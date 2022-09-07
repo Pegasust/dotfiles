@@ -5,6 +5,10 @@
 -- - Auto-complete (in insert mode: ctrl-space, navigate w/ Tab+S-Tab, confirm: Enter)
 -- - cmd: ":Format" to format
 -- - Harpoon marks: Navigate through main files within each project
+--
+-- REQUIREMENTS:
+-- - zk         @ https://github.com/mickael-menu/zk
+-- - prettierd  @ npm install -g @fsouza/prettierd
 
 -- Basic settings of vim
 vim.cmd([[
@@ -161,6 +165,7 @@ require('telescope').setup {
   }
 }
 
+-- Telescope key remap stuffs
 pcall(require('telescope').load_extension, 'fzf')
 pcall(require('telescope').load_extension, 'file_browser')
 remap('n', '<C-p>', '<cmd>Telescope<cr>', { desc = 'Open Telescope general search' })
@@ -201,9 +206,21 @@ remap('n', '<leader>fd', function()
   require('telescope.builtin').diagnostics()
 end, { desc = '[F]ind [D]iagnostics' })
 
+-- ZK remap stuffs
+remap('n', '<leader>zf', function()
+  vim.cmd([[:ZkNotes]])
+end, { desc = '[Z]ettelkasten [F]iles' })
+
+remap('n', '<leader>zg', function()
+  vim.cmd([[:ZkGrep]])
+end, { desc = '[Z]ettelkasten [G]rep' })
+
 -- treesitter
 require('nvim-treesitter.configs').setup {
-  ensure_installed = { 'lua', 'typescript', 'rust', 'go', 'python', 'prisma' },
+  ensure_installed = { 
+    'tsx', 'toml', 'lua', 'typescript', 'rust', 'go', 'yaml', 'json', 'php', 'css',
+    'python', 'prisma', 'html', "dockerfile"
+  },
   sync_install = false,
   highlight = { enable = true },
   indent = { enable = true },
@@ -237,6 +254,10 @@ require('nvim-treesitter.configs').setup {
 require('nvim-autopairs').setup {
   check_ts = true,
 }
+
+local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
+parser_config.tsx.filetype_to_parsername = {"javascript", "typescript.tsx"}
+
 
 require('guess-indent').setup {
   auto_cmd = true, -- Set to false to disable automatic execution
