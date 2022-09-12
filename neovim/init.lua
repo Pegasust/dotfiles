@@ -92,23 +92,36 @@ Plug('ThePrimeagen/harpoon') -- 1-click through marked files per project
 Plug('gruvbox-community/gruvbox')
 Plug('nvim-lualine/lualine.nvim') -- fancy status line
 Plug('lukas-reineke/indent-blankline.nvim') -- identation lines on blank lines
+Plug('sunjon/shade.nvim')
 
 -- other
 Plug('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
 Plug('saadparwaiz1/cmp_luasnip') -- snippet engine
 Plug('L3MON4D3/LuaSnip') -- snippet engine
 Plug('mickael-menu/zk-nvim') -- Zettelkasten
+Plug('m-demare/hlargs.nvim') -- highlights arguments; great for func prog
 
 ---------
 vim.call('plug#end')
 
 -- color, highlighting, UI stuffs
 vim.cmd([[ colorscheme gruvbox ]])
+require('hlargs').setup()
+require('shade').setup{
+  overlay_opacity = 60,
+  opacity_step = 1,
+  keys = {
+    brightness_up = '<C-Up>',
+        brightness_down = '<C-Down>',
+        toggle = '<Leader>s', -- s: sha
+    }
+}
 
 -- plugin keymaps
+
 local function remap(mode, key_cmd, binded_fn, opts)
-  opts = opts or { remap = true }
-  return vim.keymap.set(mode, key_cmd, binded_fn, opts)
+    opts = opts or { remap = true }
+    return vim.keymap.set(mode, key_cmd, binded_fn, opts)
 end
 
 -- Comment.nvim
@@ -119,50 +132,50 @@ vim.opt.listchars:append "space:⋅"
 vim.opt.listchars:append "eol:↴"
 
 require("indent_blankline").setup {
-  show_end_of_line = true,
-  space_char_blankline = " ",
+    show_end_of_line = true,
+    space_char_blankline = " ",
 }
 -- telescope
 local fb_actions = require "telescope".extensions.file_browser.actions
 require('telescope').setup {
-  defaults = {
-    mappings = {
-      i = {
-        ['<C-u>'] = false,
-        ['<C-d>'] = false,
-      },
+    defaults = {
+        mappings = {
+            i = {
+                ['<C-u>'] = false,
+                ['<C-d>'] = false,
+            },
+        },
     },
-  },
-  extensions = {
-    fzf = {
-      fuzzy = true, -- allow fuzzy matches
-      override_generic_sorter = true,
-      override_file_sorter = true,
-      case_mode = 'smart_case'
-    },
-    file_browser = {
-      theme = "ivy",
-      hiject_netrw = true, -- disables netrw and use file-browser instead
-      mappings = {
-        ["i"] = {}, -- disable any shortcut in insert mode for now
-        ["n"] = {
-          ["c"] = fb_actions.create,
-          ["r"] = fb_actions.rename,
-          ["m"] = fb_actions.move,
-          ["y"] = fb_actions.copy,
-          ["d"] = fb_actions.remove,
-          ["o"] = fb_actions.open,
-          ["g"] = fb_actions.goto_parent_dir,
-          ["e"] = fb_actions.goto_home_dir,
-          ["w"] = fb_actions.goto_cwd,
-          ["t"] = fb_actions.change_cwd,
-          ["f"] = fb_actions.toggle_browser,
-          ["h"] = fb_actions.toggle_hidden,
-          ["s"] = fb_actions.toggle_all,
+    extensions = {
+        fzf = {
+            fuzzy = true, -- allow fuzzy matches
+            override_generic_sorter = true,
+            override_file_sorter = true,
+            case_mode = 'smart_case'
+        },
+        file_browser = {
+            theme = "ivy",
+            hiject_netrw = true, -- disables netrw and use file-browser instead
+            mappings = {
+                ["i"] = {}, -- disable any shortcut in insert mode for now
+                ["n"] = {
+                    ["c"] = fb_actions.create,
+                    ["r"] = fb_actions.rename,
+                    ["m"] = fb_actions.move,
+                    ["y"] = fb_actions.copy,
+                    ["d"] = fb_actions.remove,
+                    ["o"] = fb_actions.open,
+                    ["g"] = fb_actions.goto_parent_dir,
+                    ["e"] = fb_actions.goto_home_dir,
+                    ["w"] = fb_actions.goto_cwd,
+                    ["t"] = fb_actions.change_cwd,
+                    ["f"] = fb_actions.toggle_browser,
+                    ["h"] = fb_actions.toggle_hidden,
+                    ["s"] = fb_actions.toggle_all,
+                }
+            }
         }
-      }
     }
-  }
 }
 
 -- Telescope key remap stuffs
@@ -171,115 +184,115 @@ pcall(require('telescope').load_extension, 'file_browser')
 remap('n', '<C-p>', '<cmd>Telescope<cr>', { desc = 'Open Telescope general search' })
 
 remap('n', '<leader>fm', function()
-  require("telescope").extensions.file_browser.file_browser()
+    require("telescope").extensions.file_browser.file_browser()
 end, { desc = '[F]ile [M]utation' })
 
 remap('n', '<leader>ff', function()
-  require('telescope.builtin').find_files({
-    hidden = false,
-    no_ignore = false,
-    follow = false,
-  })
+    require('telescope.builtin').find_files({
+        hidden = false,
+        no_ignore = false,
+        follow = false,
+    })
 end, { desc = '[F]ind [F]ile' })
 
 remap('n', '<leader>fa', function()
-  require('telescope.builtin').find_files({
-    hidden = true,
-    no_ignore = true,
-    follow = true,
-  })
+    require('telescope.builtin').find_files({
+        hidden = true,
+        no_ignore = true,
+        follow = true,
+    })
 end, { desc = '[F]ind [A]ll files' })
 
 remap('n', '<leader>fg', function()
-  require('telescope.builtin').live_grep()
+    require('telescope.builtin').live_grep()
 end, { desc = '[F]ind by [G]rep' })
 
 remap('n', '<leader>fb', function()
-  require('telescope.builtin').buffers()
+    require('telescope.builtin').buffers()
 end, { desc = '[F]ind existing [B]uffers' })
 
 remap('n', '<leader>fh', function()
-  require('telescope.builtin').help_tags()
+    require('telescope.builtin').help_tags()
 end, { desc = '[F]ind [H]elp' })
 
 remap('n', '<leader>fd', function()
-  require('telescope.builtin').diagnostics()
+    require('telescope.builtin').diagnostics()
 end, { desc = '[F]ind [D]iagnostics' })
 
 -- ZK remap stuffs
 remap('n', '<leader>zf', function()
-  vim.cmd([[:ZkNotes]])
+    vim.cmd([[:ZkNotes]])
 end, { desc = '[Z]ettelkasten [F]iles' })
 
 remap('n', '<leader>zg', function()
-  vim.cmd([[:ZkGrep]])
+    vim.cmd([[:ZkGrep]])
 end, { desc = '[Z]ettelkasten [G]rep' })
 
 -- treesitter
 require('nvim-treesitter.configs').setup {
-  ensure_installed = { 
-    'tsx', 'toml', 'lua', 'typescript', 'rust', 'go', 'yaml', 'json', 'php', 'css',
-    'python', 'prisma', 'html', "dockerfile"
-  },
-  sync_install = false,
-  highlight = { enable = true },
-  indent = { enable = true },
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = '<c-space>',
-      node_incremental = '<c-space>',
-      node_decremental = '<c-backspace>',
-      scope_incremental = '<c-S>'
-    }
-  },
-  textobjects = {
-    select = {
-      enable = true,
-      lookahead = true,
-      keymaps = {
-        ['af'] = '@function.outer',
-        ['if'] = '@function.inner',
-        ['ac'] = '@class.outer',
-        ['ic'] = '@class.inner',
-      },
+    ensure_installed = {
+        'tsx', 'toml', 'lua', 'typescript', 'rust', 'go', 'yaml', 'json', 'php', 'css',
+        'python', 'prisma', 'html', "dockerfile", "c", "cpp",
     },
-  },
-  -- automatically close and modify HTML and TSX tags
-  autotag = {
-    enable = true,
-  },
+    sync_install = false,
+    highlight = { enable = true },
+    indent = { enable = true },
+    incremental_selection = {
+        enable = true,
+        keymaps = {
+            init_selection = '<c-space>',
+            node_incremental = '<c-space>',
+            node_decremental = '<c-backspace>',
+            scope_incremental = '<c-S>'
+        }
+    },
+    textobjects = {
+        select = {
+            enable = true,
+            lookahead = true,
+            keymaps = {
+                ['af'] = '@function.outer',
+                ['if'] = '@function.inner',
+                ['ac'] = '@class.outer',
+                ['ic'] = '@class.inner',
+            },
+        },
+    },
+    -- automatically close and modify HTML and TSX tags
+    autotag = {
+        enable = true,
+    },
 }
 
 require('nvim-autopairs').setup {
-  check_ts = true,
+    check_ts = true,
 }
 
 local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
-parser_config.tsx.filetype_to_parsername = {"javascript", "typescript.tsx"}
+parser_config.tsx.filetype_to_parsername = { "javascript", "typescript.tsx" }
 
 
 require('guess-indent').setup {
-  auto_cmd = true, -- Set to false to disable automatic execution
-  filetype_exclude = { -- A list of filetypes for which the auto command gets disabled
-    "netrw",
-    "tutor",
-  },
-  buftype_exclude = { -- A list of buffer types for which the auto command gets disabled
-    "help",
-    "nofile",
-    "terminal",
-    "prompt",
-  },
+    auto_cmd = true, -- Set to false to disable automatic execution
+    filetype_exclude = { -- A list of filetypes for which the auto command gets disabled
+        "netrw",
+        "tutor",
+    },
+    buftype_exclude = { -- A list of buffer types for which the auto command gets disabled
+        "help",
+        "nofile",
+        "terminal",
+        "prompt",
+    },
 }
 
 -- harpoon: mark significant files & switch between them
 remap('n', '<leader>m', function() require('harpoon.mark').add_file() end)
 local function harpoon_nav(key, nav_file_index, lead_keybind)
-  lead_keybind = lead_keybind or '<leader>h'
-  assert(type(key) == "string", "expect key to be string(keybind)")
-  assert(type(nav_file_index) == "number" and nav_file_index >= 1, "expect 1-indexed number for file index")
-  return remap('n', lead_keybind .. key, function() require('harpoon.ui').nav_file(nav_file_index) end)
+    lead_keybind = lead_keybind or '<leader>h'
+    assert(type(key) == "string", "expect key to be string(keybind)")
+    assert(type(nav_file_index) == "number" and nav_file_index >= 1, "expect 1-indexed number for file index")
+    return remap('n', lead_keybind .. key, function() require('harpoon.ui').nav_file(nav_file_index) end)
 end
 
 -- remap letters to index. Inspired by alternating number of Dvorak programmer
@@ -304,115 +317,115 @@ harpoon_nav('0', 10)
 -- LSP settings
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
-  -- NOTE: Remember that lua is a real programming language, and as such it is possible
-  -- to define small helper and utility functions so you don't have to repeat yourself
-  -- many times.
-  --
-  -- In this case, we create a function that lets us more easily define mappings specific
-  -- for LSP related items. It sets the mode, buffer and description for us each time.
-  local nmap = function(keys, func, desc)
-    if desc then
-      desc = 'LSP: ' .. desc
+    -- NOTE: Remember that lua is a real programming language, and as such it is possible
+    -- to define small helper and utility functions so you don't have to repeat yourself
+    -- many times.
+    --
+    -- In this case, we create a function that lets us more easily define mappings specific
+    -- for LSP related items. It sets the mode, buffer and description for us each time.
+    local nmap = function(keys, func, desc)
+        if desc then
+            desc = 'LSP: ' .. desc
+        end
+
+        vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
     end
 
-    vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
-  end
+    nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+    nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+    -- symbols and gotos
+    nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+    nmap('gi', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
+    nmap('gr', require('telescope.builtin').lsp_references)
+    nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+    nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
-  -- symbols and gotos
-  nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
-  nmap('gi', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
-  nmap('gr', require('telescope.builtin').lsp_references)
-  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+    -- documentations. See `:help K` for why this keymap
+    nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+    nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
--- documentations. See `:help K` for why this keymap
-  nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+    -- Lesser used LSP functionality
+    nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+    nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
+    nmap('<leader>ja', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+    nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
+    nmap('<leader>wl', function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, '[W]orkspace [L]ist Folders')
 
-  -- Lesser used LSP functionality
-  nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-  nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
-nmap('<leader>ja', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
-  nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-  nmap('<leader>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, '[W]orkspace [L]ist Folders')
-
-  -- Create a command `:Format` local to the LSP buffer
-  vim.api.nvim_buf_create_user_command(bufnr, 'Format', vim.lsp.buf.format or vim.lsp.buf.formatting,
-    { desc = 'Format current buffer with LSP' })
+    -- Create a command `:Format` local to the LSP buffer
+    vim.api.nvim_buf_create_user_command(bufnr, 'Format', vim.lsp.buf.format or vim.lsp.buf.formatting,
+        { desc = 'Format current buffer with LSP' })
 end
 -- nvim-cmp supports additional completion capabilities
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 -- default language servers
 local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', "prisma-language-server" }
 require("mason").setup({
-  ui = {
-    icons = {
-      package_installed = "✓",
-      package_pending = "➜",
-      package_uninstalled = "✗"
+    ui = {
+        icons = {
+            package_installed = "✓",
+            package_pending = "➜",
+            package_uninstalled = "✗"
+        }
     }
-  }
 })
 require('mason-lspconfig').setup({
-  ensure_installed = servers,
-  automatic_installation = true
+    ensure_installed = servers,
+    automatic_installation = true
 })
 require('mason-lspconfig').setup_handlers({
-  -- default handler
-  function(server_name)
-    require('lspconfig')[server_name].setup {
-      on_attach = on_attach,
-      capabilities = capabilities,
-    }
-  end,
-  ["sumneko_lua"] = function()
-    require('lspconfig').sumneko_lua.setup {
-      on_attach = on_attach,
-      capabilities = capabilities,
-      settings = {
-        Lua = {
-          runtime = {
-            version = "LuaJIT",
-            path = vim.split(package.path, ";"),
-          },
-          diagnostics = {
-            globals = { "vim" }
-          },
-          workspace = {
-            library = vim.api.nvim_get_runtime_file('', true)
-},
-          telemetry = { enable = false }
+    -- default handler
+    function(server_name)
+        require('lspconfig')[server_name].setup {
+            on_attach = on_attach,
+            capabilities = capabilities,
         }
-      }
-}
-  end
+    end,
+    ["sumneko_lua"] = function()
+        require('lspconfig').sumneko_lua.setup {
+            on_attach = on_attach,
+            capabilities = capabilities,
+            settings = {
+                Lua = {
+                    runtime = {
+                        version = "LuaJIT",
+                        path = vim.split(package.path, ";"),
+                    },
+                    diagnostics = {
+                        globals = { "vim" }
+                    },
+                    workspace = {
+                        library = vim.api.nvim_get_runtime_file('', true)
+                    },
+                    telemetry = { enable = false }
+                }
+            }
+        }
+    end
 })
 require('zk').setup({
-  picker = "telescope",
-  lsp = {
-    config = {
-  cmd = { "zk", "lsp" },
-      name = "zk",
-      on_attach = on_attach,
-},
-    auto_attach = {
-      enable = true,
-      filetypes = { "markdown" }
+    picker = "telescope",
+    lsp = {
+        config = {
+            cmd = { "zk", "lsp" },
+            name = "zk",
+            on_attach = on_attach,
+        },
+        auto_attach = {
+            enable = true,
+            filetypes = { "markdown" }
+        },
     },
-  },
 })
 
 -- Custom ZkOrphans that determines unlinked notes
 -- `:ZkOrphans {tags = {"work"}}`
 require('zk.commands').add("ZkOrphans", function(options)
-  options = vim.tbl_extend("force", { orphan = true }, options or {})
-  -- zk.edit opens notes picker
-  require('zk').edit(options, { title = "Zk Orphans (unlinked notes)" })
+    options = vim.tbl_extend("force", { orphan = true }, options or {})
+    -- zk.edit opens notes picker
+    require('zk').edit(options, { title = "Zk Orphans (unlinked notes)" })
 end)
 -- ZkGrep: opens file picker
 -- In the case where `match_ctor` is falsy, create a prompt.
@@ -420,18 +433,18 @@ end)
 -- Params:
 --  match_ctor: string | {match= :string,...} | "" | nil
 require('zk.commands').add("ZkGrep", function(match_ctor)
-  -- handle polymorphic `match_ctor`
-  local grep_str = match_ctor
-  local match
-  if match_ctor == nil or match_ctor == '' then
-    vim.fn.inputsave()
-    grep_str = vim.fn.input('Grep string: >')
-    vim.fn.inputrestore()
-    match = { match = grep_str }
-  elseif type(match_ctor) == 'string' then
-    match = { match = grep_str }
-  end
-  require('zk').edit(match, { title = "Grep: '" .. grep_str .. "'" })
+    -- handle polymorphic `match_ctor`
+    local grep_str = match_ctor
+    local match
+    if match_ctor == nil or match_ctor == '' then
+        vim.fn.inputsave()
+        grep_str = vim.fn.input('Grep string: >')
+        vim.fn.inputrestore()
+        match = { match = grep_str }
+    elseif type(match_ctor) == 'string' then
+        match = { match = grep_str }
+    end
+    require('zk').edit(match, { title = "Grep: '" .. grep_str .. "'" })
 end)
 
 -- nvim-cmp
@@ -439,56 +452,56 @@ local cmp = require 'cmp'
 local luasnip = require 'luasnip'
 
 cmp.setup {
-  snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
-    end,
-  },
-  mapping = cmp.mapping.preset.insert {
-  ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-d>'] = cmp.mapping.scroll_docs(4),
-['<C-Space>'] = cmp.mapping.complete(),
-    ['<CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
-select = true,
-},
-    ['<Tab>'] = cmp.mapping(function(fallback)
-  if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-      else
-        fallback()
-end
-    end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-  },
-  sources = {
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
-  },
+    snippet = {
+        expand = function(args)
+            luasnip.lsp_expand(args.body)
+        end,
+    },
+    mapping = cmp.mapping.preset.insert {
+        ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-d>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<CR>'] = cmp.mapping.confirm {
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = true,
+        },
+        ['<Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            elseif luasnip.expand_or_jumpable() then
+                luasnip.expand_or_jump()
+            else
+                fallback()
+            end
+        end, { 'i', 's' }),
+        ['<S-Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+                luasnip.jump(-1)
+            else
+                fallback()
+            end
+        end, { 'i', 's' }),
+    },
+    sources = {
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+    },
 }
 
 -- Gitsigns
 require('gitsigns').setup {
-  signs = {
-    add = { text = '+' },
-    change = { text = '~' },
-    delete = { text = '_' },
-    topdelete = { text = '‾' },
-    changedelete = { text = '~' },
-  }
+    signs = {
+        add = { text = '+' },
+        change = { text = '~' },
+        delete = { text = '_' },
+        topdelete = { text = '‾' },
+        changedelete = { text = '~' },
+    }
 }
 require('lualine').setup {
-  options = {
-    icons_enabled = true,
-  },
+    options = {
+        icons_enabled = true,
+    },
 }
