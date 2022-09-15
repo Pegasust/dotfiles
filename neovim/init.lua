@@ -361,7 +361,7 @@ end
 -- nvim-cmp supports additional completion capabilities
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 -- default language servers
-local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', "prisma-language-server" }
+local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver',  'sumneko_lua', 'cmake', 'tailwindcss', 'prismals', 'rnix', 'eslint' }
 require("mason").setup({
     ui = {
         icons = {
