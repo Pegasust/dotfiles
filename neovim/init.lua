@@ -69,7 +69,7 @@ Plug('nvim-treesitter/nvim-treesitter') -- language parser engine for highlighti
 Plug('nvim-treesitter/nvim-treesitter-textobjects') -- more text objects
 Plug('nvim-telescope/telescope.nvim', { tag = '0.1.0' }) -- file browser
 Plug('nvim-telescope/telescope-fzf-native.nvim',
-  { ['do'] = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=release && cmake --build build --config Release && cmake --install build --prefix build' })
+    { ['do'] = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=release && cmake --build build --config Release && cmake --install build --prefix build' })
 Plug('nvim-telescope/telescope-file-browser.nvim')
 -- cmp: auto-complete/suggestions
 Plug('neovim/nvim-lspconfig') -- built-in LSP configurations
@@ -107,11 +107,11 @@ vim.call('plug#end')
 -- color, highlighting, UI stuffs
 vim.cmd([[ colorscheme gruvbox ]])
 require('hlargs').setup()
-require('shade').setup{
-  overlay_opacity = 60,
-  opacity_step = 1,
-  keys = {
-    brightness_up = '<C-Up>',
+require('shade').setup {
+    overlay_opacity = 60,
+    opacity_step = 1,
+    keys = {
+        brightness_up = '<C-Up>',
         brightness_down = '<C-Down>',
         toggle = '<Leader>s', -- s: sha
     }
@@ -316,7 +316,7 @@ harpoon_nav('0', 10)
 
 -- LSP settings
 --  This function gets run when an LSP connects to a particular buffer.
-local on_attach = function(_, bufnr)
+local on_attach = function(_client, bufnr)
     -- NOTE: Remember that lua is a real programming language, and as such it is possible
     -- to define small helper and utility functions so you don't have to repeat yourself
     -- many times.
@@ -328,11 +328,13 @@ local on_attach = function(_, bufnr)
             desc = 'LSP: ' .. desc
         end
 
-        vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+        vim.keymap.set('n', keys, func, { noremap = true, buffer = bufnr, desc = desc })
     end
 
     nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
     nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+    nmap('<leader>df', function() vim.lsp.buf.format({ async = true }) end, '[D]ocument [F]ormat')
 
     -- symbols and gotos
     nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
@@ -348,20 +350,18 @@ local on_attach = function(_, bufnr)
     -- Lesser used LSP functionality
     nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
     nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
-    nmap('<leader>ja', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+    nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
     nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
     nmap('<leader>wl', function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, '[W]orkspace [L]ist Folders')
 
-    -- Create a command `:Format` local to the LSP buffer
-    vim.api.nvim_buf_create_user_command(bufnr, 'Format', vim.lsp.buf.format or vim.lsp.buf.formatting,
-        { desc = 'Format current buffer with LSP' })
 end
 -- nvim-cmp supports additional completion capabilities
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 -- default language servers
-local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver',  'sumneko_lua', 'cmake', 'tailwindcss', 'prismals', 'rnix', 'eslint' }
+local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'cmake', 'tailwindcss', 'prismals',
+    'rnix', 'eslint' }
 require("mason").setup({
     ui = {
         icons = {
@@ -399,7 +399,14 @@ require('mason-lspconfig').setup_handlers({
                     workspace = {
                         library = vim.api.nvim_get_runtime_file('', true)
                     },
-                    telemetry = { enable = false }
+                    telemetry = { enable = false },
+                    format = {
+                        enable = true,
+                        defaultConfig = {
+                            indent_style = "space",
+                            indent_size = 2,
+                        }
+                    }
                 }
             }
         }
