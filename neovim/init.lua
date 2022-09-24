@@ -87,6 +87,7 @@ Plug('tpope/vim-fugitive') -- git commands in nvim
 Plug('williamboman/mason.nvim') -- LSP, debuggers,... package manager
 Plug('williamboman/mason-lspconfig.nvim') -- lsp config for mason
 Plug('ThePrimeagen/harpoon') -- 1-click through marked files per project
+Plug('TimUntersberger/neogit') -- Easy-to-see git status
 
 -- UI & colorscheme
 Plug('gruvbox-community/gruvbox')
@@ -314,7 +315,12 @@ harpoon_nav('8', 8)
 harpoon_nav('9', 9)
 harpoon_nav('0', 10)
 
+-- neogit: easy-to-see git status
+require('neogit').setup {}
+remap('n', '<leader>gs', function() require('neogit').open({}) end);
+
 -- LSP settings
+require('nvim-lsp-installer').setup {}
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_client, bufnr)
     -- NOTE: Remember that lua is a real programming language, and as such it is possible
@@ -511,4 +517,32 @@ require('lualine').setup {
     options = {
         icons_enabled = true,
     },
+    sections = {
+        lualine_a = { 'mode' },
+        lualine_b = { 'branch', 'diff', 'diagnostics' },
+        lualine_c = {
+            {'filename',
+                file_status = true,
+                newfile_status = false,
+                path = 1,
+                symbols = {
+                    modified = '[+]',
+                    readonly = '[-]',
+                    unnamed = '[Unnamed]',
+                    newfile = '[New]',
+                },
+            },
+        },
+        lualine_x = { 'encoding', 'fileformat', 'filetype',  },
+        lualine_y = { 'progress' },
+        lualine_z = { 'location' },
+    },
+    inactive_sections = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = { {'filename', path = 1, file_status = true, },},
+        lualine_x = { 'location' },
+        lualine_y = {},
+        lualine_z = {},
+    }
 }
