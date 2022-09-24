@@ -3,12 +3,12 @@
 -- Features:
 -- - LSP
 -- - Auto-complete (in insert mode: ctrl-space, navigate w/ Tab+S-Tab, confirm: Enter)
--- - cmd: ":Format" to format
+-- - <leader>df to format document
 -- - Harpoon marks: Navigate through main files within each project
 --
 -- REQUIREMENTS:
--- - zk         @ https://github.com/mickael-menu/zk
--- - prettierd  @ npm install -g @fsouza/prettierd
+-- - zk     @ https://github.com/mickael-menu/zk
+-- - prettierd @ npm install -g @fsouza/prettierd
 
 -- Basic settings of vim
 vim.cmd([[
@@ -46,21 +46,24 @@ vim.keymap.set({ 'n', 'i', 'v' }, '<c-l>', '<Cmd>:mode<Cr>') -- redraw on every 
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float) -- opens diag in box (floating)
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist) -- opens list of diags
-vim.keymap.set('n', '<leader>wq', vim.diagnostic.setqflist) -- workspace diags
+-- vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist) -- opens list of diags
+-- vim.keymap.set('n', '<leader>wq', vim.diagnostic.setqflist) -- workspace diags
+vim.keymap.set('n', '<leader>q', '<cmd>TroubleToggle loclist<cr>')
+vim.keymap.set('n', '<leader>wq', '<cmd>TroubleToggle workspace_diagnostics<cr>')
 
 
 -- vim-plug
 vim.cmd([[
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 if empty(glob(data_dir . '/autoload/plug.vim'))
-  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+ silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+ autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 ]])
 
 local Plug = vim.fn['plug#']
 vim.call('plug#begin', '~/.config/nvim/plugged')
+
 -- libs and dependencies
 Plug('nvim-lua/plenary.nvim')
 
@@ -71,12 +74,14 @@ Plug('nvim-telescope/telescope.nvim', { tag = '0.1.0' }) -- file browser
 Plug('nvim-telescope/telescope-fzf-native.nvim',
     { ['do'] = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=release && cmake --build build --config Release && cmake --install build --prefix build' })
 Plug('nvim-telescope/telescope-file-browser.nvim')
+
 -- cmp: auto-complete/suggestions
 Plug('neovim/nvim-lspconfig') -- built-in LSP configurations
 Plug('hrsh7th/cmp-nvim-lsp')
 Plug('hrsh7th/cmp-buffer')
 Plug('hrsh7th/nvim-cmp')
 Plug('onsails/lspkind-nvim')
+
 -- DevExp
 Plug('windwp/nvim-autopairs') -- matches pairs like [] (),...
 Plug('windwp/nvim-ts-autotag') -- matches tags <body>hello</body>
@@ -88,19 +93,22 @@ Plug('williamboman/mason.nvim') -- LSP, debuggers,... package manager
 Plug('williamboman/mason-lspconfig.nvim') -- lsp config for mason
 Plug('ThePrimeagen/harpoon') -- 1-click through marked files per project
 Plug('TimUntersberger/neogit') -- Easy-to-see git status
+Plug('folke/trouble.nvim') -- File-grouped workspace diagnostics
 
 -- UI & colorscheme
-Plug('gruvbox-community/gruvbox')
+Plug('gruvbox-community/gruvbox') -- theme provider
 Plug('nvim-lualine/lualine.nvim') -- fancy status line
 Plug('lukas-reineke/indent-blankline.nvim') -- identation lines on blank lines
-Plug('sunjon/shade.nvim')
+Plug('sunjon/shade.nvim') -- make inactive panes have lower opacity
+Plug('kyazdani42/nvim-web-devicons') -- icons for folder and filetypes
+Plug('m-demare/hlargs.nvim') -- highlights arguments; great for func prog
+Plug('folke/todo-comments.nvim') -- Highlights TODO
 
--- other
+-- other utilities
 Plug('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
 Plug('saadparwaiz1/cmp_luasnip') -- snippet engine
 Plug('L3MON4D3/LuaSnip') -- snippet engine
 Plug('mickael-menu/zk-nvim') -- Zettelkasten
-Plug('m-demare/hlargs.nvim') -- highlights arguments; great for func prog
 
 ---------
 vim.call('plug#end')
@@ -117,6 +125,9 @@ require('shade').setup {
         toggle = '<Leader>s', -- s: sha
     }
 }
+require('nvim-web-devicons').setup()
+require('trouble').setup()
+require('todo-comments').setup()
 
 -- plugin keymaps
 
@@ -136,6 +147,30 @@ require("indent_blankline").setup {
     show_end_of_line = true,
     space_char_blankline = " ",
 }
+-- User command that transform into 2-spaces by translating to tabstop
+vim.api.nvim_create_user_command(
+    'HalfSpaces',
+    function(opts)
+        vim.api.nvim_command("set ts=2 sts=2 noet")
+        vim.api.nvim_command("retab!")
+        vim.api.nvim_command("set ts=1 sts=1 et")
+        vim.api.nvim_command("retab")
+        vim.api.nvim_command("GuessIndent")
+    end,
+    { nargs = 0 }
+)
+vim.api.nvim_create_user_command(
+    'DoubleSpaces',
+    function(opts)
+        vim.api.nvim_command("set ts=1 sts=1 noet")
+        vim.api.nvim_command("retab!")
+        vim.api.nvim_command("set ts=2 sts=2 et")
+        vim.api.nvim_command("retab")
+        vim.api.nvim_command("GuessIndent")
+    end,
+    { nargs = 0 }
+)
+
 -- telescope
 local fb_actions = require "telescope".extensions.file_browser.actions
 require('telescope').setup {
@@ -321,7 +356,7 @@ remap('n', '<leader>gs', function() require('neogit').open({}) end);
 
 -- LSP settings
 require('nvim-lsp-installer').setup {}
---  This function gets run when an LSP connects to a particular buffer.
+-- This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_client, bufnr)
     -- NOTE: Remember that lua is a real programming language, and as such it is possible
     -- to define small helper and utility functions so you don't have to repeat yourself
@@ -444,7 +479,7 @@ end)
 -- In the case where `match_ctor` is falsy, create a prompt.
 -- This is so that we distinguish between ZkGrep and ZkNotes
 -- Params:
---  match_ctor: string | {match= :string,...} | "" | nil
+-- match_ctor: string | {match= :string,...} | "" | nil
 require('zk.commands').add("ZkGrep", function(match_ctor)
     -- handle polymorphic `match_ctor`
     local grep_str = match_ctor
@@ -521,7 +556,7 @@ require('lualine').setup {
         lualine_a = { 'mode' },
         lualine_b = { 'branch', 'diff', 'diagnostics' },
         lualine_c = {
-            {'filename',
+            { 'filename',
                 file_status = true,
                 newfile_status = false,
                 path = 1,
@@ -533,14 +568,14 @@ require('lualine').setup {
                 },
             },
         },
-        lualine_x = { 'encoding', 'fileformat', 'filetype',  },
+        lualine_x = { 'encoding', 'fileformat', 'filetype', },
         lualine_y = { 'progress' },
         lualine_z = { 'location' },
     },
     inactive_sections = {
         lualine_a = {},
         lualine_b = {},
-        lualine_c = { {'filename', path = 1, file_status = true, },},
+        lualine_c = { { 'filename', path = 1, file_status = true, }, },
         lualine_x = { 'location' },
         lualine_y = {},
         lualine_z = {},
