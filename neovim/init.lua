@@ -268,7 +268,7 @@ end, { desc = '[Z]ettelkasten [G]rep' })
 require('nvim-treesitter.configs').setup {
     ensure_installed = {
         'tsx', 'toml', 'lua', 'typescript', 'rust', 'go', 'yaml', 'json', 'php', 'css',
-        'python', 'prisma', 'html', "dockerfile", "c", "cpp",
+        'python', 'prisma', 'html', "dockerfile", "c", "cpp", "hcl",
     },
     sync_install = false,
     highlight = { enable = true },
@@ -318,7 +318,7 @@ require('guess-indent').setup {
         "help",
         "nofile",
         "terminal",
-        "prompt",
+        -- "prompt",
     },
 }
 
@@ -402,14 +402,15 @@ end
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 -- default language servers
 local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'cmake', 'tailwindcss', 'prismals',
-    'rnix', 'eslint' }
+    'rnix', 'eslint' , 'terraform-ls', 'tflint'}
 require("mason").setup({
     ui = {
         icons = {
             package_installed = "✓",
             package_pending = "➜",
             package_uninstalled = "✗"
-        }
+        },
+        check_outdated_packages_on_open = true,
     }
 })
 require('mason-lspconfig').setup({
