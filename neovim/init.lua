@@ -81,6 +81,7 @@ Plug('hrsh7th/cmp-nvim-lsp')
 Plug('hrsh7th/cmp-buffer')
 Plug('hrsh7th/nvim-cmp')
 Plug('onsails/lspkind-nvim')
+Plug('tzachar/cmp-tabnine', { ['do'] = './install.sh' })
 
 -- DevExp
 Plug('windwp/nvim-autopairs') -- matches pairs like [] (),...
@@ -268,7 +269,7 @@ end, { desc = '[Z]ettelkasten [G]rep' })
 require('nvim-treesitter.configs').setup {
     ensure_installed = {
         'tsx', 'toml', 'lua', 'typescript', 'rust', 'go', 'yaml', 'json', 'php', 'css',
-        'python', 'prisma', 'html', "dockerfile", "c", "cpp", "hcl",
+        'python', 'prisma', 'html', "dockerfile", "c", "cpp", "hcl", "svelte", "astro"
     },
     sync_install = false,
     highlight = { enable = true },
@@ -400,9 +401,19 @@ local on_attach = function(_client, bufnr)
 end
 -- nvim-cmp supports additional completion capabilities
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local tabnine = require('cmp_tabnine.config')
+tabnine.setup({
+    max_lines = 1000,
+    max_num_results = 20,
+    sort = true,
+    run_on_every_keystroke = true,
+    snippet_placeholder = '..',
+    ignored_file_types = {},
+    show_prediction_strength = true,
+})
 -- default language servers
 local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'cmake', 'tailwindcss', 'prismals',
-    'rnix', 'eslint' , 'terraform-ls', 'tflint'}
+    'rnix', 'eslint' , 'terraform-ls', 'tflint', 'svelte', 'astro'}
 require("mason").setup({
     ui = {
         icons = {
@@ -499,6 +510,14 @@ end)
 -- nvim-cmp
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
+local lspkind = require('lspkind')
+local source_mapping = {
+    buffer = '[Buffer]',
+    nvim_lsp = '[LSP]',
+    nvim_lua = '[Lua]',
+    cmp_tabnine = '[T9]',
+    path = '[Path]',
+}
 
 cmp.setup {
     snippet = {
@@ -533,9 +552,30 @@ cmp.setup {
             end
         end, { 'i', 's' }),
     },
+    formatting = {
+        format = function(entry, vim_item)
+            vim_item.kind = lspkind.symbolic(vim_item.kind, {mode = 'symbol'})
+            vim_item.menu = source_mapping[entry.source_name]
+            if entry.source.name == "cmp_tabnine" then
+                local detail = (entry.completion_item.data or {}).detail
+                vim_item.kind = ""
+                if detail and detail:find('.*%%.*') then
+                    vim_item.kind = vim_item.kind .. ' ' .. detail
+                end
+
+                if (entry.completion_item.data or {}).multiline then
+                    vim_item.kind = vim_item.kind .. ' ' .. '[ML]'
+                end
+            end
+            local maxwidth = 80
+            vim_item.abbr = string.sub(vim_item.abbr, 1, maxwidth)
+            return vim_item
+        end,
+    },
     sources = {
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
+        { name = 'cmp_tabnine' },
     },
 }
 
@@ -582,3 +622,4 @@ require('lualine').setup {
         lualine_z = {},
     }
 }
+
