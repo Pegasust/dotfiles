@@ -269,7 +269,8 @@ end, { desc = '[Z]ettelkasten [G]rep' })
 require('nvim-treesitter.configs').setup {
     ensure_installed = {
         'tsx', 'toml', 'lua', 'typescript', 'rust', 'go', 'yaml', 'json', 'php', 'css',
-        'python', 'prisma', 'html', "dockerfile", "c", "cpp", "hcl", "svelte", "astro"
+        'python', 'prisma', 'html', "dockerfile", "c", "cpp", "hcl", "svelte", "astro",
+        "clojure"
     },
     sync_install = false,
     highlight = { enable = true },
@@ -413,7 +414,7 @@ tabnine.setup({
 })
 -- default language servers
 local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'cmake', 'tailwindcss', 'prismals',
-    'rnix', 'eslint' , 'terraform-ls', 'tflint', 'svelte', 'astro'}
+    'rnix', 'eslint', 'terraform-ls', 'tflint', 'svelte', 'astro', 'clojure_lsp' }
 require("mason").setup({
     ui = {
         icons = {
@@ -554,7 +555,7 @@ cmp.setup {
     },
     formatting = {
         format = function(entry, vim_item)
-            vim_item.kind = lspkind.symbolic(vim_item.kind, {mode = 'symbol'})
+            vim_item.kind = lspkind.symbolic(vim_item.kind, { mode = 'symbol' })
             vim_item.menu = source_mapping[entry.source_name]
             if entry.source.name == "cmp_tabnine" then
                 local detail = (entry.completion_item.data or {}).detail
@@ -622,4 +623,3 @@ require('lualine').setup {
         lualine_z = {},
     }
 }
-
