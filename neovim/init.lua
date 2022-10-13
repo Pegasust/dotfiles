@@ -101,6 +101,8 @@ Plug('tpope/vim-dispatch') -- Allows quick build/compile/test vim commands
 Plug('clojure-vim/vim-jack-in') -- Clojure: ":Boot", ":Clj", ":Lein"
 Plug('radenling/vim-dispatch-neovim') -- Add support for neovim's terminal emulator
 Plug('Olical/conjure') -- REPL on the source for Clojure (and other LISPs)
+Plug('gennaro-tedesco/nvim-jqx') -- JSON formatter (use :Jqx*)
+Plug('kylechui/nvim-surround') -- surrounds with tags/parenthesis
 
 -- UI & colorscheme
 Plug('gruvbox-community/gruvbox') -- theme provider
@@ -276,7 +278,7 @@ require('nvim-treesitter.configs').setup {
   ensure_installed = {
     'tsx', 'toml', 'lua', 'typescript', 'rust', 'go', 'yaml', 'json', 'php', 'css',
     'python', 'prisma', 'html', "dockerfile", "c", "cpp", "hcl", "svelte", "astro",
-    "clojure", "fennel"
+    "clojure", "fennel", "bash"
   },
   sync_install = false,
   highlight = { enable = true },
@@ -365,7 +367,6 @@ require('neogit').setup {}
 remap('n', '<leader>gs', function() require('neogit').open({}) end);
 
 -- LSP settings
-require('nvim-lsp-installer').setup {}
 -- This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_client, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
@@ -422,7 +423,7 @@ local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protoco
 -- })
 -- default language servers
 local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'cmake', 'tailwindcss', 'prismals',
-  'rnix', 'eslint', 'terraform-ls', 'tflint', 'svelte', 'astro', 'clojure_lsp' }
+  'rnix', 'eslint', 'terraform-ls', 'tflint', 'svelte', 'astro', 'clojure_lsp', "bashls" }
 require("mason").setup({
   ui = {
     icons = {
@@ -644,3 +645,5 @@ require('lualine').setup {
     lualine_z = {},
   }
 }
+
+require('nvim-surround').setup {}
