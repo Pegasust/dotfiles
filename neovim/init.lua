@@ -83,6 +83,7 @@ Plug('hrsh7th/cmp-nvim-lsp')
 Plug('hrsh7th/cmp-buffer')
 Plug('hrsh7th/nvim-cmp')
 Plug('onsails/lspkind-nvim')
+Plug('yioneko/nvim-yati') -- hopefully fixes Python indentation auto-correct from Tree-sitter
 -- Plug('tzachar/cmp-tabnine', { ['do'] = './install.sh' })
 
 -- DevExp
@@ -276,6 +277,7 @@ end, { desc = '[Z]ettelkasten [G]rep' })
 
 -- treesitter
 require('nvim-treesitter.configs').setup {
+    yati = { enable = true },
     ensure_installed = {
         'tsx', 'toml', 'lua', 'typescript', 'rust', 'go', 'yaml', 'json', 'php', 'css',
         'python', 'prisma', 'html', "dockerfile", "c", "cpp", "hcl", "svelte", "astro",
@@ -283,7 +285,7 @@ require('nvim-treesitter.configs').setup {
     },
     sync_install = false,
     highlight = { enable = true },
-    indent = { enable = true },
+    indent = { enable = true, disabled = { "python" } },
     incremental_selection = {
         enable = true,
         keymaps = {
@@ -411,7 +413,7 @@ local on_attach = function(_client, bufnr)
 
 end
 -- nvim-cmp supports additional completion capabilities
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 -- local tabnine = require('cmp_tabnine.config')
 -- tabnine.setup({
 --   max_lines = 1000,
@@ -424,7 +426,7 @@ local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protoco
 -- })
 -- default language servers
 local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'cmake', 'tailwindcss', 'prismals',
-    'rnix', 'eslint', 'terraform-ls', 'tflint', 'svelte', 'astro', 'clojure_lsp', "bashls", 'yamlls' }
+    'rnix', 'eslint', 'terraformls', 'tflint', 'svelte', 'astro', 'clojure_lsp', "bashls", 'yamlls' }
 require("mason").setup({
     ui = {
         icons = {
@@ -666,7 +668,7 @@ require("rust-tools").setup {
                 vim.keymap.set('n', keys, func, { noremap = true, buffer = bufnr, desc = desc })
             end
             on_attach(client, bufnr);
-            nmap('K', require'rust-tools'.hover_actions.hover_actions, 'Hover Documentation')
+            nmap('K', require 'rust-tools'.hover_actions.hover_actions, 'Hover Documentation')
 
         end,
         capabilities = capabilities,
