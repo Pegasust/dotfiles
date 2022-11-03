@@ -277,7 +277,7 @@ end, { desc = '[Z]ettelkasten [G]rep' })
 
 -- treesitter
 require('nvim-treesitter.configs').setup {
-    yati = { enable = true },
+    yati = { enable = true, default_lazy = true },
     ensure_installed = {
         'tsx', 'toml', 'lua', 'typescript', 'rust', 'go', 'yaml', 'json', 'php', 'css',
         'python', 'prisma', 'html', "dockerfile", "c", "cpp", "hcl", "svelte", "astro",
@@ -414,7 +414,7 @@ local on_attach = function(_client, bufnr)
 
 end
 -- nvim-cmp supports additional completion capabilities
-local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 -- local tabnine = require('cmp_tabnine.config')
 -- tabnine.setup({
 --   max_lines = 1000,
