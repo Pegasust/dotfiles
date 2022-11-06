@@ -27,7 +27,7 @@ in
 
   };
   # users.users.<defaultUser>.uid = 1000;
-  networking.hostName = "nixos";
+  # networking.hostName = "nixos";
 
   # Enable nix flakes
   nix.package = pkgs.nixFlakes;
@@ -35,7 +35,7 @@ in
     experimental-features = nix-command flakes
   '';
 
-  # Home manager
+  # Some basic programs
   programs.neovim = {
     enable = true;
     defaultEditor = true;
