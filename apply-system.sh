@@ -18,5 +18,5 @@ ln -s -T ${SCRIPT_DIR} ${CONFIG_DIR}
 
 # $PWD to ~/.dotfiles
 pushd ~/.dotfiles
-sudo nixos-rebuild switch -I nixos-config=./system/configuration.nix
+sudo nixos-rebuild switch --flake ./system#nixos
 popd

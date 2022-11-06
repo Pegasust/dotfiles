@@ -11,7 +11,6 @@ in
     nixos-wsl.nixosModules.wsl
   ];
 
-  networking.hostName = "nixos";
   system.stateVersion = "22.05";
 
   wsl = {
@@ -28,6 +27,7 @@ in
 
   };
   # users.users.<defaultUser>.uid = 1000;
+  networking.hostName = "nixos";
 
   # Enable nix flakes
   nix.package = pkgs.nixFlakes;
@@ -44,19 +44,6 @@ in
     enable = true;
     # more information should be configured under user level
   };
-  programs.zsh = {
-  	enable = true;
-	shellAliases = {
-		# list lists
-		ll = "ls -l";
-		update = "sudo nixos-rebuild switch";
-	};
-	history = {
-		size = 10000;
-		path = "${config.xdg.dataHome}/zsh/history";
-	};
-  };
-
   environment.systemPackages = [
     pkgs.gnumake
   ];
