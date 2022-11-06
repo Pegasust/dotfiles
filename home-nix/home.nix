@@ -3,10 +3,34 @@
   home.username = "nixos";
   home.homeDirectory = "/home/nixos";
 
-  home.packages = [pkgs.htop pkgs.ripgrep];
+  home.packages = [
+    pkgs.htop pkgs.ripgrep pkgs.gcc pkgs.fd pkgs.zk
+  ];
   home.stateVersion = "22.05";
   nixpkgs.config.allowUnfree = true;
 
+  ## Configs ## 
+  xdg.configFile."nvim/init.lua".text = builtins.readFile ../neovim/init.lua;
+  xdg.configFile."starship.toml".text = builtins.readFile ../starship/starship.toml;
+
+  ## Programs ##
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+  programs.tmux = {
+    enable = true;
+    shell = "zsh";
+    extraConfig = builtins.readFile ../tmux/.tmux.conf;
+  };
+  programs.exa = {
+    enable = true;
+    enableAliases = true;
+  };
+  programs.starship = {
+    enable = true;
+    enableZshIntegration = true;
+  };
   programs.home-manager.enable = true;
   programs.fzf.enable = true;
   programs.neovim = {
@@ -18,14 +42,13 @@
     # https://github.com/nix-community/home-manager/pull/3287
     # extraConfig = builtins.readFile ../neovim/init.lua;
   };
-  xdg.configFile."nvim/init.lua".text = builtins.readFile ../neovim/init.lua;
   programs.zsh = {
     enable = true;
     enableCompletion = true;
     enableAutosuggestions = true;
     shellAliases = {
-      ll = "ls -l";
       nix-rebuild = "sudo nixos-rebuild switch";
+      hm-switch = "home-manager switch --flake";
     };
     history = {
       size = 10000;
@@ -40,9 +63,9 @@
     enable = true;
     lfs.enable = true;
     aliases = {
-      a="add"; c="commit"; ca="commit --ammend"; cm="commit-m";
+      a="add"; c="commit"; ca="commit --ammend"; cm="commit -m";
       lol="log --graph --decorate --pretty=oneline --abbrev-commit";
-      lola="log --grpah --decorate --pretty-oneline --abbrev-commit --all";
+      lola="log --graph --decorate --pretty=oneline --abbrev-commit --all";
     };
     extraConfig = {
       merge = {tool="vimdiff"; conflictstyle="diff3";};
