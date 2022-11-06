@@ -7,9 +7,12 @@ in
 {
   imports = [
     "${modulesPath}/profiles/minimal.nix"
-
+    ./hardware-configuration.nix
     nixos-wsl.nixosModules.wsl
   ];
+
+  networking.hostName = "nixos";
+  system.stateVersion = "22.05";
 
   wsl = {
     enable = true;
@@ -32,6 +35,7 @@ in
     experimental-features = nix-command flakes
   '';
 
+  # Home manager
   programs.neovim = {
     enable = true;
     defaultEditor = true;
@@ -40,8 +44,18 @@ in
     enable = true;
     # more information should be configured under user level
   };
-  networking.hostName = "nixos";
-  system.stateVersion = "22.05";
+  programs.zsh = {
+  	enable = true;
+	shellAliases = {
+		# list lists
+		ll = "ls -l";
+		update = "sudo nixos-rebuild switch";
+	};
+	history = {
+		size = 10000;
+		path = "${config.xdg.dataHome}/zsh/history";
+	};
+  };
 
   environment.systemPackages = [
     pkgs.gnumake
