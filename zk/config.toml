@@ -1,0 +1,23 @@
+[note] # Settings that reflect the creation of a new note
+language = "en"
+default-title = "Untitled"
+filename = "{{date now 'timestamp'}}" # Loyal to my current style: 202208201345
+extension = "md" # might switch to mdx
+
+[extra]
+author = "Hung Tran"
+
+[format.markdown]
+hashtags = true
+multiword-tags = true
+link-format = "wiki"
+link-drop-extension = true
+
+[tool]
+editor = "nvim"
+
+[lsp]
+[lsp.diagnostics]
+wiki-title = "hint"
+dead-link = "error"
+
