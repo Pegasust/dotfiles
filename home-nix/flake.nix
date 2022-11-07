@@ -17,5 +17,9 @@
         inherit pkgs;
       modules = [./home.nix];
       };
+      homeConfigurations.ubuntu_admin = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+      modules = [./home.nix];
+      };
     };
 }
