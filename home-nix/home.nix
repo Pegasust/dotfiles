@@ -5,7 +5,7 @@
 
   home.packages = [
     pkgs.htop pkgs.ripgrep pkgs.gcc pkgs.fd pkgs.zk pkgs.unzip 
-    pkgs.nodePackages.npm pkgs.rustc pkgs.cargo
+    pkgs.rustc pkgs.cargo pkgs.nodejs-18_x
   ];
   home.stateVersion = "22.05";
   nixpkgs.config.allowUnfree = true;

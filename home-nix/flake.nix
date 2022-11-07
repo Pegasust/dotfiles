@@ -15,11 +15,21 @@
     in {
       homeConfigurations.nixos = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-      modules = [./home.nix];
+        username = "nixos";
+        homeDirectory = "/home/nixos";
+        modules = [./home.nix];
       };
       homeConfigurations.ubuntu_admin = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-      modules = [./home.nix];
+        username = "ubuntu_admin";
+        homeDirectory = "/home/ubuntu_admin";
+        modules = [./home.nix];
+      };
+      homeConfigurations.hwtr = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        username = "hwtr";
+        homeDirectory = "/home/hwtr";
+        modules = [./home.nix];
       };
     };
 }
