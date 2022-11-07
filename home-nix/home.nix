@@ -20,7 +20,6 @@
   };
   programs.tmux = {
     enable = true;
-    shell = "zsh";
     extraConfig = builtins.readFile ../tmux/.tmux.conf;
   };
   programs.exa = {
@@ -66,6 +65,7 @@
       a="add"; c="commit"; ca="commit --ammend"; cm="commit -m";
       lol="log --graph --decorate --pretty=oneline --abbrev-commit";
       lola="log --graph --decorate --pretty=oneline --abbrev-commit --all";
+      sts="status";
     };
     extraConfig = {
       merge = {tool="vimdiff"; conflictstyle="diff3";};

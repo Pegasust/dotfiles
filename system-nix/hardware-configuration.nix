@@ -18,12 +18,12 @@
 
   fileSystems."/usr/lib/wsl/drivers" =
     { device = "drivers";
-      fsType = "9p";
+      fsType = "drvfs";
     };
 
   fileSystems."/usr/lib/wsl/lib" =
     { device = "lib";
-      fsType = "9p";
+      fsType = "drvfs";
     };
 
   fileSystems."/mnt/wsl" =
@@ -32,18 +32,18 @@
     };
 
   fileSystems."/mnt/c" =
-    { device = "C:\134";
-      fsType = "9p";
+    { device = "C:";
+      fsType = "drvfs";
     };
 
   fileSystems."/mnt/d" =
-    { device = "D:\134";
-      fsType = "9p";
+    { device = "D:";
+      fsType = "drvfs";
     };
 
   fileSystems."/mnt/f" =
-    { device = "F:\134";
-      fsType = "9p";
+    { device = "F:";
+      fsType = "drvfs";
     };
 
   swapDevices = [ ];

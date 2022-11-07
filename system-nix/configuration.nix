@@ -18,7 +18,7 @@ in
     automountPath = "/mnt";
     defaultUser = "nixos"; # if change defaultUser, make sure uid to be 1000 (first user)
     startMenuLaunchers = true;
-
+    automountOptions = "drvfs,metadata,uid=1000,gid=100";
     # Enable native Docker support
     # docker-native.enable = true;
 
