@@ -14,6 +14,9 @@
   xdg.configFile."starship.toml".text = builtins.readFile ../starship/starship.toml;
 
   ## Programs ##
+  programs.alacritty = {
+    enable = true;
+  };
   programs.zoxide = {
     enable = true;
     enableZshIntegration = true;
