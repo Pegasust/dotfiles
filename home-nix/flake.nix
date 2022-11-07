@@ -9,27 +9,47 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = {nixpkgs, home-manager, ...}:
-    let system = "x86_64-linux";
+  outputs = { nixpkgs, home-manager, ... }:
+    let
+      system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-    in {
+    in
+    {
       homeConfigurations.nixos = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        username = "nixos";
-        homeDirectory = "/home/nixos";
-        modules = [./home.nix];
+        modules = [
+          ./home.nix
+          {
+            home = {
+              username = "nixos";
+              homeDirectory = "/home/nixos";
+            };
+          }
+        ];
       };
       homeConfigurations.ubuntu_admin = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        username = "ubuntu_admin";
-        homeDirectory = "/home/ubuntu_admin";
-        modules = [./home.nix];
+        modules = [
+          ./home.nix
+          {
+            home = {
+              username = "ubuntu_admin";
+              homeDirectory = "/home/ubuntu_admin";
+            };
+          }
+        ];
       };
       homeConfigurations.hwtr = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        username = "hwtr";
-        homeDirectory = "/home/hwtr";
-        modules = [./home.nix];
+        modules = [
+          ./home.nix
+          {
+            home = {
+              username = "hwtr";
+              homeDirectory = "/home/hwtr";
+            };
+          }
+        ];
       };
     };
 }
