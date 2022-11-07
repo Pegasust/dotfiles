@@ -1,0 +1,18 @@
+Host felia-win
+    HostName felia.coati-celsius.ts.net
+    Port 2222
+    User _nhitrl
+    IdentityFile ~/.ssh/id_rsa
+
+Host felia
+    HostName felia.coati-celsius.ts.net
+    Port 22
+    User ubuntu_admin
+    IdentityFile ~/.ssh/id_rsa
+
+Host fel
+    HostName fel.coati-celsius.ts.net
+    User user
+    IdentityFile ~/.ssh/id_rsa
+    Port 22
+

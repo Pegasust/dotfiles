@@ -4,7 +4,8 @@
   home.homeDirectory = "/home/nixos";
 
   home.packages = [
-    pkgs.htop pkgs.ripgrep pkgs.gcc pkgs.fd pkgs.zk
+    pkgs.htop pkgs.ripgrep pkgs.gcc pkgs.fd pkgs.zk pkgs.unzip 
+    pkgs.nodePackages.npm pkgs.rustc pkgs.cargo
   ];
   home.stateVersion = "22.05";
   nixpkgs.config.allowUnfree = true;
@@ -16,6 +17,10 @@
   ## Programs ##
   programs.alacritty = {
     enable = true;
+  };
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
   };
   programs.zoxide = {
     enable = true;
@@ -75,5 +80,10 @@
     };
     # why is this no longer valid?
     # pull = { rebase=true; };
+  };
+  programs.ssh = {
+    enable = true;
+    forwardAgent = true;
+    extraConfig = builtins.readFile ../ssh/config;
   };
 }

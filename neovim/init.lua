@@ -70,6 +70,7 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
 Plug('nvim-lua/plenary.nvim')
 
 -- plugins
+Plug('tjdevries/nlua.nvim') -- adds symbols of vim stuffs in init.lua
 Plug('nvim-treesitter/nvim-treesitter') -- language parser engine for highlighting
 Plug('nvim-treesitter/nvim-treesitter-textobjects') -- more text objects
 Plug('nvim-telescope/telescope.nvim', { tag = '0.1.0' }) -- file browser
