@@ -5,6 +5,12 @@ Contains my configurations for the software I use.
 I'm looking to move forward to configuration with NixOS, but until I get
 a bit more experiment on NixOS, I'll keep this repository as simple as possible.
 
+## Nix
+
+Monorepo that contains my commonly used personal environments.
+I hope to incorporate my configs at [gh:pegasust/dotfiles](https://github.com/pegasust/dotfiles)
+onto this repo for quick env setup (especially devel) on new machines.
+
 ## How do I apply these config
 
 - I will always first clone this repository, preferably from local source before

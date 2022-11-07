@@ -281,7 +281,7 @@ require('nvim-treesitter.configs').setup {
     ensure_installed = {
         'tsx', 'toml', 'lua', 'typescript', 'rust', 'go', 'yaml', 'json', 'php', 'css',
         'python', 'prisma', 'html', "dockerfile", "c", "cpp", "hcl", "svelte", "astro",
-        "clojure", "fennel", "bash"
+        "clojure", "fennel", "bash", "nix"
     },
     sync_install = false,
     highlight = { enable = true },
