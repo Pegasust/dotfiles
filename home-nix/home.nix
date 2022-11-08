@@ -8,7 +8,10 @@
   };
   home.packages = [
     pkgs.htop pkgs.ripgrep pkgs.gcc pkgs.fd pkgs.zk pkgs.unzip 
-    pkgs.rustc pkgs.cargo pkgs.nodejs-18_x
+    pkgs.rustc pkgs.cargo 
+    pkgs.nodejs-18_x 
+    pkgs.rust-analyzer
+    pkgs.stdenv.cc.cc.lib
   ] ++ (myHome.packages or []);
   nixpkgs.config.allowUnfree = true;
 
