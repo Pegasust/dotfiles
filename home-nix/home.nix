@@ -1,13 +1,15 @@
-{ config, pkgs,... }:
+# myHome is injected from extraSpecialArgs in flake.nix
+{ config, pkgs, myHome, ... }:
 {
-  home.username = "nixos";
-  home.homeDirectory = "/home/nixos";
-
+  home = {
+    username = myHome.username;
+    homeDirectory = myHome.homeDirectory;
+    stateVersion = myHome.stateVersion or "22.05";
+  };
   home.packages = [
     pkgs.htop pkgs.ripgrep pkgs.gcc pkgs.fd pkgs.zk pkgs.unzip 
     pkgs.rustc pkgs.cargo pkgs.nodejs-18_x
-  ];
-  home.stateVersion = "22.05";
+  ] ++ (myHome.packages or []);
   nixpkgs.config.allowUnfree = true;
 
   ## Configs ## 
@@ -15,7 +17,7 @@
   xdg.configFile."starship.toml".text = builtins.readFile ../starship/starship.toml;
 
   ## Programs ##
-  programs.alacritty = {
+  programs.alacritty = myHome.programs.alacritty or {
     enable = true;
   };
   programs.direnv = {
@@ -56,7 +58,7 @@
     shellAliases = {
       nix-rebuild = "sudo nixos-rebuild switch";
       hm-switch = "home-manager switch --flake";
-    };
+    } // (myHome.shellAliases or {});
     history = {
       size = 10000;
       path = "${config.xdg.dataHome}/zsh/history";
