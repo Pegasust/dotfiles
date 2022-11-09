@@ -23,6 +23,11 @@
     pkgs.rust-analyzer
     pkgs.stdenv.cc.cc.lib
     pkgs.yq
+    pkgs.python39Full
+    # pkgs.python310
+    # pkgs.python310.numpy
+    # pkgs.python310Packages.tensorflow
+    # pkgs.python310Packages.scikit-learn
   ] ++ (myHome.packages or [ ]);
   nixpkgs.config.allowUnfree = true;
 
