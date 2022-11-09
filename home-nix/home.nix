@@ -2,7 +2,7 @@
 { config
 , pkgs
 , myHome
-# , lib
+, myLib
 , ...
 }:
 {
@@ -22,6 +22,7 @@
     pkgs.nodejs-18_x
     pkgs.rust-analyzer
     pkgs.stdenv.cc.cc.lib
+    pkgs.yq
   ] ++ (myHome.packages or [ ]);
   nixpkgs.config.allowUnfree = true;
 
@@ -30,9 +31,12 @@
   xdg.configFile."starship.toml".text = builtins.readFile ../starship/starship.toml;
 
   ## Programs ##
+  programs.jq = {
+    enable = true;
+  };
   programs.alacritty = myHome.programs.alacritty or {
     enable = true;
-    # settings = lib.fromYaml builtins.readFile ../alacritty/alacritty.yml;
+    # settings = myLib.fromYaml (builtins.readFile ../alacritty/alacritty.yml);
   };
   programs.direnv = {
     enable = true;
