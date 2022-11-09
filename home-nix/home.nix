@@ -1,5 +1,10 @@
 # myHome is injected from extraSpecialArgs in flake.nix
-{ config, pkgs, myHome, ... }:
+{ config
+, pkgs
+, myHome
+# , lib
+, ...
+}:
 {
   home = {
     username = myHome.username;
@@ -7,12 +12,17 @@
     stateVersion = myHome.stateVersion or "22.05";
   };
   home.packages = [
-    pkgs.htop pkgs.ripgrep pkgs.gcc pkgs.fd pkgs.zk pkgs.unzip 
-    pkgs.rustc pkgs.cargo 
-    pkgs.nodejs-18_x 
+    pkgs.htop
+    pkgs.ripgrep
+    pkgs.gcc
+    pkgs.fd
+    pkgs.zk
+    pkgs.unzip
+    pkgs.rust-bin.nightly.latest.default
+    pkgs.nodejs-18_x
     pkgs.rust-analyzer
     pkgs.stdenv.cc.cc.lib
-  ] ++ (myHome.packages or []);
+  ] ++ (myHome.packages or [ ]);
   nixpkgs.config.allowUnfree = true;
 
   ## Configs ## 
@@ -22,6 +32,7 @@
   ## Programs ##
   programs.alacritty = myHome.programs.alacritty or {
     enable = true;
+    # settings = lib.fromYaml builtins.readFile ../alacritty/alacritty.yml;
   };
   programs.direnv = {
     enable = true;
@@ -61,7 +72,7 @@
     shellAliases = {
       nix-rebuild = "sudo nixos-rebuild switch";
       hm-switch = "home-manager switch --flake";
-    } // (myHome.shellAliases or {});
+    } // (myHome.shellAliases or { });
     history = {
       size = 10000;
       path = "${config.xdg.dataHome}/zsh/history";
@@ -75,13 +86,16 @@
     enable = true;
     lfs.enable = true;
     aliases = {
-      a="add"; c="commit"; ca="commit --ammend"; cm="commit -m";
-      lol="log --graph --decorate --pretty=oneline --abbrev-commit";
-      lola="log --graph --decorate --pretty=oneline --abbrev-commit --all";
-      sts="status";
+      a = "add";
+      c = "commit";
+      ca = "commit --ammend";
+      cm = "commit -m";
+      lol = "log --graph --decorate --pretty=oneline --abbrev-commit";
+      lola = "log --graph --decorate --pretty=oneline --abbrev-commit --all";
+      sts = "status";
     };
     extraConfig = {
-      merge = {tool="vimdiff"; conflictstyle="diff3";};
+      merge = { tool = "vimdiff"; conflictstyle = "diff3"; };
     };
     # why is this no longer valid?
     # pull = { rebase=true; };

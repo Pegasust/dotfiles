@@ -8,14 +8,20 @@
     };
     flake-utils.url = "github:numtide/flake-utils";
     nixgl.url = "github:guibou/nixGL";
+    rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
-  outputs = { nixpkgs, home-manager, nixgl, ... }:
+  outputs = { nixpkgs, home-manager, nixgl, rust-overlay, flake-utils, ... }:
     let
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system}.appendOverlays [nixgl.overlay];
+      overlays = [ nixgl.overlay rust-overlay.overlays.default ];
+      # pkgs = nixpkgs.legacyPackages.${system}.appendOverlays overlays;
+      pkgs = import nixpkgs { inherit system overlays; };
+      lib = (import ../lib-nix { inherit pkgs; lib = pkgs.lib; });
     in
-    {
+    rec {
+      inherit pkgs;
+      inherit lib;
       homeConfigurations.nixos = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [
@@ -25,6 +31,7 @@
         # we migrate this from in-place modules to allow flexibility
         # in this case, we can add "home" to input arglist of home.nix
         extraSpecialArgs = {
+          inherit lib;
           myHome = {
             username = "nixos";
             homeDirectory = "/home/nixos";
@@ -37,6 +44,7 @@
           ./home.nix
         ];
         extraSpecialArgs = {
+          # inherit lib;
           myHome = {
             username = "ubuntu_admin";
             homeDirectory = "/home/ubuntu_admin";
@@ -49,10 +57,11 @@
           ./home.nix
         ];
         extraSpecialArgs = {
+          # inherit lib;
           myHome = {
             username = "hwtr";
             homeDirectory = "/home/hwtr";
-            packages = [pkgs.nixgl.nixGLIntel];
+            packages = [ pkgs.nixgl.nixGLIntel ];
             shellAliases = {
               nixGL = "nixGLIntel";
             };
