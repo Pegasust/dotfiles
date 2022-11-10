@@ -74,6 +74,11 @@
     # https://github.com/nix-community/home-manager/pull/3287
     # extraConfig = builtins.readFile ../neovim/init.lua;
   };
+  programs.bash = {
+    enable = true;
+    enableCompletion = true;
+    initExtra = myHome.shellInitExtra or "";
+  };
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -90,6 +95,7 @@
       enable = true;
       plugins = [ "git" "sudo" "command-not-found" "gitignore" "ripgrep" "rust" ];
     };
+    initExtra = myHome.shellInitExtra or "";
   };
   programs.git = {
     enable = true;
