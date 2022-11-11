@@ -86,4 +86,13 @@ format = 'via [$symbol]($style)'
 [git_status]
 disabled = true
 
+[shell]
+zsh_indicator = "%"
+fish_indicator = ""
+powershell_indicator = "_"
+unknown_indicator = "mystery shell"
+style = "cyan bold"
+disabled = false
 
+[username]
+show_always=true

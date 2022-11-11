@@ -24,6 +24,7 @@
     pkgs.stdenv.cc.cc.lib
     pkgs.yq
     pkgs.python39Full
+    pkgs.xorg.xclock
     # pkgs.python310
     # pkgs.python310.numpy
     # pkgs.python310Packages.tensorflow
@@ -53,7 +54,7 @@
   };
   programs.tmux = {
     enable = true;
-    extraConfig = builtins.readFile ../tmux/.tmux.conf;
+    extraConfig = builtins.readFile ../tmux/tmux.conf;
   };
   programs.exa = {
     enable = true;
