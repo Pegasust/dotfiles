@@ -1,6 +1,5 @@
 Host *
     IdentityFile ~/.ssh/id_rsa
-    Port 22
 
 # felia mirror on windows
 Host felia-win
@@ -12,26 +11,35 @@ Host felia-win
 Host felia
     HostName felia.coati-celsius.ts.net
     User ubuntu_admin
+    Port 22
 
 # 2c 16G-RAM  200G drive
 Host fel
     HostName fel.coati-celsius.ts.net
     User user
+    Port 22
 
 # AMZ Linux aarch64 hungtr@AMZ
 Host nioma
     HostName ec2.pegasust.com
     User ec2-user
     IdentityFile ~/.ssh/free-aws.pem
+    Port 22
 
 # Ubuntu 22.04 LTS Pegasust@Linode
 Host ocolo-lab
     HostName ocolo.pegasust.com
-    Port 22
     User root
+    Port 22
 
 # NixOS Pegasust@Linode
 Host nyx
     HostName nyx.pegasust.com
     User nyx
+    Port 22
+
+Host ocolo-lab-2
+    HostName 139.144.18.164
+    User root
+    Port 22
 

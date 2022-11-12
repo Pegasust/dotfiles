@@ -25,6 +25,7 @@
     pkgs.yq
     pkgs.python39Full
     pkgs.xorg.xclock
+    pkgs.logseq
     # pkgs.python310
     # pkgs.python310.numpy
     # pkgs.python310Packages.tensorflow
