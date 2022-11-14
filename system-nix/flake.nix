@@ -14,7 +14,6 @@
       ];
       specialArgs = {
         hostname = "Felia";
-        enableSSH = false;
       };
     };
     # Generic machine
@@ -38,7 +37,32 @@
         boot.loader.grub.version = 2;
         services.openssh = {
           permitRootLogin = "no";
-          enable = enableSSH;
+          enable = true;
+        };
+        services.gitea = {
+          enable = true;
+          stateDir = "/gitea";
+          rootUrl = "https://git.pegasust.com";
+          settings = {
+            repository = {
+              "ENABLE_PUSH_CREATE_USER" = true;
+              "ENABLE_PUSH_CREATE_ORG" = true;
+            };
+          };
+        };
+        services.nginx = {
+          enable = true;
+          recommendedGzipSettings = true;
+          recommendedOptimisation = true;
+          recommendedProxySettings = true;
+          recommendedTlsSettings = true;
+          virtualHosts."git.pegasust.com" = {
+            # Gitea hostname
+            sslCertificate = "/var/lib/acme/git.pegasust.com/fullchain.pem";
+            sslCertificateKey = "/var/lib/acme/git.pegasust.com/key.pem";
+            forceSSL = true; # Runs on port 80 and 443
+            locations."/".proxyPass = "http://localhost:3000/"; # Proxy to Gitea
+          };
         };
       };
     };
@@ -62,7 +86,7 @@
         boot.loader.grub.version = 2;
         services.openssh = {
           permitRootLogin = "no";
-          enable = enableSSH;
+          enable = true;
         };
       };
     };

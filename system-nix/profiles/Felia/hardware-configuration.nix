@@ -13,7 +13,7 @@
 
   fileSystems."/" =
     {
-      device = "/dev/sde";
+      device = "/dev/sdd";
       fsType = "ext4";
     };
 

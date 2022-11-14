@@ -49,6 +49,7 @@ with lib;
     pkgs.inetutils
     pkgs.mtr
     pkgs.sysstat
+    pkgs.mosh
   ];
 }
 
