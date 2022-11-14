@@ -47,10 +47,13 @@
     enable = true;
     # settings = myLib.fromYaml (builtins.readFile ../alacritty/alacritty.yml);
   };
+  # nix: Propagates the environment with packages and vars when enter (children of)
+  # a directory with shell.nix-compatible and .envrc
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
   };
+  # z <path> as smarter cd
   programs.zoxide = {
     enable = true;
     enableZshIntegration = true;
