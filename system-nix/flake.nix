@@ -25,6 +25,21 @@
       ];
       specialArgs = {
         hostname = "lizzi";
+        networking = {
+          interfaces.eth1.ipv4.addresses = [{
+            address = "71.0.0.1";
+            prefixLength = 24;
+          }];
+          firewall.enable = false;
+          useDHCP = false;
+          interfaces.eth0.useDHCP = true;
+        };
+        boot.loader.grub.enable = true;
+        boot.loader.grub.version = 2;
+        services.openssh = {
+          permitRootLogin = "no";
+          enable = enableSSH;
+        };
       };
     };
     nixosConfigurations.nyx = nixpkgs.lib.nixosSystem {
@@ -34,6 +49,21 @@
       ];
       specialArgs = {
         hostname = "nyx";
+        networking = {
+          interfaces.eth1.ipv4.addresses = [{
+            address = "71.0.0.2";
+            prefixLength = 24;
+          }];
+          firewall.enable = false;
+          useDHCP = false;
+          interfaces.eth0.useDHCP = true;
+        };
+        boot.loader.grub.enable = true;
+        boot.loader.grub.version = 2;
+        services.openssh = {
+          permitRootLogin = "no";
+          enable = enableSSH;
+        };
       };
     };
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
