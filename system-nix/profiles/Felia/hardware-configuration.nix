@@ -17,12 +17,6 @@
       fsType = "ext4";
     };
 
-  fileSystems."/mnt/wsl" =
-    {
-      device = "tmpfs";
-      fsType = "tmpfs";
-    };
-
   fileSystems."/mnt/wsl/docker-desktop/shared-sockets/guest-services" =
     {
       device = "none";

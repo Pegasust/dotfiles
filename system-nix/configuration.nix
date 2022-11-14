@@ -1,10 +1,14 @@
-{ lib, pkgs, config, modulesPath, ... }:
+{ lib, pkgs, config, modulesPath, specialArgs, ... }:
+let hostname = specialArgs.hostname;
+    enableSSH = specialArgs.enableSSH or true;
+in
 with lib;
 {
   imports = [
-    /etc/nixos/hardware-configuration.nix
+    ./profiles/${hostname}/hardware-configuration.nix
     "${modulesPath}/profiles/minimal.nix"
   ];
+  networking.hostName = hostname;
 
   system.stateVersion = "22.05";
   # users.users.<defaultUser>.uid = 1000;
@@ -15,19 +19,19 @@ with lib;
   nix.extraOptions = ''
     experimental-features = nix-command flakes
   '';
-  users.users.hungtr = {
-    isNormalUser = true;
-    home = "/home/hungtr";
-    description = "pegasust/hungtr";
-    extraGroups = [ "wheel" "networkmanager" ];
-    openssh.authorizedKeys.keys = lib.strings.splitString "\n" (builtins.readFile ../ssh/authorized_keys);
-  };
+  # users.users.hungtr = {
+  #   isNormalUser = true;
+  #   home = "/home/hungtr";
+  #   description = "pegasust/hungtr";
+  #   extraGroups = [ "wheel" "networkmanager" ];
+  #   openssh.authorizedKeys.keys = lib.strings.splitString "\n" (builtins.readFile ../ssh/authorized_keys);
+  # };
 
   # Let's just open ssh server in general, even though it may not be
   # network-accessible
   services.openssh = {
     permitRootLogin = "no";
-    enable = true;
+    enable = enableSSH;
   };
 
   # Some basic programs

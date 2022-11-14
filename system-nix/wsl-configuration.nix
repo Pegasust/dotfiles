@@ -1,4 +1,4 @@
-{ lib, pkgs, config, modulesPath, ... }:
+{ lib, ... }:
 
 with lib;
 let
@@ -6,9 +6,8 @@ let
 in
 {
   imports = [
-    /etc/nixos/hardware-configuration.nix
-    nixos-wsl.nixosModules.wsl
     ./configuration.nix
+    nixos-wsl.nixosModules.wsl
   ];
 
   wsl = {
@@ -16,7 +15,7 @@ in
     automountPath = "/mnt";
     defaultUser = "nixos"; # if change defaultUser, make sure uid to be 1000 (first user)
     startMenuLaunchers = true;
-    automountOptions = "drvfs,metadata,uid=1000,gid=100";
+    # automountOptions = "drvfs,metadata,uid=1000,gid=100";
     # Enable native Docker support
     # docker-native.enable = true;
 
