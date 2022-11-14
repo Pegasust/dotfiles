@@ -6,12 +6,10 @@ let
 in
 {
   imports = [
-    ./hardware-configuration.nix
+    /etc/nixos/hardware-configuration.nix
     nixos-wsl.nixosModules.wsl
-    configuration.nix
+    ./configuration.nix
   ];
-
-  system.stateVersion = "22.05";
 
   wsl = {
     enable = true;

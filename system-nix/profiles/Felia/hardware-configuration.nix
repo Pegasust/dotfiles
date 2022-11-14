@@ -12,37 +12,57 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/sdd";
+    {
+      device = "/dev/sde";
       fsType = "ext4";
     };
 
+  fileSystems."/mnt/wsl" =
+    {
+      device = "tmpfs";
+      fsType = "tmpfs";
+    };
+
+  fileSystems."/mnt/wsl/docker-desktop/shared-sockets/guest-services" =
+    {
+      device = "none";
+      fsType = "tmpfs";
+    };
+
+
   fileSystems."/usr/lib/wsl/drivers" =
-    { device = "drivers";
+    {
+      device = "drivers";
       fsType = "drvfs";
     };
 
   fileSystems."/usr/lib/wsl/lib" =
-    { device = "lib";
+    {
+      device = "lib";
       fsType = "drvfs";
     };
 
   fileSystems."/mnt/wsl" =
-    { device = "tmpfs";
+    {
+      device = "tmpfs";
       fsType = "tmpfs";
     };
 
   fileSystems."/mnt/c" =
-    { device = "C:";
+    {
+      device = "C:";
       fsType = "drvfs";
     };
 
   fileSystems."/mnt/d" =
-    { device = "D:";
+    {
+      device = "D:";
       fsType = "drvfs";
     };
 
   fileSystems."/mnt/f" =
-    { device = "F:";
+    {
+      device = "F:";
       fsType = "drvfs";
     };
 
