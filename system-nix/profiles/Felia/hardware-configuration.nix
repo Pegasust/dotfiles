@@ -13,8 +13,14 @@
 
   fileSystems."/" =
     {
-      device = "/dev/sdd";
+      device = "/dev/sde";
       fsType = "ext4";
+    };
+
+  fileSystems."/mnt/wsl" =
+    {
+      device = "tmpfs";
+      fsType = "tmpfs";
     };
 
   fileSystems."/mnt/wsl/docker-desktop/shared-sockets/guest-services" =
@@ -23,24 +29,17 @@
       fsType = "tmpfs";
     };
 
-
-  fileSystems."/usr/lib/wsl/drivers" =
-    {
-      device = "drivers";
-      fsType = "drvfs";
-    };
-
-  fileSystems."/usr/lib/wsl/lib" =
-    {
-      device = "lib";
-      fsType = "drvfs";
-    };
-
-  fileSystems."/mnt/wsl" =
-    {
-      device = "tmpfs";
-      fsType = "tmpfs";
-    };
+  # fileSystems."/usr/lib/wsl/drivers" =
+  #   {
+  #     device = "drivers";
+  #     fsType = "drvfs";
+  #   };
+  #
+  # fileSystems."/usr/lib/wsl/lib" =
+  #   {
+  #     device = "lib";
+  #     fsType = "drvfs";
+  #   };
 
   fileSystems."/mnt/c" =
     {
