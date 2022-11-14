@@ -32,8 +32,22 @@
       lib = (import ../lib-nix { inherit pkgs from-yaml; lib = pkgs.lib; });
     in
     rec {
-      inherit pkgs;
-      inherit lib;
+      homeConfigurations.nyx = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [
+          ./home.nix
+        ];
+        # optionally pass inarguments to module
+        # we migrate this from in-place modules to allow flexibility
+        # in this case, we can add "home" to input arglist of home.nix
+        extraSpecialArgs = {
+          myLib = lib;
+          myHome = {
+            username = "nyx";
+            homeDirectory = "/home/nyx";
+          };
+        };
+      };
       homeConfigurations.nixos = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [

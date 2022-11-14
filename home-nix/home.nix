@@ -3,6 +3,7 @@
 , pkgs
 , myHome
 , myLib
+, extraSSH
 , ...
 }:
 {
@@ -26,7 +27,8 @@
     pkgs.python39Full
     pkgs.xorg.xclock
     pkgs.logseq
-    # pkgs.python310
+    pkgs.mosh
+    # pkgs.python310 # dev packages should be in jk
     # pkgs.python310.numpy
     # pkgs.python310Packages.tensorflow
     # pkgs.python310Packages.scikit-learn
