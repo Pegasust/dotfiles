@@ -34,8 +34,9 @@ My main text editor. It's based on `vim`, but stays loyal to `lua` ecosystem
 Terminal multiplexor. Allows creating persistent sessions and multiple terminal windows
 from one terminal.
 
-- Config file: `./tmux/.tmux.conf`
-- Command: `ln [-s] $PWD/tmux/.tmux.conf ~/.tmux.conf`
+- Config file: `./tmux/tmux.conf`
+- Command: `ln [-s] $PWD/tmux/tmux.conf ~/.tmux.conf`
+  - Or `ln [-s] $PWD/tmux/tmux.conf ~/.config/tmux/tmux.conf` (hardcoded, `$XDG_CONFIG_HOME` is ignored)
 
 #### Notes
 
