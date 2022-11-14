@@ -43,3 +43,8 @@ Host lizzi
     User hungtr
     Port 22
 
+Host lizzi
+    HostName 172.105.135.218
+    User hungtr
+    Port 22
+
