@@ -38,8 +38,8 @@ Host nyx
     User nyx
     Port 22
 
-Host ocolo-lab-2
-    HostName 139.144.18.164
-    User root
+Host lizzi
+    HostName 172.105.135.218
+    User hungtr
     Port 22
 
