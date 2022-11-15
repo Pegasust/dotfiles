@@ -1,15 +1,18 @@
 { lib, pkgs, config, modulesPath, specialArgs, ... }:
-let hostname = specialArgs.hostname;
-    enableSSH = specialArgs.enableSSH or true;
-    networking = {hostName = hostname;} // (specialArgs.networking or {});
-    boot = specialArgs.boot or {};
-    services = specialArgs.services or {};
+let
+  hostname = specialArgs.hostname;
+  enableSSH = specialArgs.enableSSH or true;
+  networking = { hostName = hostname; } // (specialArgs.networking or { });
+  boot = specialArgs.boot or { };
+  services = specialArgs.services or { };
+  includeHardware = specialArgs.includeHardware or true;
 in
 with lib;
 {
-  imports = [
+  imports = (if includeHardware then [
     ./profiles/${hostname}/hardware-configuration.nix
-    "${modulesPath}/profiles/minimal.nix"
+  ] else []) ++ [
+  "${modulesPath}/profiles/minimal.nix"
   ];
   inherit networking;
   inherit boot;
@@ -25,31 +28,31 @@ with lib;
     experimental-features = nix-command flakes
   '';
   users.users.hungtr = {
-    isNormalUser = true;
-    home = "/home/hungtr";
-    description = "pegasust/hungtr";
-    extraGroups = [ "wheel" "networkmanager" ];
-    openssh.authorizedKeys.keys = lib.strings.splitString "\n" (builtins.readFile ../ssh/authorized_keys);
+  isNormalUser = true;
+  home = "/home/hungtr";
+  description = "pegasust/hungtr";
+  extraGroups = [ "wheel" "networkmanager" ];
+  openssh.authorizedKeys.keys = lib.strings.splitString "\n" (builtins.readFile ../ssh/authorized_keys);
   };
 
   # Some basic programs
   programs.neovim = {
-    enable = true;
-    defaultEditor = true;
+  enable = true;
+  defaultEditor = true;
   };
 
   programs.git = {
-    enable = true;
-    # more information should be configured under user level
+  enable = true;
+  # more information should be configured under user level
   };
 
   environment.systemPackages = [
-    pkgs.gnumake
-    pkgs.wget
-    pkgs.inetutils
-    pkgs.mtr
-    pkgs.sysstat
-    pkgs.mosh
+  pkgs.gnumake
+  pkgs.wget
+  pkgs.inetutils
+  pkgs.mtr
+  pkgs.sysstat
+  pkgs.mosh
   ];
-}
+  }
 

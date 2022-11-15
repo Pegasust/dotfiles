@@ -11,24 +11,26 @@
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
 
-  fileSystems."/" =
-    {
-      device = "/dev/sde";
-      fsType = "ext4";
-    };
+  ## NOTE: These filesystems are mounted by a wrapper script from nix-wsl
 
-  fileSystems."/mnt/wsl" =
-    {
-      device = "tmpfs";
-      fsType = "tmpfs";
-    };
-
-  fileSystems."/mnt/wsl/docker-desktop/shared-sockets/guest-services" =
-    {
-      device = "none";
-      fsType = "tmpfs";
-    };
-
+  # fileSystems."/" =
+  #   {
+  #     device = "/dev/sdc";
+  #     fsType = "ext4";
+  #   };
+  #
+  # fileSystems."/mnt/wsl" =
+  #   {
+  #     device = "tmpfs";
+  #     fsType = "tmpfs";
+  #   };
+  #
+  # fileSystems."/mnt/wsl/docker-desktop/shared-sockets/guest-services" =
+  #   {
+  #     device = "none";
+  #     fsType = "tmpfs";
+  #   };
+  #
   # fileSystems."/usr/lib/wsl/drivers" =
   #   {
   #     device = "drivers";

@@ -13,6 +13,7 @@
         ./wsl-configuration.nix
       ];
       specialArgs = {
+        # includeHardware = false;
         hostname = "Felia";
       };
     };

@@ -69,6 +69,8 @@
               myHome = {
                 username = "nixos";
                 homeDirectory = "/home/nixos";
+                shellInitExtra = ''
+                ''  + x11_wsl;
               };
             };
           };
@@ -83,10 +85,7 @@
                 username = "ubuntu_admin";
                 homeDirectory = "/home/ubuntu_admin";
                 shellInitExtra = ''
-                  # x11 output for WSL
-                  export DISPLAY=$(ip route list default | awk '{print $3}'):0
-                  export LIBGL_ALWAYS_INDIRECT=1
-                '';
+                '' + x11_wsl;
               };
             };
           };
