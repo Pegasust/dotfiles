@@ -11,8 +11,8 @@ with lib;
 {
   imports = (if includeHardware then [
     ./profiles/${hostname}/hardware-configuration.nix
-  ] else []) ++ [
-  "${modulesPath}/profiles/minimal.nix"
+  ] else [ ]) ++ [
+    "${modulesPath}/profiles/minimal.nix"
   ];
   inherit networking;
   inherit boot;
@@ -28,31 +28,31 @@ with lib;
     experimental-features = nix-command flakes
   '';
   users.users.hungtr = {
-  isNormalUser = true;
-  home = "/home/hungtr";
-  description = "pegasust/hungtr";
-  extraGroups = [ "wheel" "networkmanager" ];
-  openssh.authorizedKeys.keys = lib.strings.splitString "\n" (builtins.readFile ../ssh/authorized_keys);
+    isNormalUser = true;
+    home = "/home/hungtr";
+    description = "pegasust/hungtr";
+    extraGroups = [ "wheel" "networkmanager" ];
+    openssh.authorizedKeys.keys = lib.strings.splitString "\n" (builtins.readFile ../ssh/authorized_keys);
   };
 
   # Some basic programs
   programs.neovim = {
-  enable = true;
-  defaultEditor = true;
+    enable = true;
+    defaultEditor = true;
   };
 
   programs.git = {
-  enable = true;
-  # more information should be configured under user level
+    enable = true;
+    # more information should be configured under user level
   };
 
   environment.systemPackages = [
-  pkgs.gnumake
-  pkgs.wget
-  pkgs.inetutils
-  pkgs.mtr
-  pkgs.sysstat
-  pkgs.mosh
+    pkgs.gnumake
+    pkgs.wget
+    pkgs.inetutils
+    pkgs.mtr
+    pkgs.sysstat
+    pkgs.mosh
   ];
-  }
+}
 
