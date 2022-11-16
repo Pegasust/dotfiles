@@ -53,6 +53,7 @@
         };
         services.nginx = {
           enable = true;
+          clientMaxBodySize = "100m";
           recommendedGzipSettings = true;
           recommendedOptimisation = true;
           recommendedProxySettings = true;
