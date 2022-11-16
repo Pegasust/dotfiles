@@ -28,6 +28,7 @@
     pkgs.xorg.xclock
     pkgs.logseq
     pkgs.mosh
+    pkgs.nixops
     # pkgs.python310 # dev packages should be in jk
     # pkgs.python310.numpy
     # pkgs.python310Packages.tensorflow
