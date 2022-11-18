@@ -19,7 +19,7 @@ set shiftwidth=4
 set smartindent
 set exrc
 set incsearch
-set scrolloff=15
+set scrolloff=30
 set signcolumn=yes
 set colorcolumn=80
 set background=light
