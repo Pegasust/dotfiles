@@ -7,7 +7,7 @@
 -- - Harpoon marks: Navigate through main files within each project
 --
 -- REQUIREMENTS:
--- - zk   @ https://github.com/mickael-menu/zk
+-- - zk  @ https://github.com/mickael-menu/zk
 -- - prettierd @ npm install -g @fsouza/prettierd
 
 -- Basic settings of vim
@@ -174,9 +174,11 @@ vim.api.nvim_create_user_command(
 vim.api.nvim_create_user_command(
     'DoubleSpaces',
     function(opts)
-        vim.api.nvim_command("set ts=1 sts=1 noet")
+        -- cannot really do 1-space tab. The minimum is 2-space to begin
+        -- doubling
+        vim.api.nvim_command("set ts=2 sts=2 noet")
         vim.api.nvim_command("retab!")
-        vim.api.nvim_command("set ts=2 sts=2 et")
+        vim.api.nvim_command("set ts=4 sts=4 et")
         vim.api.nvim_command("retab")
         vim.api.nvim_command("GuessIndent")
     end,
@@ -290,11 +292,11 @@ require('nvim-treesitter.configs').setup {
     incremental_selection = {
         enable = true,
         keymaps = {
-            init_selection = '<c-space>',
-            node_incremental = '<c-space>',
-            node_decremental = '<c-backspace>',
-            scope_incremental = '<c-S>'
-        }
+            init_selection = '<C-space>',
+            node_incremental = '<C-space>',
+            node_decremental = '<C-backspace>',
+            pscope_incremental = '<C-S>'
+        },
     },
     textobjects = {
         select = {
@@ -330,6 +332,7 @@ require('guess-indent').setup {
         "netrw",
         "tutor",
     },
+
     buftype_exclude = { -- A list of buffer types for which the auto command gets disabled
         "help",
         "nofile",
@@ -480,27 +483,27 @@ require('mason-lspconfig').setup_handlers({
         }
     end,
     -- ["rust_analyzer"] = function()
-    --     require('lspconfig').rust_analyzer.setup {
-    --         on_attach = on_attach,
-    --         capabilities = capabilities,
-    --         settings = {
-    --             checkOnSave = {
-    --                 command = "clippy",
-    --             }
-    --         }
-    --     }
+    --    require('lspconfig').rust_analyzer.setup {
+    --        on_attach = on_attach,
+    --        capabilities = capabilities,
+    --        settings = {
+    --            checkOnSave = {
+    --                command = "clippy",
+    --            }
+    --        }
+    --    }
     -- end,
     -- ["astro"] = function()
     --   print('configuring astro')
     --   require('lspconfig').astro.setup {
-    --     on_attach = on_attach,
-    --     capabilities = capabilities,
-    --     init_options = {
+    --    on_attach = on_attach,
+    --    capabilities = capabilities,
+    --    init_options = {
     --       configuration = {},
     --       typescript = {
-    --         serverPath = data_dir
+    --        serverPath = data_dir
     --       }
-    --     }
+    --    }
     --   }
     -- end
 })
@@ -787,11 +790,11 @@ cmp.setup {
             --   local detail = (entry.completion_item.data or {}).detail
             --   vim_item.kind = ""
             --   if detail and detail:find('.*%%.*') then
-            --     vim_item.kind = vim_item.kind .. ' ' .. detail
+            --    vim_item.kind = vim_item.kind .. ' ' .. detail
             --   end
             --
             --   if (entry.completion_item.data or {}).multiline then
-            --     vim_item.kind = vim_item.kind .. ' ' .. '[ML]'
+            --    vim_item.kind = vim_item.kind .. ' ' .. '[ML]'
             --   end
             -- end
             local maxwidth = 80
