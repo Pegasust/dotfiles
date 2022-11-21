@@ -56,11 +56,16 @@ vim.keymap.set('n', '<leader>wq', '<cmd>TroubleToggle workspace_diagnostics<cr>'
 -- vim-plug
 local data_dir = vim.fn.stdpath('data')
 vim.cmd([[
-let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-if empty(glob(data_dir . '/autoload/plug.vim'))
- silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
- autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+" Install vim-plug if not found
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+      \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 endif
+
+" Run PlugInstall if there are missing plugins
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+    \| PlugInstall --sync | source $MYVIMRC
+\| endif
 ]])
 
 local Plug = vim.fn['plug#']
@@ -417,17 +422,88 @@ local on_attach = function(_client, bufnr)
     end, '[W]orkspace [L]ist Folders')
 
 end
+-- nvim-cmp
+local cmp = require 'cmp'
+local luasnip = require 'luasnip'
+local lspkind = require('lspkind')
+local source_mapping = {
+    buffer = '[Buffer]',
+    nvim_lsp = '[LSP]',
+    nvim_lua = '[Lua]',
+    -- cmp_tabnine = '[T9]',
+    path = '[Path]',
+}
+
+cmp.setup {
+    snippet = {
+        expand = function(args)
+            luasnip.lsp_expand(args.body)
+        end,
+    },
+    mapping = cmp.mapping.preset.insert {
+        ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-d>'] = cmp.mapping.scroll_docs(4),
+        ['<C-space>'] = cmp.mapping.complete(),
+        ['<CR>'] = cmp.mapping.confirm {
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = true,
+        },
+        ['<Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            elseif luasnip.expand_or_jumpable() then
+                luasnip.expand_or_jump()
+            else
+                fallback()
+            end
+        end, { 'i', 's' }),
+        ['<S-Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+                luasnip.jump(-1)
+            else
+                fallback()
+            end
+        end, { 'i', 's' }),
+    },
+    formatting = {
+        format = function(entry, vim_item)
+            vim_item.kind = lspkind.symbolic(vim_item.kind, { mode = 'symbol' })
+            vim_item.menu = source_mapping[entry.source_name]
+            -- if entry.source.name == "cmp_tabnine" then
+            --  local detail = (entry.completion_item.data or {}).detail
+            --  vim_item.kind = ""
+            --  if detail and detail:find('.*%%.*') then
+            --   vim_item.kind = vim_item.kind .. ' ' .. detail
+            --  end
+            --
+            --  if (entry.completion_item.data or {}).multiline then
+            --   vim_item.kind = vim_item.kind .. ' ' .. '[ML]'
+            --  end
+            -- end
+            local maxwidth = 80
+            vim_item.abbr = string.sub(vim_item.abbr, 1, maxwidth)
+            return vim_item
+        end,
+    },
+    sources = cmp.config.sources {
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+        -- { name = 'cmp_tabnine' },
+    },
+}
 -- nvim-cmp supports additional completion capabilities
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 -- local tabnine = require('cmp_tabnine.config')
 -- tabnine.setup({
---   max_lines = 1000,
---   max_num_results = 20,
---   sort = true,
---   run_on_every_keystroke = true,
---   snippet_placeholder = '..',
---   ignored_file_types = {},
---   show_prediction_strength = true,
+--  max_lines = 1000,
+--  max_num_results = 20,
+--  sort = true,
+--  run_on_every_keystroke = true,
+--  snippet_placeholder = '..',
+--  ignored_file_types = {},
+--  show_prediction_strength = true,
 -- })
 -- default language servers
 local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'cmake', 'tailwindcss', 'prismals',
@@ -475,36 +551,45 @@ require('mason-lspconfig').setup_handlers({
                         enable = true,
                         defaultConfig = {
                             indent_style = "space",
-                            indent_size = 2,
+                            indent_size = 4,
                         }
                     }
                 }
             }
         }
     end,
+    ["tsserver"] = function()
+        require('lspconfig').tsserver.setup {
+            on_attach = on_attach,
+            capabilities = capabilities,
+            -- Monorepo support: spawn one instance of lsp within the git
+            -- repos.
+            root_dir = require('lspconfig.util').root_pattern('.git')
+        }
+    end,
     -- ["rust_analyzer"] = function()
-    --    require('lspconfig').rust_analyzer.setup {
-    --        on_attach = on_attach,
-    --        capabilities = capabilities,
-    --        settings = {
-    --            checkOnSave = {
-    --                command = "clippy",
-    --            }
-    --        }
-    --    }
+    --   require('lspconfig').rust_analyzer.setup {
+    --       on_attach = on_attach,
+    --       capabilities = capabilities,
+    --       settings = {
+    --           checkOnSave = {
+    --               command = "clippy",
+    --           }
+    --       }
+    --   }
     -- end,
     -- ["astro"] = function()
-    --   print('configuring astro')
-    --   require('lspconfig').astro.setup {
-    --    on_attach = on_attach,
-    --    capabilities = capabilities,
-    --    init_options = {
-    --       configuration = {},
-    --       typescript = {
-    --        serverPath = data_dir
-    --       }
-    --    }
+    --  print('configuring astro')
+    --  require('lspconfig').astro.setup {
+    --   on_attach = on_attach,
+    --   capabilities = capabilities,
+    --   init_options = {
+    --      configuration = {},
+    --      typescript = {
+    --       serverPath = data_dir
+    --      }
     --   }
+    --  }
     -- end
 })
 require("rust-tools").setup {
@@ -737,77 +822,6 @@ require('zk.commands').add("ZkGrep", function(match_ctor)
     require('zk').edit(match, { title = "Grep: '" .. grep_str .. "'" })
 end)
 
--- nvim-cmp
-local cmp = require 'cmp'
-local luasnip = require 'luasnip'
-local lspkind = require('lspkind')
-local source_mapping = {
-    buffer = '[Buffer]',
-    nvim_lsp = '[LSP]',
-    nvim_lua = '[Lua]',
-    -- cmp_tabnine = '[T9]',
-    path = '[Path]',
-}
-
-cmp.setup {
-    snippet = {
-        expand = function(args)
-            luasnip.lsp_expand(args.body)
-        end,
-    },
-    mapping = cmp.mapping.preset.insert {
-        ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-d>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<CR>'] = cmp.mapping.confirm {
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = true,
-        },
-        ['<Tab>'] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
-            else
-                fallback()
-            end
-        end, { 'i', 's' }),
-        ['<S-Tab>'] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-                luasnip.jump(-1)
-            else
-                fallback()
-            end
-        end, { 'i', 's' }),
-    },
-    formatting = {
-        format = function(entry, vim_item)
-            vim_item.kind = lspkind.symbolic(vim_item.kind, { mode = 'symbol' })
-            vim_item.menu = source_mapping[entry.source_name]
-            -- if entry.source.name == "cmp_tabnine" then
-            --   local detail = (entry.completion_item.data or {}).detail
-            --   vim_item.kind = ""
-            --   if detail and detail:find('.*%%.*') then
-            --    vim_item.kind = vim_item.kind .. ' ' .. detail
-            --   end
-            --
-            --   if (entry.completion_item.data or {}).multiline then
-            --    vim_item.kind = vim_item.kind .. ' ' .. '[ML]'
-            --   end
-            -- end
-            local maxwidth = 80
-            vim_item.abbr = string.sub(vim_item.abbr, 1, maxwidth)
-            return vim_item
-        end,
-    },
-    sources = {
-        { name = 'nvim_lsp' },
-        { name = 'luasnip' },
-        -- { name = 'cmp_tabnine' },
-    },
-}
 
 -- Gitsigns
 require('gitsigns').setup {
