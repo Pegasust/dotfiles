@@ -86,7 +86,9 @@ Plug('nvim-telescope/telescope-file-browser.nvim')
 -- cmp: auto-complete/suggestions
 Plug('neovim/nvim-lspconfig') -- built-in LSP configurations
 Plug('hrsh7th/cmp-nvim-lsp')
+Plug('hrsh7th/cmp-nvim-path')
 Plug('hrsh7th/cmp-buffer')
+Plug('hrsh7th/cmp-cmdline')
 Plug('hrsh7th/nvim-cmp')
 Plug('onsails/lspkind-nvim')
 Plug('yioneko/nvim-yati') -- hopefully fixes Python indentation auto-correct from Tree-sitter
@@ -490,11 +492,12 @@ cmp.setup {
     sources = cmp.config.sources {
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
+        { name = 'buffer' },
         -- { name = 'cmp_tabnine' },
     },
 }
 -- nvim-cmp supports additional completion capabilities
-local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 -- local tabnine = require('cmp_tabnine.config')
 -- tabnine.setup({
 --  max_lines = 1000,
