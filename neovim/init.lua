@@ -118,10 +118,10 @@ Plug('simrat39/rust-tools.nvim') -- config rust-analyzer and nvim integration
 Plug('gruvbox-community/gruvbox') -- theme provider
 Plug('nvim-lualine/lualine.nvim') -- fancy status line
 Plug('lukas-reineke/indent-blankline.nvim') -- identation lines on blank lines
-Plug('sunjon/shade.nvim') -- make inactive panes have lower opacity
 Plug('kyazdani42/nvim-web-devicons') -- icons for folder and filetypes
 Plug('m-demare/hlargs.nvim') -- highlights arguments; great for func prog
 Plug('folke/todo-comments.nvim') -- Highlights TODO
+Plug('TaDaa/vimade') -- shade alternative
 
 -- other utilities
 Plug('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
@@ -135,15 +135,6 @@ vim.call('plug#end')
 -- color, highlighting, UI stuffs
 vim.cmd([[ colorscheme gruvbox ]])
 require('hlargs').setup()
-require('shade').setup {
-    overlay_opacity = 60,
-    opacity_step = 1,
-    keys = {
-        brightness_up = '<C-Up>',
-        brightness_down = '<C-Down>',
-        toggle = '<Leader>s', -- s: sha
-    }
-}
 require('nvim-web-devicons').setup()
 require('trouble').setup()
 require('todo-comments').setup()
