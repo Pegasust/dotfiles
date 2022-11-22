@@ -35,7 +35,7 @@ Host ocolo-lab
 # NixOS Pegasust@Linode
 Host nyx
     HostName nyx.pegasust.com
-    User nyx
+    User hungtr
     Port 22
 
 Host lizzi
