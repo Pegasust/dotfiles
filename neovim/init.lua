@@ -10,16 +10,16 @@
 -- - zk  @ https://github.com/mickael-menu/zk
 -- - prettierd @ npm install -g @fsouza/prettierd
 
--- vim-plug
 local data_dir = vim.fn.stdpath('data')
 vim.cmd([[
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 if empty(glob(data_dir . '/autoload/plug.vim'))
     silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 endif
+autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 ]])
-
+--
+-- vim-plug
 local Plug = vim.fn['plug#']
 
 -- TODO: Change this to relative datadir
@@ -87,7 +87,7 @@ Plug('mickael-menu/zk-nvim') -- Zettelkasten
 ---------
 vim.call('plug#end')
 
-if vim.v.vim_did_enter then 
+
 
 vim.cmd([[
 set number relativenumber
@@ -889,4 +889,4 @@ vim.cmd([[
 let g:conjure#mapping#doc_word = v:false
 ]])
 
-end
+
