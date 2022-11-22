@@ -13,17 +13,17 @@
 local data_dir = vim.fn.stdpath('data')
 vim.cmd([[
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-if empty(glob(data_dir . '/autoload/plug.vim'))
-    silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+let plug_path = data_dir . '/autoload/plug.vim'
+if empty(glob(plug_path))
+    execute '!curl -fLo '.plug_path.' --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    execute 'so '.plug_path
 endif
-autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 ]])
---
+
 -- vim-plug
 local Plug = vim.fn['plug#']
 
--- TODO: Change this to relative datadir
-vim.call('plug#begin', '~/.config/nvim/plugged')
+vim.call('plug#begin')
 
 -- libs and dependencies
 Plug('nvim-lua/plenary.nvim')
@@ -87,7 +87,11 @@ Plug('mickael-menu/zk-nvim') -- Zettelkasten
 ---------
 vim.call('plug#end')
 
-
+vim.cmd([[
+    if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+        \| PlugInstall --sync | autocmd VimEnter * so $MYVIMRC
+    \| endif
+]])
 
 vim.cmd([[
 set number relativenumber
@@ -101,7 +105,6 @@ set scrolloff=30
 set signcolumn=yes
 set colorcolumn=80
 set background=light
-
 ]])
 vim.opt.lazyredraw = true
 vim.opt.termguicolors = true
@@ -888,5 +891,4 @@ require('nvim-surround').setup {}
 vim.cmd([[
 let g:conjure#mapping#doc_word = v:false
 ]])
-
 
