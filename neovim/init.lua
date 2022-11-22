@@ -1,3 +1,4 @@
+vim.lsp.set_log_level("debug")
 -- What: Mono-file nvim configuration file
 -- Why: Easy to see through everything without needing to navigate thru files
 -- Features:
