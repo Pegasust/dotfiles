@@ -1,4 +1,3 @@
-vim.lsp.set_log_level("debug")
 -- What: Mono-file nvim configuration file
 -- Why: Easy to see through everything without needing to navigate thru files
 -- Features:
@@ -11,61 +10,19 @@ vim.lsp.set_log_level("debug")
 -- - zk  @ https://github.com/mickael-menu/zk
 -- - prettierd @ npm install -g @fsouza/prettierd
 
--- Basic settings of vim
-vim.cmd([[
-set number relativenumber
-set tabstop=4 softtabstop=4
-set expandtab
-set shiftwidth=4
-set smartindent
-set exrc
-set incsearch
-set scrolloff=30
-set signcolumn=yes
-set colorcolumn=80
-set background=light
-]])
-vim.opt.lazyredraw = true
-vim.opt.termguicolors = true
-vim.opt.cursorline = true
--- some plugins misbehave when we do swap files
-vim.opt.swapfile = false
-vim.opt.backup = false
-vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
-vim.opt.undofile = true
-vim.opt.completeopt = 'menuone,noselect'
--- vim.opt.clipboard = "unnamedplus"
-
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ','
-
--- basic keymaps
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true }) -- since we're using space for leader
-vim.keymap.set('t', '<Esc>', '<C-\\><C-n>)') -- make :terminal escape out
-vim.keymap.set({ 'n', 'i', 'v' }, '<c-l>', '<Cmd>:mode<Cr>') -- redraw on every mode
-
--- diagnostics (errors/warnings to be shown)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float) -- opens diag in box (floating)
--- vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist) -- opens list of diags
--- vim.keymap.set('n', '<leader>wq', vim.diagnostic.setqflist) -- workspace diags
-vim.keymap.set('n', '<leader>q', '<cmd>TroubleToggle loclist<cr>')
-vim.keymap.set('n', '<leader>wq', '<cmd>TroubleToggle workspace_diagnostics<cr>')
-
-
 -- vim-plug
 local data_dir = vim.fn.stdpath('data')
 vim.cmd([[
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 if empty(glob(data_dir . '/autoload/plug.vim'))
     silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 endif
-
-autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 ]])
 
 local Plug = vim.fn['plug#']
+
+-- TODO: Change this to relative datadir
 vim.call('plug#begin', '~/.config/nvim/plugged')
 
 -- libs and dependencies
@@ -75,9 +32,9 @@ Plug('nvim-lua/plenary.nvim')
 Plug('tjdevries/nlua.nvim') -- adds symbols of vim stuffs in init.lua
 Plug('nvim-treesitter/nvim-treesitter') -- language parser engine for highlighting
 Plug('nvim-treesitter/nvim-treesitter-textobjects') -- more text objects
-Plug('nvim-telescope/telescope.nvim', { tag = '0.1.0' }) -- file browser
+Plug('nvim-telescope/telescope.nvim', { branch = '0.1.x' }) -- file browser
 Plug('nvim-telescope/telescope-fzf-native.nvim',
-    { ['do'] = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=release && cmake --build build --config Release && cmake --install build --prefix build' })
+    { ['do'] = 'make >> /tmp/log 2>&1' })
 Plug('nvim-telescope/telescope-file-browser.nvim')
 
 -- cmp: auto-complete/suggestions
@@ -130,8 +87,54 @@ Plug('mickael-menu/zk-nvim') -- Zettelkasten
 ---------
 vim.call('plug#end')
 
+if vim.v.vim_did_enter then 
+
+vim.cmd([[
+set number relativenumber
+set tabstop=4 softtabstop=4
+set expandtab
+set shiftwidth=4
+set smartindent
+set exrc
+set incsearch
+set scrolloff=30
+set signcolumn=yes
+set colorcolumn=80
+set background=light
+
+]])
+vim.opt.lazyredraw = true
+vim.opt.termguicolors = true
+vim.opt.cursorline = true
+-- some plugins misbehave when we do swap files
+vim.opt.swapfile = false
+vim.opt.backup = false
+vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+vim.opt.undofile = true
+vim.opt.completeopt = 'menuone,noselect'
+-- vim.opt.clipboard = "unnamedplus"
+
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ','
+
+-- basic keymaps
+vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true }) -- since we're using space for leader
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>)') -- make :terminal escape out
+vim.keymap.set({ 'n', 'i', 'v' }, '<c-l>', '<Cmd>:mode<Cr>') -- redraw on every mode
+
+-- diagnostics (errors/warnings to be shown)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float) -- opens diag in box (floating)
+-- vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist) -- opens list of diags
+-- vim.keymap.set('n', '<leader>wq', vim.diagnostic.setqflist) -- workspace diags
+vim.keymap.set('n', '<leader>q', '<cmd>TroubleToggle loclist<cr>')
+vim.keymap.set('n', '<leader>wq', '<cmd>TroubleToggle workspace_diagnostics<cr>')
+
 -- color, highlighting, UI stuffs
-vim.cmd([[ colorscheme gruvbox ]])
+vim.cmd([[ 
+colorscheme gruvbox
+]])
 require('hlargs').setup()
 require('nvim-web-devicons').setup()
 require('trouble').setup()
@@ -885,3 +888,5 @@ require('nvim-surround').setup {}
 vim.cmd([[
 let g:conjure#mapping#doc_word = v:false
 ]])
+
+end

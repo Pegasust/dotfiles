@@ -25,10 +25,10 @@
     pkgs.stdenv.cc.cc.lib
     pkgs.yq
     pkgs.python39Full
-    pkgs.xorg.xclock
-    pkgs.logseq
+    pkgs.xorg.xclock # TODO: only include if have GL
+    pkgs.logseq # TODO: only include if have GL
     pkgs.mosh
-    pkgs.nixops_unstable
+    pkgs.nixops_unstable # nixops v2
     # pkgs.python310 # dev packages should be in jk
     # pkgs.python310.numpy
     # pkgs.python310Packages.tensorflow
