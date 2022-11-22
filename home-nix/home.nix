@@ -28,7 +28,7 @@
     pkgs.xorg.xclock
     pkgs.logseq
     pkgs.mosh
-    pkgs.nixops
+    pkgs.nixops_unstable
     # pkgs.python310 # dev packages should be in jk
     # pkgs.python310.numpy
     # pkgs.python310Packages.tensorflow
@@ -77,6 +77,8 @@
     enable = true;
     viAlias = true;
     vimAlias = true;
+    withPython3 = true;
+    withNodeJs = true;
     # I use vim-plug, so I probably don't require packaging
     # extraConfig actually writes to init-home-manager.vim (not lua)
     # https://github.com/nix-community/home-manager/pull/3287
@@ -128,7 +130,7 @@
     ];
     extraConfig = {
       # cache credential for 10 minutes.
-      credential.helper = "cache --timeout=600"
+      credential.helper = "cache --timeout=600";
     };
     # why is this no longer valid?
     # pull = { rebase=true; };

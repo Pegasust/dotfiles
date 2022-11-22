@@ -86,7 +86,7 @@ Plug('nvim-telescope/telescope-file-browser.nvim')
 -- cmp: auto-complete/suggestions
 Plug('neovim/nvim-lspconfig') -- built-in LSP configurations
 Plug('hrsh7th/cmp-nvim-lsp')
-Plug('hrsh7th/cmp-nvim-path')
+Plug('hrsh7th/cmp-path')
 Plug('hrsh7th/cmp-buffer')
 Plug('hrsh7th/cmp-cmdline')
 Plug('hrsh7th/nvim-cmp')
