@@ -109,6 +109,7 @@ Plug('Olical/conjure') -- REPL on the source for Clojure (and other LISPs)
 Plug('gennaro-tedesco/nvim-jqx') -- JSON formatter (use :Jqx*)
 Plug('kylechui/nvim-surround') -- surrounds with tags/parenthesis
 Plug('simrat39/rust-tools.nvim') -- config rust-analyzer and nvim integration
+Plug('simrat39/inlay-hints.nvim') -- type-hints with pseudo-virtual texts
 
 -- UI & colorscheme
 Plug('gruvbox-community/gruvbox') -- theme provider
@@ -369,7 +370,7 @@ remap('n', '<leader>gs', function() require('neogit').open({}) end);
 
 -- LSP settings
 -- This function gets run when an LSP connects to a particular buffer.
-local on_attach = function(_client, bufnr)
+local on_attach = function(client, bufnr)
     -- NOTE: Remember that lua is a real programming language, and as such it is possible
     -- to define small helper and utility functions so you don't have to repeat yourself
     -- many times.
@@ -408,6 +409,9 @@ local on_attach = function(_client, bufnr)
     nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
     nmap('<leader>wl', function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+
+    -- enable inlay hints if available
+    require('inlay-hints').on_attach(client, bufnr)
     end, '[W]orkspace [L]ist Folders')
 
 end
@@ -512,6 +516,16 @@ require('mason-lspconfig').setup({
     ensure_installed = servers,
     automatic_installation = true
 })
+local inlay_hint_tsjs = {
+    includeInlayEnumMemberValueHints = true,
+    includeInlayFunctionLikeReturnTypeHints = true,
+    includeInlayFunctionParameterTypeHints = true,
+    includeInlayParameterNameHints = 'all', -- "none" | "literals" | "all"
+    inlcudeInlayParameterNameHintsWhenArgumentMatchesName = false,
+    includeInlayPropertyDeclarationTypeHints = true,
+    includeInlayVariableTypeHints = true,
+};
+
 require('mason-lspconfig').setup_handlers({
     -- default handler
     function(server_name)
@@ -537,6 +551,7 @@ require('mason-lspconfig').setup_handlers({
                         library = vim.api.nvim_get_runtime_file('', true)
                     },
                     telemetry = { enable = false },
+                    hint = {enable = true,},
                     format = {
                         enable = true,
                         defaultConfig = {
@@ -554,7 +569,11 @@ require('mason-lspconfig').setup_handlers({
             capabilities = capabilities,
             -- Monorepo support: spawn one instance of lsp within the git
             -- repos.
-            root_dir = require('lspconfig.util').root_pattern('.git')
+            root_dir = require('lspconfig.util').root_pattern('.git'),
+            settings = {
+                javascript = inlay_hint_tsjs,
+                typescript = inlay_hint_tsjs,
+            }
         }
     end,
     -- ["rust_analyzer"] = function()
@@ -591,7 +610,9 @@ require("rust-tools").setup {
 
         -- callback to execute once rust-analyzer is done initializing the workspace
         -- The callback receives one parameter indicating the `health` of the server: "ok" | "warning" | "error"
-        on_initialized = nil,
+        on_initialized = function()
+            require ('inlay-hints').set_all()
+        end,
 
         -- automatically call RustReloadWorkspace when writing to a Cargo.toml file.
         reload_workspace_from_cargo_toml = true,
@@ -747,7 +768,8 @@ require("rust-tools").setup {
 
                 vim.keymap.set('n', keys, func, { noremap = true, buffer = bufnr, desc = desc })
             end
-            on_attach(client, bufnr);
+            on_attach(client, bufnr)
+            require('inlay-hints').on_attach(client, bufnr)
             nmap('K', require 'rust-tools'.hover_actions.hover_actions, 'Hover Documentation')
 
         end,
