@@ -120,6 +120,16 @@
     extraConfig = {
       merge = { tool = "vimdiff"; conflictstyle = "diff3"; };
     };
+    ignores = [
+      # vscode-related settings
+      ".vscode"
+      # envrc cached outputs
+      ".direnv"
+    ];
+    extraConfig = {
+      # cache credential for 10 minutes.
+      credential.helper = "cache --timeout=600"
+    };
     # why is this no longer valid?
     # pull = { rebase=true; };
   };
