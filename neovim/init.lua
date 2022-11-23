@@ -45,7 +45,7 @@ Plug('hrsh7th/cmp-buffer')
 Plug('hrsh7th/cmp-cmdline')
 Plug('hrsh7th/nvim-cmp')
 Plug('onsails/lspkind-nvim')
-Plug('yioneko/nvim-yati') -- hopefully fixes Python indentation auto-correct from Tree-sitter
+Plug('yioneko/nvim-yati', { tag = '*'}) -- hopefully fixes Python indentation auto-correct from Tree-sitter
 -- Plug('tzachar/cmp-tabnine', { ['do'] = './install.sh' })
 
 -- DevExp
@@ -281,7 +281,8 @@ end, { desc = '[Z]ettelkasten [G]rep' })
 
 -- treesitter
 require('nvim-treesitter.configs').setup {
-    yati = { enable = true, default_lazy = true },
+    yati = { enable = true, default_lazy = true, default_fallback = "auto"},
+    indent = { enable = false },
     ensure_installed = {
         'tsx', 'toml', 'lua', 'typescript', 'rust', 'go', 'yaml', 'json', 'php', 'css',
         'python', 'prisma', 'html', "dockerfile", "c", "cpp", "hcl", "svelte", "astro",
@@ -289,7 +290,6 @@ require('nvim-treesitter.configs').setup {
     },
     sync_install = false,
     highlight = { enable = true },
-    indent = { enable = false },
     incremental_selection = {
         enable = true,
         keymaps = {

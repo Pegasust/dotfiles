@@ -119,6 +119,10 @@
       lola = "log --graph --decorate --pretty=oneline --abbrev-commit --all";
       sts = "status";
     };
+    # No idea why this is not appearing in home-manager search
+    # It's in source code, though
+    userName="pegasust";
+    userEmail="pegasucksgg@gmail.com";
     extraConfig = {
       merge = { tool = "vimdiff"; conflictstyle = "diff3"; };
     };
