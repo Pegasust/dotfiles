@@ -513,8 +513,10 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 --  show_prediction_strength = true,
 -- })
 -- default language servers
-local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'cmake', 'tailwindcss', 'prismals',
-    'rnix', 'eslint', 'terraformls', 'tflint', 'svelte', 'astro', 'clojure_lsp', "bashls", 'yamlls', "pylsp" }
+local servers = { 
+    'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'cmake', 'tailwindcss', 'prismals',
+    'rnix', 'eslint', 'terraformls', 'tflint', 'svelte', 'astro', 'clojure_lsp', "bashls", 'yamlls', "pylsp" ,
+}
 require("mason").setup({
     ui = {
         icons = {

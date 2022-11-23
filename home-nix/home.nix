@@ -29,6 +29,7 @@
     pkgs.logseq # TODO: only include if have GL
     pkgs.mosh
     pkgs.nixops_unstable # nixops v2
+    pkgs.lynx
     # pkgs.python310 # dev packages should be in jk
     # pkgs.python310.numpy
     # pkgs.python310Packages.tensorflow
