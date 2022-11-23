@@ -76,7 +76,6 @@ Plug('lukas-reineke/indent-blankline.nvim') -- identation lines on blank lines
 Plug('kyazdani42/nvim-web-devicons') -- icons for folder and filetypes
 Plug('m-demare/hlargs.nvim') -- highlights arguments; great for func prog
 Plug('folke/todo-comments.nvim') -- Highlights TODO
-Plug('TaDaa/vimade') -- shade alternative
 
 -- other utilities
 Plug('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
@@ -377,6 +376,12 @@ remap('n', '<leader>gs', function() require('neogit').open({}) end);
 
 -- LSP settings
 -- This function gets run when an LSP connects to a particular buffer.
+require("inlay-hints").setup {
+    only_current_line = true,
+    eol = {
+        right_align = true,
+    }
+}
 local on_attach = function(client, bufnr)
     -- NOTE: Remember that lua is a real programming language, and as such it is possible
     -- to define small helper and utility functions so you don't have to repeat yourself
