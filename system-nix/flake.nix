@@ -15,6 +15,10 @@
       specialArgs = {
         # includeHardware = false;
         hostname = "Felia";
+        services.openssh = {
+          permitRootLogin = "no";
+          enable = true;
+        };
       };
     };
     # Generic machine
