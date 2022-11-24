@@ -74,23 +74,26 @@ with lib;
     # have the job run this shell script
     script = ''
       # wait for tailscaled to settle
-      sleep 5
+      sleep 2
       # check if we are already authenticated to tailscale
       status="$(${pkgs.tailscale}/bin/tailscale status -json | ${pkgs.jq}/bin/jq -r .BackendState)"
       if [ $status = "Running" ]; then # if so, then do nothing
         exit 0
       fi
-      # otherwise authenticate with tailscale
-      ${pkgs.tailscale}/bin/tailscale up -authkey tskey-examplekeyhere
+
+      # ${pkgs.tailscale}/bin/tailscale up # blocks, doesn't give url
+      # This time, configure device auth so that we authenticate from portal
+      # https://tailscale.com/kb/1099/device-authorization/#enable-device-authorization-for-your-network 
+      ${pkgs.tailscale}/bin/tailscale up -authkey tskey-auth-kJcgTG5CNTRL-PUVFkk31z1bThHpfq3FC5b1jcMmkW2EYW
     '';
   };
   # Don't touch networking.firewall.enable, just configure everything else.
   # inherit networking;
   networking = networking // {
     firewall = {
-      checkReversePath = "loose";
-      trustedInterfaces = [ "tailscale0" ];
-      allowedUDPPorts = [ config.services.tailscale.port ];
+      trustedInterfaces = networking.firewall.trustedInterfaces or [] ++ [ "tailscale0" ];
+      allowedUDPPorts = networking.firewall.allowedUDPPorts or [] ++ [ config.services.tailscale.port ];
+      allowedTCPPorts = networking.firewall.allowedTCPPorts or [] ++ [ 22 ];
     };
   };
 
