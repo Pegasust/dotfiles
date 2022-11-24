@@ -54,6 +54,7 @@ with lib;
     pkgs.mtr     # network diag
     pkgs.sysstat # sys diag
     pkgs.mosh    # ssh-alt; parsec-like
+    pkgs.tailscale # VPC
   ];
 }
 
