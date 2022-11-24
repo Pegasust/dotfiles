@@ -91,9 +91,19 @@ with lib;
   # inherit networking;
   networking = networking // {
     firewall = {
-      trustedInterfaces = networking.firewall.trustedInterfaces or [] ++ [ "tailscale0" ];
-      allowedUDPPorts = networking.firewall.allowedUDPPorts or [] ++ [ config.services.tailscale.port ];
-      allowedTCPPorts = networking.firewall.allowedTCPPorts or [] ++ [ 22 ];
+      trustedInterfaces = networking.firewall.trustedInterfaces or [ ] ++ [
+        "tailscale0"
+      ];
+      allowedUDPPorts = networking.firewall.allowedUDPPorts or [ ] ++ [
+        config.services.tailscale.port
+      ];
+      allowedTCPPorts = networking.firewall.allowedTCPPorts or [ ] ++ [
+        22
+      ];
+      allowedUDPPortRanges = networking.firewall.allowedUDPPortRanges or [ ] ++ [
+        { from = 60000; to = 61000; } # mosh
+
+      ];
     };
   };
 

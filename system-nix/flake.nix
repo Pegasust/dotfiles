@@ -17,6 +17,10 @@
         specialArgs = {
           # includeHardware = false;
           hostname = "Felia";
+          services.openssh = {
+            permitRootLogin = "no";
+            enable = true;
+          };
         };
       };
       # Generic machine
@@ -83,8 +87,6 @@
               prefixLength = 24;
             }];
             firewall.enable = true;
-            firewall.allowedTCPPorts = [ 22 ];
-            firewall.allowedUDPPorts = lib.range 60000 61000; # mosh
             useDHCP = false;
             interfaces.eth0.useDHCP = true;
           };
