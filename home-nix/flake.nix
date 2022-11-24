@@ -74,6 +74,7 @@
               };
             };
           };
+          # NOTE: This is never actually tested
           "ubuntu_admin" = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
             modules = [

@@ -2,8 +2,6 @@
 { config
 , pkgs
 , myHome
-, myLib
-, extraSSH
 , ...
 }:
 {
