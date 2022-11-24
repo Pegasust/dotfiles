@@ -44,15 +44,16 @@ with lib;
   programs.git = {
     enable = true;
     # more information should be configured under user level
+    # See other config at @/home-nix
   };
 
   environment.systemPackages = [
     pkgs.gnumake
     pkgs.wget
-    pkgs.inetutils
-    pkgs.mtr
-    pkgs.sysstat
-    pkgs.mosh
+    pkgs.inetutils # network diag
+    pkgs.mtr     # network diag
+    pkgs.sysstat # sys diag
+    pkgs.mosh    # ssh-alt; parsec-like
   ];
 }
 
