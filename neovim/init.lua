@@ -45,7 +45,7 @@ Plug('hrsh7th/cmp-buffer')
 Plug('hrsh7th/cmp-cmdline')
 Plug('hrsh7th/nvim-cmp')
 Plug('onsails/lspkind-nvim')
-Plug('yioneko/nvim-yati', { tag = '*'}) -- hopefully fixes Python indentation auto-correct from Tree-sitter
+Plug('yioneko/nvim-yati', { tag = '*' }) -- copium: fix Python indent auto-correct from smart-indent
 -- Plug('tzachar/cmp-tabnine', { ['do'] = './install.sh' })
 
 -- DevExp
@@ -79,6 +79,8 @@ Plug('folke/todo-comments.nvim') -- Highlights TODO
 
 -- other utilities
 Plug('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
+Plug('nvim-treesitter/nvim-treesitter-context') -- Top one-liner context of func/class scope
+Plug('nvim-treesitter/playground') -- Sees Treesitter AST - less hair pulling, more PRs
 Plug('saadparwaiz1/cmp_luasnip') -- snippet engine
 Plug('L3MON4D3/LuaSnip') -- snippet engine
 Plug('mickael-menu/zk-nvim') -- Zettelkasten
@@ -87,9 +89,9 @@ Plug('mickael-menu/zk-nvim') -- Zettelkasten
 vim.call('plug#end')
 
 vim.cmd([[
-    if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-        \| PlugInstall --sync | autocmd VimEnter * so $MYVIMRC
-    \| endif
+if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+    PlugInstall --sync | autocmd VimEnter * so $MYVIMRC
+endif
 ]])
 
 vim.cmd([[
@@ -97,6 +99,7 @@ set number relativenumber
 set tabstop=4 softtabstop=4
 set expandtab
 set shiftwidth=4
+set autoindent
 set smartindent
 set exrc
 set incsearch
@@ -115,6 +118,9 @@ vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.undofile = true
 vim.opt.completeopt = 'menuone,noselect'
 -- vim.opt.clipboard = "unnamedplus"
+-- more aggressive swap file writing. ThePrimeagen believes higher number
+-- leads to low DX
+vim.opt.updatetime = 50
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ','
@@ -280,13 +286,17 @@ remap('n', '<leader>zg', function()
 end, { desc = '[Z]ettelkasten [G]rep' })
 
 -- treesitter
+require 'treesitter-context'
 require('nvim-treesitter.configs').setup {
-    yati = { enable = true, default_lazy = true, default_fallback = "auto"},
+    yati = {
+        enable = true, default_lazy = true, default_fallback = "auto",
+        disable = { "nix" }
+    },
     indent = { enable = false },
     ensure_installed = {
         'tsx', 'toml', 'lua', 'typescript', 'rust', 'go', 'yaml', 'json', 'php', 'css',
         'python', 'prisma', 'html', "dockerfile", "c", "cpp", "hcl", "svelte", "astro",
-        "clojure", "fennel", "bash", "nix"
+        "clojure", "fennel", "bash", "nix", "query",
     },
     sync_install = false,
     highlight = { enable = true },
@@ -422,8 +432,8 @@ local on_attach = function(client, bufnr)
     nmap('<leader>wl', function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 
-    -- enable inlay hints if available
-    require('inlay-hints').on_attach(client, bufnr)
+        -- enable inlay hints if available
+        require('inlay-hints').on_attach(client, bufnr)
     end, '[W]orkspace [L]ist Folders')
 
 end
@@ -513,9 +523,9 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 --  show_prediction_strength = true,
 -- })
 -- default language servers
-local servers = { 
+local servers = {
     'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'cmake', 'tailwindcss', 'prismals',
-    'rnix', 'eslint', 'terraformls', 'tflint', 'svelte', 'astro', 'clojure_lsp', "bashls", 'yamlls', "pylsp" ,
+    'rnix', 'eslint', 'terraformls', 'tflint', 'svelte', 'astro', 'clojure_lsp', "bashls", 'yamlls', "pylsp",
 }
 require("mason").setup({
     ui = {
@@ -566,7 +576,7 @@ require('mason-lspconfig').setup_handlers({
                         library = vim.api.nvim_get_runtime_file('', true)
                     },
                     telemetry = { enable = false },
-                    hint = {enable = true,},
+                    hint = { enable = true, },
                     format = {
                         enable = true,
                         defaultConfig = {
@@ -626,7 +636,7 @@ require("rust-tools").setup {
         -- callback to execute once rust-analyzer is done initializing the workspace
         -- The callback receives one parameter indicating the `health` of the server: "ok" | "warning" | "error"
         on_initialized = function()
-            require ('inlay-hints').set_all()
+            require('inlay-hints').set_all()
         end,
 
         -- automatically call RustReloadWorkspace when writing to a Cargo.toml file.
@@ -899,4 +909,3 @@ require('nvim-surround').setup {}
 vim.cmd([[
 let g:conjure#mapping#doc_word = v:false
 ]])
-

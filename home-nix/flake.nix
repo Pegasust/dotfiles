@@ -70,7 +70,7 @@
                 username = "nixos";
                 homeDirectory = "/home/nixos";
                 shellInitExtra = ''
-                ''  + x11_wsl;
+                '' + x11_wsl;
               };
             };
           };
