@@ -30,6 +30,7 @@
     pkgs.mosh
     pkgs.nixops_unstable # nixops v2
     pkgs.lynx
+    pkgs.tailscale # VPC
     # pkgs.python310 # dev packages should be in jk
     # pkgs.python310.numpy
     # pkgs.python310Packages.tensorflow
