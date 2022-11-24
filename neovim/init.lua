@@ -299,7 +299,10 @@ require('nvim-treesitter.configs').setup {
         "clojure", "fennel", "bash", "nix", "query",
     },
     sync_install = false,
-    highlight = { enable = true },
+    highlight = {
+        enable = true,
+        enable_vim_regex_highlighting = true,
+    },
     incremental_selection = {
         enable = true,
         keymaps = {
@@ -320,6 +323,10 @@ require('nvim-treesitter.configs').setup {
                 ['ic'] = '@class.inner',
             },
         },
+    },
+    playground = {
+        enable = true,
+        disable = {}
     },
     -- automatically close and modify HTML and TSX tags
     autotag = {
