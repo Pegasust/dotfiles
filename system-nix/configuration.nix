@@ -14,9 +14,7 @@ with lib;
   ] else [ ]) ++ [
     "${modulesPath}/profiles/minimal.nix"
   ];
-  inherit networking;
   inherit boot;
-  inherit services;
 
   system.stateVersion = "22.05";
   # users.users.<defaultUser>.uid = 1000;
@@ -51,10 +49,50 @@ with lib;
     pkgs.gnumake
     pkgs.wget
     pkgs.inetutils # network diag
-    pkgs.mtr     # network diag
+    pkgs.mtr # network diag
     pkgs.sysstat # sys diag
-    pkgs.mosh    # ssh-alt; parsec-like
+    pkgs.mosh # ssh-alt; parsec-like
     pkgs.tailscale # VPC
   ];
+  # tailscale is mandatory : ^)
+  # inherit services;
+  services = services // {
+    tailscale.enable = true;
+  };
+  # create a oneshot job to authenticate to Tailscale
+  systemd.services.tailscale-autoconnect = {
+    description = "Automatic connection to Tailscale";
+
+    # make sure tailscale is running before trying to connect to tailscale
+    after = [ "network-pre.target" "tailscale.service" ];
+    wants = [ "network-pre.target" "tailscale.service" ];
+    wantedBy = [ "multi-user.target" ];
+
+    # set this service as a oneshot job
+    serviceConfig.Type = "oneshot";
+
+    # have the job run this shell script
+    script = ''
+      # wait for tailscaled to settle
+      sleep 5
+      # check if we are already authenticated to tailscale
+      status="$(${pkgs.tailscale}/bin/tailscale status -json | ${pkgs.jq}/bin/jq -r .BackendState)"
+      if [ $status = "Running" ]; then # if so, then do nothing
+        exit 0
+      fi
+      # otherwise authenticate with tailscale
+      ${pkgs.tailscale}/bin/tailscale up -authkey tskey-examplekeyhere
+    '';
+  };
+  # Don't touch networking.firewall.enable, just configure everything else.
+  # inherit networking;
+  networking = networking // {
+    firewall = {
+      checkReversePath = "loose";
+      trustedInterfaces = [ "tailscale0" ];
+      allowedUDPPorts = [ config.services.tailscale.port ];
+    };
+  };
+
 }
 
