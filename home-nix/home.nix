@@ -18,9 +18,8 @@
     pkgs.zk
     pkgs.unzip
     pkgs.rust-bin.nightly.latest.default
-    pkgs.nodejs-18_x
+    # pkgs.nodejs-18_x
     pkgs.rust-analyzer
-    pkgs.stdenv.cc.cc.lib
     pkgs.yq
     pkgs.python39Full
     pkgs.xorg.xclock # TODO: only include if have GL
