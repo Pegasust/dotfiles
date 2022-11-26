@@ -90,7 +90,7 @@ with lib;
   # Don't touch networking.firewall.enable, just configure everything else.
   # inherit networking;
   networking = networking // {
-    firewall = {
+    firewall = (networking.firewall.enable and {
       trustedInterfaces = networking.firewall.trustedInterfaces or [ ] ++ [
         "tailscale0"
       ];
@@ -105,7 +105,7 @@ with lib;
 
       ];
       checkReversePath = "loose";
-    };
+    }) or {};
   };
 
 }
