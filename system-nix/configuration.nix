@@ -92,7 +92,7 @@ with lib;
   # inherit _networking;
   networking = _networking // {
     firewall =
-      if _networking.firewall.enable ? false then {
+      if _networking ? firewall.enable && _networking.firewall.enable then {
         trustedInterfaces = _networking.firewall.trustedInterfaces or [ ] ++ [
           "tailscale0"
         ];
