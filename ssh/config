@@ -26,13 +26,7 @@ Host nioma
     IdentityFile ~/.ssh/free-aws.pem
     Port 22
 
-# Ubuntu 22.04 LTS Pegasust@Linode
-Host ocolo-lab
-    HostName ocolo.pegasust.com
-    User root
-    Port 22
-
-# NixOS Pegasust@Linode
+# NixOS Pegasust-gh@Linode
 Host nyx
     HostName nyx.pegasust.com
     User hungtr
@@ -43,14 +37,9 @@ Host lizzi
     User hungtr
     Port 22
 
+# Ubuntu 4G Pegasust-gh@Linode
 Host ash
     HostName 192.155.95.41
     User hungtr
     Port 22
-
-Host lester
-    HostName 139.144.185.207
-    User hungtr
-    Port 22
-
 
