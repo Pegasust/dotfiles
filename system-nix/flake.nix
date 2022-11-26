@@ -17,7 +17,7 @@
         specialArgs = {
           # includeHardware = false;
           hostname = "Felia";
-          services.openssh = {
+          _services.openssh = {
             permitRootLogin = "no";
             enable = true;
           };
@@ -31,7 +31,7 @@
         ];
         specialArgs = {
           hostname = "lizzi";
-          networking = {
+          _networking = {
             interfaces.eth1.ipv4.addresses = [{
               address = "71.0.0.1";
               prefixLength = 24;
@@ -54,13 +54,13 @@
             useDHCP = false;
             interfaces.eth0.useDHCP = true;
           };
-          boot.loader.grub.enable = true;
-          boot.loader.grub.version = 2;
-          services.openssh = {
+          _boot.loader.grub.enable = true;
+          _boot.loader.grub.version = 2;
+          _services.openssh = {
             permitRootLogin = "no";
             enable = true;
           };
-          services.gitea = {
+          _services.gitea = {
             enable = true;
             stateDir = "/gitea";
             rootUrl = "https://git.pegasust.com";
@@ -71,7 +71,7 @@
               };
             };
           };
-          services.nginx = {
+          _services.nginx = {
             enable = true;
             clientMaxBodySize = "100m"; # Allow big file transfers over git :^)
             recommendedGzipSettings = true;
@@ -95,14 +95,14 @@
         ];
         specialArgs = {
           hostname = "lester";
-          networking = {
+          _networking = {
             firewall.enable = true;
             useDHCP = false;
             interfaces.eth0.useDHCP = true;
           };
-          boot.loader.grub.enable = true;
-          boot.loader.grub.version = 2;
-          services.openssh = {
+          _boot.loader.grub.enable = true;
+          _boot.loader.grub.version = 2;
+          _services.openssh = {
             permitRootLogin = "no";
             enable = true;
           };
@@ -115,7 +115,7 @@
         ];
         specialArgs = {
           hostname = "nyx";
-          networking = {
+          _networking = {
             interfaces.eth1.ipv4.addresses = [{
               address = "71.0.0.2";
               prefixLength = 24;
@@ -124,9 +124,9 @@
             useDHCP = false;
             interfaces.eth0.useDHCP = true;
           };
-          boot.loader.grub.enable = true;
-          boot.loader.grub.version = 2;
-          services.openssh = {
+          _boot.loader.grub.enable = true;
+          _boot.loader.grub.version = 2;
+          _services.openssh = {
             permitRootLogin = "no";
             enable = true;
           };
