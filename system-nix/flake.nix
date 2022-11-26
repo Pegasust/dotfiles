@@ -36,7 +36,6 @@
               address = "71.0.0.1";
               prefixLength = 24;
             }];
-            firewall.enable = true;
             firewall = {
               enable = true;
               # Also wishing for nix-lsp to be a bit better here
