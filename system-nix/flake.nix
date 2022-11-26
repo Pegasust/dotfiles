@@ -37,7 +37,7 @@
               prefixLength = 24;
             }];
             firewall = {
-              enable = true;
+              enable = false;
               # Also wishing for nix-lsp to be a bit better here
               # A man can only pray and cry
               # How would we add such functionality to nix-lsp if nix is 
