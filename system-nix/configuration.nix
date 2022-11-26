@@ -2,9 +2,9 @@
 let
   hostname = specialArgs.hostname;
   enableSSH = specialArgs.enableSSH or true;
-  networking = { hostName = hostname; } // (specialArgs.networking or { });
-  boot = specialArgs.boot or { };
-  services = specialArgs.services or { };
+  _networking = { hostName = hostname; } // (specialArgs._networking or { });
+  _boot = specialArgs._boot or { };
+  _services = specialArgs._services or { };
   includeHardware = specialArgs.includeHardware or true;
 in
 with lib;
@@ -14,7 +14,7 @@ with lib;
   ] else [ ]) ++ [
     "${modulesPath}/profiles/minimal.nix"
   ];
-  inherit boot;
+  boot = _boot;
 
   system.stateVersion = "22.05";
   # users.users.<defaultUser>.uid = 1000;
@@ -56,7 +56,7 @@ with lib;
   ];
   # tailscale is mandatory : ^)
   # inherit services;
-  services = services // {
+  services = _services // {
     tailscale.enable = true;
   };
   # create a oneshot job to authenticate to Tailscale
@@ -89,23 +89,25 @@ with lib;
   };
   # Don't touch networking.firewall.enable, just configure everything else.
   # inherit networking;
-  networking = networking // {
-    firewall = (networking.firewall.enable and {
-      trustedInterfaces = networking.firewall.trustedInterfaces or [ ] ++ [
-        "tailscale0"
-      ];
-      allowedUDPPorts = networking.firewall.allowedUDPPorts or [ ] ++ [
-        config.services.tailscale.port
-      ];
-      allowedTCPPorts = networking.firewall.allowedTCPPorts or [ ] ++ [
-        22
-      ];
-      allowedUDPPortRanges = networking.firewall.allowedUDPPortRanges or [ ] ++ [
-        { from = 60000; to = 61000; } # mosh
+  # inherit _networking;
+  networking = _networking // {
+    firewall =
+      if _networking.firewall.enable ? false then {
+        trustedInterfaces = _networking.firewall.trustedInterfaces or [ ] ++ [
+          "tailscale0"
+        ];
+        allowedUDPPorts = _networking.firewall.allowedUDPPorts or [ ] ++ [
+          config.services.tailscale.port
+        ];
+        allowedTCPPorts = _networking.firewall.allowedTCPPorts or [ ] ++ [
+          22
+        ];
+        allowedUDPPortRanges = _networking.firewall.allowedUDPPortRanges or [ ] ++ [
+          { from = 60000; to = 61000; } # mosh
 
-      ];
-      checkReversePath = "loose";
-    }) or {};
+        ];
+        checkReversePath = "loose";
+      } else { enable = false; };
   };
 
 }
