@@ -74,6 +74,26 @@
           };
         };
       };
+      nixosConfigurations.lester = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./configuration.nix
+        ];
+        specialArgs = {
+          hostname = "lester";
+          networking = {
+            firewall.enable = true;
+            useDHCP = false;
+            interfaces.eth0.useDHCP = true;
+          };
+          boot.loader.grub.enable = true;
+          boot.loader.grub.version = 2;
+          services.openssh = {
+            permitRootLogin = "no";
+            enable = true;
+          };
+        };
+      };
       nixosConfigurations.nyx = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
