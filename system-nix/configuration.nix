@@ -104,6 +104,7 @@ with lib;
         { from = 60000; to = 61000; } # mosh
 
       ];
+      checkReversePath = "loose";
     };
   };
 
