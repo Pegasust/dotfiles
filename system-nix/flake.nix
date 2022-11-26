@@ -36,7 +36,22 @@
               address = "71.0.0.1";
               prefixLength = 24;
             }];
-            firewall.enable = false;
+            firewall.enable = true;
+            firewall = {
+              enable = true;
+              # Also wishing for nix-lsp to be a bit better here
+              # A man can only pray and cry
+              # How would we add such functionality to nix-lsp if nix is 
+              # inherently lazy?
+              #
+              # Can use the schema, maybe?
+              #
+              # Also wishing on the ability for services to declare their
+              # own ports now
+              #
+              # Maybe write a mkService?
+              allowedTCPPorts = [80 443];
+            };
             useDHCP = false;
             interfaces.eth0.useDHCP = true;
           };
@@ -59,7 +74,7 @@
           };
           services.nginx = {
             enable = true;
-            clientMaxBodySize = "100m";
+            clientMaxBodySize = "100m"; # Allow big file transfers over git :^)
             recommendedGzipSettings = true;
             recommendedOptimisation = true;
             recommendedProxySettings = true;
