@@ -38,18 +38,7 @@
             }];
             firewall = {
               enable = false;
-              # Also wishing for nix-lsp to be a bit better here
-              # A man can only pray and cry
-              # How would we add such functionality to nix-lsp if nix is 
-              # inherently lazy?
-              #
-              # Can use the schema, maybe?
-              #
-              # Also wishing on the ability for services to declare their
-              # own ports now
-              #
-              # Maybe write a mkService?
-              allowedTCPPorts = [80 443];
+              allowedTCPPorts = [ 80 443 ];
             };
             useDHCP = false;
             interfaces.eth0.useDHCP = true;
