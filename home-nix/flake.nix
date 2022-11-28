@@ -100,7 +100,7 @@
               myHome = {
                 username = "hwtr";
                 homeDirectory = "/home/hwtr";
-                packages = [ pkgs.nixgl.nixGLIntel ];
+                packages = [ pkgs.nixgl.nixGLIntel pkgs.postman ];
                 shellAliases = {
                   nixGL = "nixGLIntel";
                 };
