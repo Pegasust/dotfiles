@@ -97,6 +97,8 @@ endif
 vim.cmd([[
 set number relativenumber
 set tabstop=4 softtabstop=4
+set autoindent
+set smartindent
 set expandtab
 set shiftwidth=4
 set exrc
@@ -334,7 +336,6 @@ require('nvim-treesitter.configs').setup {
 
 require('nvim-autopairs').setup {
     check_ts = true,
-
 }
 
 local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
@@ -453,6 +454,12 @@ local source_mapping = {
     -- cmp_tabnine = '[T9]',
     path = '[Path]',
 }
+
+cmp.event:on(
+    "confirm_done",
+    require('nvim-autopairs.completion.cmp').on_confirm_done()
+)
+
 
 cmp.setup {
     snippet = {

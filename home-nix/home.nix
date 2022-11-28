@@ -52,6 +52,7 @@
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
+    # nix-direnv.enableFlakes = true; # must remove. this will always be supported.
   };
   # z <path> as smarter cd
   programs.zoxide = {
