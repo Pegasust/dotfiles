@@ -18,8 +18,13 @@
     pkgs.zk
     pkgs.unzip
     pkgs.rust-bin.nightly.latest.default
+
     # pkgs.nodejs-18_x
     # pkgs.rust-analyzer
+
+    # Yes, I desperately want neovim to work out-of-the-box without flake.nix for now
+    pkgs.tree-sitter
+    pkgs.nodejs
     pkgs.yq
     pkgs.python39Full
     pkgs.xorg.xclock # TODO: only include if have GL
@@ -33,7 +38,6 @@
     # pkgs.python310Packages.tensorflow
     # pkgs.python310Packages.scikit-learn
   ] ++ (myHome.packages or [ ]);
-  nixpkgs.config.allowUnfree = true;
 
   ## Configs ## 
   xdg.configFile."nvim/init.lua".text = builtins.readFile ../neovim/init.lua;
@@ -121,8 +125,8 @@
     };
     # No idea why this is not appearing in home-manager search
     # It's in source code, though
-    userName="pegasust";
-    userEmail="pegasucksgg@gmail.com";
+    userName = "pegasust";
+    userEmail = "pegasucksgg@gmail.com";
     extraConfig = {
       merge = { tool = "vimdiff"; conflictstyle = "diff3"; };
     };

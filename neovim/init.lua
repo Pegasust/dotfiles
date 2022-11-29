@@ -146,6 +146,8 @@ colorscheme gruvbox
 require('hlargs').setup()
 require('nvim-web-devicons').setup()
 require('trouble').setup()
+
+-- TODO: Any way to collect all the TODOs and its variants?
 require('todo-comments').setup()
 
 -- plugin keymaps
