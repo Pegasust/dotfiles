@@ -4,40 +4,56 @@
 , myHome
 , ...
 }:
+let nvim_pkgs = [
+  # Yes, I desperately want neovim to work out-of-the-box without flake.nix for now
+  # I want at least python LSP to work everywhere because it's basically
+  # an alternative to bash script when I move to OpenColo
+  pkgs.neovim
+  pkgs.gccStdenv
+  pkgs.gcc
+  pkgs.tree-sitter
+  pkgs.ripgrep
+  pkgs.fzf
+  pkgs.sumneko-lua-language-server
+  pkgs.ripgrep
+  pkgs.zk
+  pkgs.fd
+  # Python3 as alternative to bash scripts :^)
+  (pkgs.python310Full.withPackages (pypkgs: [
+    pypkgs.pynvim # nvim provider
+    pypkgs.ujson  # pylsp seems to rely on this. satisfy it lol
+  ]))
+]; in
 {
   home = {
     username = myHome.username;
     homeDirectory = myHome.homeDirectory;
     stateVersion = myHome.stateVersion or "22.05";
   };
-  home.packages = [
+  home.packages = pkgs.lib.unique ([
     pkgs.htop
     pkgs.ripgrep
-    pkgs.gcc
-    pkgs.fd
-    pkgs.zk
     pkgs.unzip
-    pkgs.rust-bin.nightly.latest.default
+    pkgs.rust-bin.nightly.latest.default # Needed for alacritty?
 
     # pkgs.nodejs-18_x
-    # pkgs.rust-analyzer
+    # pkgs.rust-analyzer  # This should be very specific to env
 
-    # Yes, I desperately want neovim to work out-of-the-box without flake.nix for now
-    pkgs.tree-sitter
-    pkgs.nodejs
-    pkgs.yq
-    pkgs.python39Full
-    pkgs.xorg.xclock # TODO: only include if have GL
-    pkgs.logseq # TODO: only include if have GL
-    pkgs.mosh
+
+    # cool utilities
+    pkgs.yq # Yaml adaptor for jq (only pretty print, little query)
+    pkgs.xorg.xclock # TODO: only include if have GL # For testing GL installation
+    pkgs.logseq # TODO: only include if have GL # Obsidian alt
+    pkgs.mosh # Parsec for SSH
     pkgs.nixops_unstable # nixops v2
-    pkgs.lynx
+    pkgs.lynx # Web browser at your local terminal
+
     # pkgs.tailscale # VPC;; This should be installed in system-nix
     # pkgs.python310 # dev packages should be in jk
     # pkgs.python310.numpy
     # pkgs.python310Packages.tensorflow
     # pkgs.python310Packages.scikit-learn
-  ] ++ (myHome.packages or [ ]);
+  ] ++ (myHome.packages or [ ]) ++ nvim_pkgs);
 
   ## Configs ## 
   xdg.configFile."nvim/init.lua".text = builtins.readFile ../neovim/init.lua;
@@ -77,17 +93,17 @@
   };
   programs.home-manager.enable = true;
   programs.fzf.enable = true;
-  programs.neovim = {
-    enable = true;
-    viAlias = true;
-    vimAlias = true;
-    withPython3 = true;
-    withNodeJs = true;
-    # I use vim-plug, so I probably don't require packaging
-    # extraConfig actually writes to init-home-manager.vim (not lua)
-    # https://github.com/nix-community/home-manager/pull/3287
-    # extraConfig = builtins.readFile ../neovim/init.lua;
-  };
+  # programs.neovim = {
+  #   enable = true;
+  #   viAlias = true;
+  #   vimAlias = true;
+  #   withPython3 = true;
+  #   withNodeJs = true;
+  #   # I use vim-plug, so I probably don't require packaging
+  #   # extraConfig actually writes to init-home-manager.vim (not lua)
+  #   # https://github.com/nix-community/home-manager/pull/3287
+  #   # extraConfig = builtins.readFile ../neovim/init.lua;
+  # };
   programs.bash = {
     enable = true;
     enableCompletion = true;
