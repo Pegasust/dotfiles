@@ -38,7 +38,7 @@ Host lizzi
     Port 22
 
 Host pixi
-    HostName 170.187.205.14
+    HostName 139.144.60.254
     User hungtr
     Port 22
 
