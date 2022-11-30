@@ -8,13 +8,14 @@ let nvim_pkgs = [
   # Yes, I desperately want neovim to work out-of-the-box without flake.nix for now
   # I want at least python LSP to work everywhere because it's basically
   # an alternative to bash script when I move to OpenColo
+  pkgs.ncdu
   pkgs.neovim
   pkgs.gccStdenv
   pkgs.gcc
   pkgs.tree-sitter
   pkgs.ripgrep
   pkgs.fzf
-  pkgs.sumneko-lua-language-server
+  # pkgs.sumneko-lua-language-server
   pkgs.ripgrep
   pkgs.zk
   pkgs.fd

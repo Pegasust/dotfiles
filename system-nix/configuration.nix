@@ -16,6 +16,9 @@ with lib;
   ];
   boot = _boot;
 
+# prune old builds
+  nix.settings.auto-optimise-store = true;
+
   system.stateVersion = "22.05";
   # users.users.<defaultUser>.uid = 1000;
   # networking.hostName = "nixos";
