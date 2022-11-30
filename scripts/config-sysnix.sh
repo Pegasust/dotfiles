@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+set -xv
+
+HOSTNAME=${1}
+
+if [ -z $HOSTNAME ]; then
+	echo "Missing hostname as first param" 1>&2
+	exit 1
+fi
+
+# Where is this script located
+SCRIPT_DIR=$(realpath $(dirname $0))
+echo "SCRIPT_DIR: ${SCRIPT_DIR}"
+
+SYSNIX_DIR="${SCRIPT_DIR}/../system-nix"
+
+# Copy hardware-configuration of existing machine onto our version control
+HARDWARE_CONF="${SYSNIX_DIR}/profiles/${HOSTNAME}/hardware-configuration.nix" 
+if [ ! -f ${HARDWARE_CONF} ];
+	sudo cp /etc/nixos/hardware-configuration.nix ${HARDWARE_CONF}
+fi
+
+echo "Apply nixos-rebuild"
+sudo nixos-rebuild switch --flake "${SYSNIX_DIR}#${HOSTNAME}"
+
