@@ -555,6 +555,7 @@ require('mason-lspconfig').setup({
     ensure_installed = servers,
     automatic_installation = true
 })
+
 local inlay_hint_tsjs = {
     includeInlayEnumMemberValueHints = true,
     includeInlayFunctionLikeReturnTypeHints = true,
@@ -853,6 +854,7 @@ require('zk.commands').add("ZkOrphans", function(options)
     -- zk.edit opens notes picker
     require('zk').edit(options, { title = "Zk Orphans (unlinked notes)" })
 end)
+--
 -- ZkGrep: opens file picker
 -- In the case where `match_ctor` is falsy, create a prompt.
 -- This is so that we distinguish between ZkGrep and ZkNotes
@@ -920,6 +922,3 @@ require('lualine').setup {
 
 require('nvim-surround').setup {}
 
-vim.cmd([[
-let g:conjure#mapping#doc_word = v:false
-]])
