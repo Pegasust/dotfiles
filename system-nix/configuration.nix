@@ -30,6 +30,9 @@ with lib;
     home = "/home/hungtr";
     description = "pegasust/hungtr";
     extraGroups = [ "wheel" "networkmanager" ];
+  };
+  users.users.root = {
+    # openssh runs in root, no? This is because port < 1024 requires root.
     openssh.authorizedKeys.keys = lib.strings.splitString "\n" (builtins.readFile ../ssh/authorized_keys);
   };
 
