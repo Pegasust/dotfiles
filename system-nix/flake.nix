@@ -32,13 +32,13 @@
         specialArgs = {
           hostname = "pixi";
           _networking = {
-            interfaces.eth1.ipv4.addresses = [{
-              address = "71.0.0.1";
-              prefixLength = 24;
-            }];
+            # interfaces.eth1.ipv4.addresses = [{
+            #   address = "71.0.0.1";
+            #   prefixLength = 24;
+            # }];
             firewall = {
               enable = false;
-              allowedTCPPorts = [ 80 443 ];
+              allowedTCPPorts = [ 80 443 22 ];
             };
             useDHCP = false;
             interfaces.eth0.useDHCP = true;
