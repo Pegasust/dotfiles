@@ -20,6 +20,7 @@ let nvim_pkgs = [
   pkgs.fd
   # Python3 as alternative to bash scripts :^)
   (pkgs.python310Full.withPackages (pypkgs: [
+    pypkgs.python-lsp-server # python-lsp. Now we'll have to tell mason to look for this
     pypkgs.pynvim # nvim provider
     pypkgs.ujson  # pylsp seems to rely on this. satisfy it lol
   ]))

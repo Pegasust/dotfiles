@@ -24,13 +24,13 @@
         };
       };
       # Generic machine
-      nixosConfigurations.lizzi = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.pixi = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
           ./configuration.nix
         ];
         specialArgs = {
-          hostname = "lizzi";
+          hostname = "pixi";
           _networking = {
             interfaces.eth1.ipv4.addresses = [{
               address = "71.0.0.1";

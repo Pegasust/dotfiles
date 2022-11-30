@@ -37,6 +37,11 @@ Host lizzi
     User hungtr
     Port 22
 
+Host pixi
+    HostName 170.187.205.14
+    User hungtr
+    Port 22
+
 # Ubuntu 4G Pegasust-gh@Linode
 Host ash
     HostName 192.155.95.41
