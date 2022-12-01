@@ -161,8 +161,8 @@ let nvim_pkgs = [
       ".direnv"
     ];
     extraConfig = {
-      # cache credential for 10 minutes.
-      credential.helper = "cache --timeout=600";
+      # cache credential for 50 minutes (a pomodoro session)
+      credential.helper = "cache --timeout=3000";
     };
     # why is this no longer valid?
     # pull = { rebase=true; };
