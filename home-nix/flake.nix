@@ -28,7 +28,10 @@
       system = "x86_64-linux";
       overlays = [ nixgl.overlay rust-overlay.overlays.default ];
       # pkgs = nixpkgs.legacyPackages.${system}.appendOverlays overlays;
-      pkgs = import nixpkgs { inherit system overlays; };
+      pkgs = import nixpkgs {
+        inherit system overlays;
+        config = {allowUnfree = true;}; 
+      };
       lib = (import ../lib-nix { inherit pkgs from-yaml; lib = pkgs.lib; });
     in
     {
@@ -100,9 +103,9 @@
               myHome = {
                 username = "hwtr";
                 homeDirectory = "/home/hwtr";
-                packages = [ 
-                  pkgs.nixgl.nixGLIntel 
-                  # pkgs.postman 
+                packages = [
+                  pkgs.nixgl.nixGLIntel
+                  pkgs.postman
                 ];
                 shellAliases = {
                   nixGL = "nixGLIntel";

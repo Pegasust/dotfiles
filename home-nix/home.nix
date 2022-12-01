@@ -8,8 +8,6 @@ let nvim_pkgs = [
   # Yes, I desperately want neovim to work out-of-the-box without flake.nix for now
   # I want at least python LSP to work everywhere because it's basically
   # an alternative to bash script when I move to OpenColo
-  pkgs.ncdu
-  pkgs.neovim
   pkgs.gccStdenv
   pkgs.gcc
   pkgs.tree-sitter
@@ -19,13 +17,14 @@ let nvim_pkgs = [
   pkgs.ripgrep
   pkgs.zk
   pkgs.fd
+  pkgs.stdenv.cc.cc.lib
   # Python3 as alternative to bash scripts :^)
-  (pkgs.python310Full.withPackages (pypkgs: [
-    # python-lsp-server's dependencies is absolutely astronomous
-    # pypkgs.python-lsp-server # python-lsp. Now we'll have to tell mason to look for this
-    pypkgs.pynvim # nvim provider
-    # pypkgs.ujson  # pylsp seems to rely on this. satisfy it lol
-  ]))
+  # (pkgs.python310Full.withPackages (pypkgs: [
+  #   # python-lsp-server's dependencies is absolutely astronomous
+  #   # pypkgs.python-lsp-server # python-lsp. Now we'll have to tell mason to look for this
+  #   pypkgs.pynvim # nvim provider
+  #   # pypkgs.ujson  # pylsp seems to rely on this. satisfy it lol
+  # ]))
 ]; in
 {
   home = {
@@ -34,6 +33,7 @@ let nvim_pkgs = [
     stateVersion = myHome.stateVersion or "22.05";
   };
   home.packages = pkgs.lib.unique ([
+    pkgs.ncdu
     pkgs.htop
     pkgs.ripgrep
     pkgs.unzip
@@ -52,7 +52,7 @@ let nvim_pkgs = [
     pkgs.lynx # Web browser at your local terminal
 
     # pkgs.tailscale # VPC;; This should be installed in system-nix
-    # pkgs.python310 # dev packages should be in jk
+    pkgs.python310 # dev packages should be in jk
     # pkgs.python310.numpy
     # pkgs.python310Packages.tensorflow
     # pkgs.python310Packages.scikit-learn
@@ -96,17 +96,22 @@ let nvim_pkgs = [
   };
   programs.home-manager.enable = true;
   programs.fzf.enable = true;
-  # programs.neovim = {
-  #   enable = true;
-  #   viAlias = true;
-  #   vimAlias = true;
-  #   withPython3 = true;
-  #   withNodeJs = true;
-  #   # I use vim-plug, so I probably don't require packaging
-  #   # extraConfig actually writes to init-home-manager.vim (not lua)
-  #   # https://github.com/nix-community/home-manager/pull/3287
-  #   # extraConfig = builtins.readFile ../neovim/init.lua;
-  # };
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+    withPython3 = true;
+    withNodeJs = true;
+    extraPackages = nvim_pkgs;
+    extraPython3Packages = (pypkgs: [
+      pypkgs.python-lsp-server
+      pypkgs.ujson
+    ]);
+    # I use vim-plug, so I probably don't require packaging
+    # extraConfig actually writes to init-home-manager.vim (not lua)
+    # https://github.com/nix-community/home-manager/pull/3287
+    # extraConfig = builtins.readFile ../neovim/init.lua;
+  };
   programs.bash = {
     enable = true;
     enableCompletion = true;
