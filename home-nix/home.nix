@@ -102,11 +102,11 @@ let nvim_pkgs = [
     vimAlias = true;
     withPython3 = true;
     withNodeJs = true;
-    extraPackages = nvim_pkgs;
-    extraPython3Packages = (pypkgs: [
-      pypkgs.python-lsp-server
-      pypkgs.ujson
-    ]);
+    # extraPackages = nvim_pkgs;
+    # extraPython3Packages = (pypkgs: [
+    #   pypkgs.python-lsp-server
+    #   pypkgs.ujson
+    # ]);
     # I use vim-plug, so I probably don't require packaging
     # extraConfig actually writes to init-home-manager.vim (not lua)
     # https://github.com/nix-community/home-manager/pull/3287
