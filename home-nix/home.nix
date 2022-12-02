@@ -141,11 +141,13 @@ let nvim_pkgs = [
     aliases = {
       a = "add";
       c = "commit";
-      ca = "commit --ammend";
+      ca = "commit --amend";
       cm = "commit -m";
       lol = "log --graph --decorate --pretty=oneline --abbrev-commit";
       lola = "log --graph --decorate --pretty=oneline --abbrev-commit --all";
       sts = "status";
+      co = "checkout";
+      b = "branch";
     };
     # No idea why this is not appearing in home-manager search
     # It's in source code, though

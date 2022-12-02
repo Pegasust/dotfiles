@@ -540,7 +540,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local servers = {
     'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'cmake', 'tailwindcss', 'prismals',
     'rnix', 'eslint', 'terraformls', 'tflint', 'svelte', 'astro', 'clojure_lsp', "bashls", 'yamlls', "pylsp",
-    "jsonls"
+    "jsonls", 
 }
 require("mason").setup({
     ui = {
