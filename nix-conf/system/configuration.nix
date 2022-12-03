@@ -6,6 +6,7 @@ let
   _boot = specialArgs._boot or { };
   _services = specialArgs._services or { };
   includeHardware = specialArgs.includeHardware or true;
+  proj_root = builtins.toString ./../..;
 in
 with lib;
 {
@@ -36,7 +37,7 @@ with lib;
   };
   users.users.root = {
     # openssh runs in root, no? This is because port < 1024 requires root.
-    openssh.authorizedKeys.keys = lib.strings.splitString "\n" (builtins.readFile ../ssh/authorized_keys);
+    openssh.authorizedKeys.keys = lib.strings.splitString "\n" (builtins.readFile "${proj_root}/ssh/authorized_keys");
   };
 
   # Some basic programs
