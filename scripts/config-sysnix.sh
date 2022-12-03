@@ -12,7 +12,7 @@ fi
 SCRIPT_DIR=$(realpath $(dirname $0))
 echo "SCRIPT_DIR: ${SCRIPT_DIR}"
 
-SYSNIX_DIR="${SCRIPT_DIR}/../system-nix"
+SYSNIX_DIR="${SCRIPT_DIR}/../nix-conf/system"
 
 # Copy hardware-configuration of existing machine onto our version control
 SYSNIX_PROF="${SYSNIX_DIR}/profiles/${HOSTNAME}"
