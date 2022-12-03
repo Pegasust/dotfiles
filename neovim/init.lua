@@ -540,7 +540,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local servers = {
     'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'cmake', 'tailwindcss', 'prismals',
     'rnix', 'eslint', 'terraformls', 'tflint', 'svelte', 'astro', 'clojure_lsp', "bashls", 'yamlls', "pylsp",
-    "jsonls", 
+    "jsonls", "denols"
 }
 require("mason").setup({
     ui = {
@@ -608,13 +608,23 @@ require('mason-lspconfig').setup_handlers({
         require('lspconfig').tsserver.setup {
             on_attach = on_attach,
             capabilities = capabilities,
+            -- TODO: Have to figure out an alternative config for monorepo to prevent
+            -- Deno from injecting TS projects.
             -- Monorepo support: spawn one instance of lsp within the git
             -- repos.
-            root_dir = require('lspconfig.util').root_pattern('.git'),
+            --  root_dir = require('lspconfig.util').root_pattern('.git'),
+            root_dir = require('lspconfig.util').root_pattern('package.json'),
             settings = {
                 javascript = inlay_hint_tsjs,
                 typescript = inlay_hint_tsjs,
             }
+        }
+    end,
+    ["denols"] = function()
+        require('lspconfig').denols.setup {
+            on_attach = on_attach,
+            capabilities = capabilities,
+            root_dir = require('lspconfig.util').root_pattern("deno.json", "deno.jsonc"),
         }
     end,
     -- ["rust_analyzer"] = function()

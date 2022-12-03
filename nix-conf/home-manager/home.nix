@@ -4,28 +4,32 @@
 , myHome
 , ...
 }:
-let nvim_pkgs = [
-  # Yes, I desperately want neovim to work out-of-the-box without flake.nix for now
-  # I want at least python LSP to work everywhere because it's basically
-  # an alternative to bash script when I move to OpenColo
-  pkgs.gccStdenv
-  pkgs.gcc
-  pkgs.tree-sitter
-  pkgs.ripgrep
-  pkgs.fzf
-  # pkgs.sumneko-lua-language-server
-  pkgs.ripgrep
-  pkgs.zk
-  pkgs.fd
-  pkgs.stdenv.cc.cc.lib
-  # Python3 as alternative to bash scripts :^)
-  # (pkgs.python310Full.withPackages (pypkgs: [
-  #   # python-lsp-server's dependencies is absolutely astronomous
-  #   # pypkgs.python-lsp-server # python-lsp. Now we'll have to tell mason to look for this
-  #   pypkgs.pynvim # nvim provider
-  #   # pypkgs.ujson  # pylsp seems to rely on this. satisfy it lol
-  # ]))
-]; in
+let
+  nvim_pkgs = [
+    # Yes, I desperately want neovim to work out-of-the-box without flake.nix for now
+    # I want at least python LSP to work everywhere because it's basically
+    # an alternative to bash script when I move to OpenColo
+    pkgs.gccStdenv
+    pkgs.gcc
+    pkgs.tree-sitter
+    pkgs.ripgrep
+    pkgs.fzf
+    # pkgs.sumneko-lua-language-server
+    pkgs.ripgrep
+    pkgs.zk
+    pkgs.fd
+    pkgs.stdenv.cc.cc.lib
+    # Python3 as alternative to bash scripts :^)
+    # (pkgs.python310Full.withPackages (pypkgs: [
+    #   # python-lsp-server's dependencies is absolutely astronomous
+    #   # pypkgs.python-lsp-server # python-lsp. Now we'll have to tell mason to look for this
+    #   pypkgs.pynvim # nvim provider
+    #   # pypkgs.ujson  # pylsp seems to rely on this. satisfy it lol
+    # ]))
+  ];
+  proj_root = builtins.toString ./../..;
+
+in
 {
   home = {
     username = myHome.username;
@@ -59,8 +63,8 @@ let nvim_pkgs = [
   ] ++ (myHome.packages or [ ]) ++ nvim_pkgs);
 
   ## Configs ## 
-  xdg.configFile."nvim/init.lua".text = builtins.readFile ../neovim/init.lua;
-  xdg.configFile."starship.toml".text = builtins.readFile ../starship/starship.toml;
+  xdg.configFile."nvim/init.lua".text = builtins.readFile "${proj_root}//neovim/init.lua";
+  xdg.configFile."starship.toml".text = builtins.readFile "${proj_root}//starship/starship.toml";
 
   ## Programs ##
   programs.jq = {
@@ -68,7 +72,7 @@ let nvim_pkgs = [
   };
   programs.alacritty = myHome.programs.alacritty or {
     enable = true;
-    # settings = myLib.fromYaml (builtins.readFile ../alacritty/alacritty.yml);
+    # settings = myLib.fromYaml (builtins.readFile "${proj_root}/alacritty/alacritty.yml");
   };
   # nix: Propagates the environment with packages and vars when enter (children of)
   # a directory with shell.nix-compatible and .envrc
@@ -84,7 +88,7 @@ let nvim_pkgs = [
   };
   programs.tmux = {
     enable = true;
-    extraConfig = builtins.readFile ../tmux/tmux.conf;
+    extraConfig = builtins.readFile "${proj_root}/tmux/tmux.conf";
   };
   programs.exa = {
     enable = true;
@@ -110,7 +114,7 @@ let nvim_pkgs = [
     # I use vim-plug, so I probably don't require packaging
     # extraConfig actually writes to init-home-manager.vim (not lua)
     # https://github.com/nix-community/home-manager/pull/3287
-    # extraConfig = builtins.readFile ../neovim/init.lua;
+    # extraConfig = builtins.readFile "${proj_root}/neovim/init.lua";
   };
   programs.bash = {
     enable = true;
@@ -172,6 +176,6 @@ let nvim_pkgs = [
   programs.ssh = {
     enable = true;
     forwardAgent = true;
-    extraConfig = builtins.readFile ../ssh/config;
+    extraConfig = builtins.readFile "${proj_root}/ssh/config";
   };
 }
