@@ -7,8 +7,12 @@ set -xv
 HOSTNAME=${1}
 
 if [ -z $HOSTNAME ]; then
-	echo "Missing hostname as first param" 1>&2
-	exit 1
+	current_hostname=$(hostname)
+	echo "Missing hostname as first param."
+	echo "Type the hostname you want to be here"
+	read -p "[${current_hostname}] > " HOSTNAME
+	HOSTNAME=${HOSTNAME:-${current_hostname}}
+	read -p "Using hostname: ${HOSTNAME}. Press ENTER to continue." _WHATEVER_
 fi
 
 # Where is this script located
