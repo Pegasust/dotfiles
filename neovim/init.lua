@@ -550,7 +550,12 @@ require("mason").setup({
             package_uninstalled = "✗"
         },
         check_outdated_packages_on_open = true,
-    }
+    },
+    -- The default settings is "prepend" https://github.com/williamboman/mason.nvim#default-configuration
+    -- Which means Mason's installed path is prioritized against our local install
+    -- see: https://git.pegasust.com/pegasust/aoc/commit/b45dc32c74d84c9f787ebce7a174c9aa1d411fc2
+    -- This introduces some pitfalls, so we'll take the approach of trusting user's local installation
+    PATH = "append";
 })
 require('mason-lspconfig').setup({
     ensure_installed = servers,
