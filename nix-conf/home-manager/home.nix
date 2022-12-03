@@ -24,7 +24,7 @@ let
     #   # python-lsp-server's dependencies is absolutely astronomous
     #   # pypkgs.python-lsp-server # python-lsp. Now we'll have to tell mason to look for this
     #   pypkgs.pynvim # nvim provider
-    #   # pypkgs.ujson  # pylsp seems to rely on this. satisfy it lol
+    #   pypkgs.ujson  # pylsp seems to rely on this. satisfy it lol
     # ]))
   ];
   proj_root = builtins.toString ./../..;
@@ -65,6 +65,7 @@ in
   ## Configs ## 
   xdg.configFile."nvim/init.lua".text = builtins.readFile "${proj_root}//neovim/init.lua";
   xdg.configFile."starship.toml".text = builtins.readFile "${proj_root}//starship/starship.toml";
+  xdg.configFile."zk/config.toml".text = builtins.readFile "${proj_root}//zk/config.toml";
 
   ## Programs ##
   programs.jq = {
@@ -106,9 +107,9 @@ in
     vimAlias = true;
     withPython3 = true;
     withNodeJs = true;
-    # extraPackages = nvim_pkgs;
+    extraPackages = nvim_pkgs;
     # extraPython3Packages = (pypkgs: [
-    #   pypkgs.python-lsp-server
+    #   # pypkgs.python-lsp-server
     #   pypkgs.ujson
     # ]);
     # I use vim-plug, so I probably don't require packaging
