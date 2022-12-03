@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
+## Configures a new nixos system to this repository
+## Blame: Hung Tran (Pegasust) <pegasucksgg@gmail.com>
+
 set -xv
 
 HOSTNAME=${1}
@@ -17,7 +20,7 @@ SYSNIX_DIR="${SCRIPT_DIR}/../nix-conf/system"
 # Copy hardware-configuration of existing machine onto our version control
 SYSNIX_PROF="${SYSNIX_DIR}/profiles/${HOSTNAME}"
 HARDWARE_CONF="${SYSNIX_PROF}/hardware-configuration.nix" 
-if [ ! -f "${HARDWARE_CONF}" ]; then;
+if [ ! -f "${HARDWARE_CONF}" ]; then
 	mkdir "$SYSNIX_PROF"
 	sudo cp /etc/nixos/hardware-configuration.nix ${HARDWARE_CONF}
 fi
