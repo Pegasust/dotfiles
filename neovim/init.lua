@@ -521,6 +521,7 @@ cmp.setup {
         { name = 'luasnip' },
         { name = 'buffer' },
         { name = 'path' },
+        { name = 'conjure' },
         -- { name = 'cmp_tabnine' },
     },
 }

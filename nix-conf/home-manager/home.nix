@@ -1,7 +1,12 @@
 # myHome is injected from extraSpecialArgs in flake.nix
 { config
+, lib
 , pkgs
-, myHome
+, my-pkgs ? []
+, myLib ? []
+, extraPackages ? []
+, shellInitExtra ? ""
+, shellAliases ? {}
 , ...
 }:
 let
@@ -28,14 +33,17 @@ let
     # ]))
   ];
   proj_root = builtins.toString ./../..;
-
+  _my-pkgs = import my-pkgs { inherit pkgs; lib = pkgs.lib // my-pkgs.lib // myLib; };
 in
 {
-  home = {
-    username = myHome.username;
-    homeDirectory = myHome.homeDirectory;
-    stateVersion = myHome.stateVersion or "22.05";
-  };
+  # config = { 
+  #   # my-pkgs = mkOption {
+  #   #   type = ;
+  #   #   default = {};
+  #   #   example = {};
+  #   #   description = "TODO: complete the type to get every other fields";
+  #   # };
+  # };
   home.packages = pkgs.lib.unique ([
     pkgs.ncdu
     pkgs.htop
@@ -60,7 +68,7 @@ in
     # pkgs.python310.numpy
     # pkgs.python310Packages.tensorflow
     # pkgs.python310Packages.scikit-learn
-  ] ++ (myHome.packages or [ ]) ++ nvim_pkgs);
+  ] ++ (extraPackages) ++ nvim_pkgs);
 
   ## Configs ## 
   xdg.configFile."nvim/init.lua".text = builtins.readFile "${proj_root}//neovim/init.lua";
@@ -71,8 +79,9 @@ in
   programs.jq = {
     enable = true;
   };
-  programs.alacritty = myHome.programs.alacritty or {
+  programs.alacritty = {
     enable = true;
+    # settings = builtins.fromJSON (builtins.readFile "${_my-pkgs.dot-hwtr}/alacritty/alacritty.json");
     # settings = myLib.fromYaml (builtins.readFile "${proj_root}/alacritty/alacritty.yml");
   };
   # nix: Propagates the environment with packages and vars when enter (children of)
@@ -120,7 +129,7 @@ in
   programs.bash = {
     enable = true;
     enableCompletion = true;
-    initExtra = myHome.shellInitExtra or "";
+    initExtra = shellInitExtra;
   };
   programs.zsh = {
     enable = true;
@@ -129,7 +138,7 @@ in
     shellAliases = {
       nix-rebuild = "sudo nixos-rebuild switch";
       hm-switch = "home-manager switch --flake";
-    } // (myHome.shellAliases or { });
+    } // (shellAliases);
     history = {
       size = 10000;
       path = "${config.xdg.dataHome}/zsh/history";
@@ -138,7 +147,7 @@ in
       enable = true;
       plugins = [ "git" "sudo" "command-not-found" "gitignore" "ripgrep" "rust" ];
     };
-    initExtra = myHome.shellInitExtra or "";
+    initExtra = shellInitExtra;
   };
   programs.git = {
     enable = true;

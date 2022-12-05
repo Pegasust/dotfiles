@@ -13,6 +13,10 @@
       url = "github:pegasust/fromYaml";
       flake = false;
     };
+    my-pkgs = {
+      url = "path:../pkgs";
+      flake = false;
+    };
   };
 
   outputs =
@@ -22,6 +26,7 @@
     , rust-overlay
     , flake-utils
     , from-yaml
+    , my-pkgs
     , ...
     }:
     let
@@ -30,9 +35,9 @@
       # pkgs = nixpkgs.legacyPackages.${system}.appendOverlays overlays;
       pkgs = import nixpkgs {
         inherit system overlays;
-        config = {allowUnfree = true;}; 
+        config = { allowUnfree = true; };
       };
-      lib = (import ../lib-nix { inherit pkgs from-yaml; lib = pkgs.lib; });
+      lib = (import ../lib { inherit pkgs from-yaml; lib = pkgs.lib; });
     in
     {
       homeConfigurations =
@@ -47,34 +52,42 @@
             inherit pkgs;
             modules = [
               ./home.nix
+              {
+                home = {
+                  username = "hungtr";
+                  homeDirectory = "/home/hungtr";
+                  stateVersion = "22.05";
+                };
+              }
             ];
             # optionally pass inarguments to module
             # we migrate this from in-place modules to allow flexibility
             # in this case, we can add "home" to input arglist of home.nix
             extraSpecialArgs = {
               myLib = lib;
-              myHome = {
-                username = "hungtr";
-                homeDirectory = "/home/hungtr";
-              };
+              inherit my-pkgs;
             };
           };
           "nixos@Felia" = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
             modules = [
               ./home.nix
+              {
+                home = {
+                  username = "nixos";
+                  homeDirectory = "/home/nixos";
+                  stateVersion = "22.05";
+                };
+              }
             ];
             # optionally pass inarguments to module
             # we migrate this from in-place modules to allow flexibility
             # in this case, we can add "home" to input arglist of home.nix
             extraSpecialArgs = {
               myLib = lib;
-              myHome = {
-                username = "nixos";
-                homeDirectory = "/home/nixos";
-                shellInitExtra = ''
-                '' + x11_wsl;
-              };
+              inherit my-pkgs;
+              shellInitExtra = ''
+              '' + x11_wsl;
             };
           };
           # NOTE: This is never actually tested
@@ -82,34 +95,42 @@
             inherit pkgs;
             modules = [
               ./home.nix
+              {
+                home = {
+                  username = "ubuntu_admin";
+                  homeDirectory = "/home/ubuntu_admin";
+                  stateVersion = "22.05";
+                };
+              }
             ];
             extraSpecialArgs = {
               myLib = lib;
-              myHome = {
-                username = "ubuntu_admin";
-                homeDirectory = "/home/ubuntu_admin";
-                shellInitExtra = ''
-                '' + x11_wsl;
-              };
+              inherit my-pkgs;
+              shellInitExtra = ''
+              '' + x11_wsl;
             };
           };
           hwtr = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
             modules = [
               ./home.nix
+              {
+                home = {
+                  username = "hwtr";
+                  homeDirectory = "/home/hwtr";
+                  stateVersion = "22.05";
+                };
+              }
             ];
             extraSpecialArgs = {
               myLib = lib;
-              myHome = {
-                username = "hwtr";
-                homeDirectory = "/home/hwtr";
-                packages = [
-                  pkgs.nixgl.nixGLIntel
-                  pkgs.postman
-                ];
-                shellAliases = {
-                  nixGL = "nixGLIntel";
-                };
+              inherit my-pkgs;
+              extraPackages = [
+                pkgs.nixgl.nixGLIntel
+                pkgs.postman
+              ];
+              shellAliases = {
+                nixGL = "nixGLIntel";
               };
             };
           };
