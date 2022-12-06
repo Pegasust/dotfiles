@@ -63,9 +63,9 @@ in
   ] ++ (myHome.packages or [ ]) ++ nvim_pkgs);
 
   ## Configs ## 
-  xdg.configFile."nvim/init.lua".text = builtins.readFile "${proj_root}//neovim/init.lua";
-  xdg.configFile."starship.toml".text = builtins.readFile "${proj_root}//starship/starship.toml";
-  xdg.configFile."zk/config.toml".text = builtins.readFile "${proj_root}//zk/config.toml";
+  xdg.configFile."nvim/init.lua".source = "${proj_root}//neovim/init.lua";
+  xdg.configFile."starship.toml".source = "${proj_root}//starship/starship.toml";
+  xdg.configFile."zk/config.toml".source = "${proj_root}//zk/config.toml";
 
   ## Programs ##
   programs.jq = {
