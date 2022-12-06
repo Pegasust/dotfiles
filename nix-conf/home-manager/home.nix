@@ -1,6 +1,6 @@
 # myHome is injected from extraSpecialArgs in flake.nix
 { config
-, pkgs
+, pkgs # This is by default just ``= import <nixpkgs>{}`
 , myHome
 , ...
 }:
@@ -28,7 +28,19 @@ let
     # ]))
   ];
   proj_root = builtins.toString ./../..;
-
+  # TODO: put this in a seperate library
+  # callPackage supports both PATH and function as first param!
+  # TODO: support yaml string with writeTextFile (provided by callPackge)
+  yamlToJsonDrv = yamlPath: outputPath:
+    pkgs.callPackage ({ runCommand }:
+      # runCommand source: https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/trivial-builders.nix#L33
+      runCommand
+        outputPath
+        { nativeBuildInputs = [ pkgs.yq ]; }
+        # run yq which outputs '.' (no filter) on file at yamlPath
+        # note that $out is passed onto the bash/sh script for execution
+        ''cat \"${yamlPath}\" | yq >\"$out\"'') { };
+  fromYaml = yamlPath: builtins.fromJSON (builtins.readFile (yamlToJsonDrv yamlPath "any-output.json"));
 in
 {
   home = {
@@ -74,6 +86,7 @@ in
   programs.alacritty = myHome.programs.alacritty or {
     enable = true;
     # settings = myLib.fromYaml (builtins.readFile "${proj_root}/alacritty/alacritty.yml");
+    settings = fromYaml "${proj_root}//alacritty/alacritty.yml";
   };
   # nix: Propagates the environment with packages and vars when enter (children of)
   # a directory with shell.nix-compatible and .envrc
