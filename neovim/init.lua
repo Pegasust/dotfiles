@@ -397,7 +397,7 @@ remap('n', '<leader>gs', function() require('neogit').open({}) end);
 require("inlay-hints").setup {
     only_current_line = false,
     eol = {
-        right_align = true,
+        right_align = false,
     }
 }
 local on_attach = function(client, bufnr)
