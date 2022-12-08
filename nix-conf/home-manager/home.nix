@@ -1,30 +1,48 @@
 # myHome is injected from extraSpecialArgs in flake.nix
 { config
-, pkgs
+, pkgs # This is by default just ``= import <nixpkgs>{}`
 , myHome
 , ...
 }:
-let nvim_pkgs = [
-  # Yes, I desperately want neovim to work out-of-the-box without flake.nix for now
-  # I want at least python LSP to work everywhere because it's basically
-  # an alternative to bash script when I move to OpenColo
-  pkgs.neovim
-  pkgs.gccStdenv
-  pkgs.gcc
-  pkgs.tree-sitter
-  pkgs.ripgrep
-  pkgs.fzf
-  pkgs.sumneko-lua-language-server
-  pkgs.ripgrep
-  pkgs.zk
-  pkgs.fd
-  # Python3 as alternative to bash scripts :^)
-  (pkgs.python310Full.withPackages (pypkgs: [
-    # pypkgs.python-lsp-server # python-lsp. Now we'll have to tell mason to look for this
-    pypkgs.pynvim # nvim provider
-    pypkgs.ujson # pylsp seems to rely on this. satisfy it lol
-  ]))
-]; in
+let
+  nvim_pkgs = [
+    # Yes, I desperately want neovim to work out-of-the-box without flake.nix for now
+    # I want at least python LSP to work everywhere because it's basically
+    # an alternative to bash script when I move to OpenColo
+    pkgs.gccStdenv
+    pkgs.gcc
+    pkgs.tree-sitter
+    pkgs.ripgrep
+    pkgs.fzf
+    # pkgs.sumneko-lua-language-server
+    pkgs.ripgrep
+    pkgs.zk
+    pkgs.fd
+    pkgs.stdenv.cc.cc.lib
+    # Python3 as alternative to bash scripts :^)
+    # (pkgs.python310Full.withPackages (pypkgs: [
+    #   # python-lsp-server's dependencies is absolutely astronomous
+    #   # pypkgs.python-lsp-server # python-lsp. Now we'll have to tell mason to look for this
+    #   pypkgs.pynvim # nvim provider
+    #   pypkgs.ujson  # pylsp seems to rely on this. satisfy it lol
+    # ]))
+  ];
+  proj_root = builtins.toString ./../..;
+  # TODO: put this in a seperate library
+  # callPackage supports both PATH and function as first param!
+  yamlToJsonDrv = yamlContent: outputPath: pkgs.callPackage
+    ({ runCommand }:
+      # runCommand source: https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/trivial-builders.nix#L33
+      runCommand outputPath { inherit yamlContent; nativeBuildInputs = [ pkgs.yq ]; }
+        # run yq which outputs '.' (no filter) on file at yamlPath
+        # note that $out is passed onto the bash/sh script for execution
+        ''
+          echo "$yamlContent" | yq >$out
+        '')
+    { };
+  # fromYamlPath = yamlPath: builtins.fromJSON (builtins.readFile (yamlToJsonDrv yamlPath "any-output.json"));
+  fromYaml = yamlContent: builtins.fromJSON (builtins.readFile (yamlToJsonDrv yamlContent "any_output.json"));
+in
 {
   home = {
     username = myHome.username;
@@ -32,6 +50,7 @@ let nvim_pkgs = [
     stateVersion = myHome.stateVersion or "22.05";
   };
   home.packages = pkgs.lib.unique ([
+    pkgs.ncdu
     pkgs.htop
     pkgs.ripgrep
     pkgs.unzip
@@ -50,19 +69,16 @@ let nvim_pkgs = [
     pkgs.lynx # Web browser at your local terminal
 
     # pkgs.tailscale # VPC;; This should be installed in system-nix
-    # pkgs.python310 # dev packages should be in jk
+    pkgs.python310 # dev packages should be in jk
     # pkgs.python310.numpy
     # pkgs.python310Packages.tensorflow
     # pkgs.python310Packages.scikit-learn
   ] ++ (myHome.packages or [ ]) ++ nvim_pkgs);
 
   ## Configs ## 
-  # neovim
-  xdg.configFile."nvim/init.lua".text = builtins.readFile ../neovim/init.lua;
-  # starship sh
-  xdg.configFile."starship.toml".text = builtins.readFile ../starship/starship.toml;
-  # zk
-  xdg.configFile."config.toml".text = builtins.readFile ../zk/config.toml;
+  xdg.configFile."nvim/init.lua".source = "${proj_root}//neovim/init.lua";
+  xdg.configFile."starship.toml".source = "${proj_root}//starship/starship.toml";
+  xdg.configFile."zk/config.toml".source = "${proj_root}//zk/config.toml";
 
   ## Programs ##
   programs.jq = {
@@ -70,7 +86,8 @@ let nvim_pkgs = [
   };
   programs.alacritty = myHome.programs.alacritty or {
     enable = true;
-    # settings = myLib.fromYaml (builtins.readFile ../alacritty/alacritty.yml);
+    # settings = myLib.fromYaml (builtins.readFile "${proj_root}/alacritty/alacritty.yml");
+    settings = fromYaml (builtins.readFile "${proj_root}//alacritty/alacritty.yml");
   };
   # nix: Propagates the environment with packages and vars when enter (children of)
   # a directory with shell.nix-compatible and .envrc
@@ -86,7 +103,7 @@ let nvim_pkgs = [
   };
   programs.tmux = {
     enable = true;
-    extraConfig = builtins.readFile ../tmux/tmux.conf;
+    extraConfig = builtins.readFile "${proj_root}/tmux/tmux.conf";
   };
   programs.exa = {
     enable = true;
@@ -98,17 +115,22 @@ let nvim_pkgs = [
   };
   programs.home-manager.enable = true;
   programs.fzf.enable = true;
-  # programs.neovim = {
-  #   enable = true;
-  #   viAlias = true;
-  #   vimAlias = true;
-  #   withPython3 = true;
-  #   withNodeJs = true;
-  #   # I use vim-plug, so I probably don't require packaging
-  #   # extraConfig actually writes to init-home-manager.vim (not lua)
-  #   # https://github.com/nix-community/home-manager/pull/3287
-  #   # extraConfig = builtins.readFile ../neovim/init.lua;
-  # };
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+    withPython3 = true;
+    withNodeJs = true;
+    extraPackages = nvim_pkgs;
+    # extraPython3Packages = (pypkgs: [
+    #   # pypkgs.python-lsp-server
+    #   pypkgs.ujson
+    # ]);
+    # I use vim-plug, so I probably don't require packaging
+    # extraConfig actually writes to init-home-manager.vim (not lua)
+    # https://github.com/nix-community/home-manager/pull/3287
+    # extraConfig = builtins.readFile "${proj_root}/neovim/init.lua";
+  };
   programs.bash = {
     enable = true;
     enableCompletion = true;
@@ -138,11 +160,13 @@ let nvim_pkgs = [
     aliases = {
       a = "add";
       c = "commit";
-      ca = "commit --ammend";
+      ca = "commit --amend";
       cm = "commit -m";
       lol = "log --graph --decorate --pretty=oneline --abbrev-commit";
       lola = "log --graph --decorate --pretty=oneline --abbrev-commit --all";
       sts = "status";
+      co = "checkout";
+      b = "branch";
     };
     # No idea why this is not appearing in home-manager search
     # It's in source code, though
@@ -158,8 +182,8 @@ let nvim_pkgs = [
       ".direnv"
     ];
     extraConfig = {
-      # cache credential for 10 minutes.
-      credential.helper = "cache --timeout=600";
+      # cache credential for 50 minutes (a pomodoro session)
+      credential.helper = "cache --timeout=3000";
     };
     # why is this no longer valid?
     # pull = { rebase=true; };
@@ -167,6 +191,6 @@ let nvim_pkgs = [
   programs.ssh = {
     enable = true;
     forwardAgent = true;
-    extraConfig = builtins.readFile ../ssh/config;
+    extraConfig = builtins.readFile "${proj_root}/ssh/config";
   };
 }

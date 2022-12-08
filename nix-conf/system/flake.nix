@@ -1,8 +1,6 @@
 {
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, nixpkgs, ... }:
@@ -36,10 +34,11 @@
               prefixLength = 24;
             }];
             firewall = {
-              enable = false;
+              enable = true;
               allowedTCPPorts = [ 80 443 22 ];
             };
             useDHCP = false;
+            # required so that we get IP address from linode
             interfaces.eth0.useDHCP = true;
           };
           _boot.loader.grub.enable = true;
@@ -59,6 +58,7 @@
               };
             };
           };
+          # Highly suspect that thanks to nginx, ipv6 is disabled?
           _services.nginx = {
             enable = true;
             clientMaxBodySize = "100m"; # Allow big file transfers over git :^)
@@ -94,76 +94,7 @@
               allowedTCPPorts = [ 80 443 22 ];
             };
             useDHCP = false;
-            interfaces.eth0.useDHCP = true;
-          };
-          _boot.loader.grub.enable = true;
-          _boot.loader.grub.version = 2;
-          _services.openssh = {
-            permitRootLogin = "no";
-            enable = true;
-          };
-          _services.gitea = {
-            enable = true;
-            stateDir = "/gitea";
-            rootUrl = "https://git.pegasust.com";
-            settings = {
-              repository = {
-                "ENABLE_PUSH_CREATE_USER" = true;
-                "ENABLE_PUSH_CREATE_ORG" = true;
-              };
-            };
-          };
-          _services.nginx = {
-            enable = true;
-            clientMaxBodySize = "100m"; # Allow big file transfers over git :^)
-            recommendedGzipSettings = true;
-            recommendedOptimisation = true;
-            recommendedProxySettings = true;
-            recommendedTlsSettings = true;
-            virtualHosts."git.pegasust.com" = {
-              # Gitea hostname
-              sslCertificate = "/var/lib/acme/git.pegasust.com/fullchain.pem";
-              sslCertificateKey = "/var/lib/acme/git.pegasust.com/key.pem";
-              forceSSL = true; # Runs on port 80 and 443
-              locations."/".proxyPass = "http://localhost:3000/"; # Proxy to Gitea
-            };
-          };
-        };
-      };
-      nixosConfigurations.lester = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          ./configuration.nix
-        ];
-        specialArgs = {
-          hostname = "lester";
-          _networking = {
-            firewall.enable = true;
-            useDHCP = false;
-            interfaces.eth0.useDHCP = true;
-          };
-          _boot.loader.grub.enable = true;
-          _boot.loader.grub.version = 2;
-          _services.openssh = {
-            permitRootLogin = "no";
-            enable = true;
-          };
-        };
-      };
-      nixosConfigurations.homeless = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          ./configuration.nix
-        ];
-        specialArgs = {
-          hostname = "homeless";
-          _networking = {
-            firewall = {
-              enable = false;
-              allowedTCPPorts = [ 80 443 ];
-            };
-            useDHCP = false;
-            interfaces.eth0.useDHCP = true;
+            # interfaces.eth0.useDHCP = true;
           };
           _boot.loader.grub.enable = true;
           _boot.loader.grub.version = 2;
@@ -207,6 +138,7 @@
         specialArgs = {
           hostname = "nyx";
           _networking = {
+            enableIPv6 = false;
             interfaces.eth1.ipv4.addresses = [{
               address = "71.0.0.2";
               prefixLength = 24;

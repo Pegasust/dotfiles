@@ -395,7 +395,7 @@ remap('n', '<leader>gs', function() require('neogit').open({}) end);
 -- LSP settings
 -- This function gets run when an LSP connects to a particular buffer.
 require("inlay-hints").setup {
-    only_current_line = true,
+    only_current_line = false,
     eol = {
         right_align = true,
     }
@@ -440,9 +440,10 @@ local on_attach = function(client, bufnr)
     nmap('<leader>wl', function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 
-        -- enable inlay hints if available
-        require('inlay-hints').on_attach(client, bufnr)
     end, '[W]orkspace [L]ist Folders')
+
+    -- enable inlay hints if available
+    require('inlay-hints').on_attach(client, bufnr)
 
 end
 -- nvim-cmp
@@ -521,6 +522,7 @@ cmp.setup {
         { name = 'luasnip' },
         { name = 'buffer' },
         { name = 'path' },
+        { name = "conjure" },
         -- { name = 'cmp_tabnine' },
     },
 }
@@ -540,6 +542,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local servers = {
     'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'cmake', 'tailwindcss', 'prismals',
     'rnix', 'eslint', 'terraformls', 'tflint', 'svelte', 'astro', 'clojure_lsp', "bashls", 'yamlls', "pylsp",
+    "jsonls", "denols"
 }
 require("mason").setup({
     ui = {
@@ -549,12 +552,18 @@ require("mason").setup({
             package_uninstalled = "✗"
         },
         check_outdated_packages_on_open = true,
-    }
+    },
+    -- The default settings is "prepend" https://github.com/williamboman/mason.nvim#default-configuration
+    -- Which means Mason's installed path is prioritized against our local install
+    -- see: https://git.pegasust.com/pegasust/aoc/commit/b45dc32c74d84c9f787ebce7a174c9aa1d411fc2
+    -- This introduces some pitfalls, so we'll take the approach of trusting user's local installation
+    PATH = "append";
 })
 require('mason-lspconfig').setup({
     ensure_installed = servers,
     automatic_installation = true
 })
+
 local inlay_hint_tsjs = {
     includeInlayEnumMemberValueHints = true,
     includeInlayFunctionLikeReturnTypeHints = true,
@@ -606,13 +615,23 @@ require('mason-lspconfig').setup_handlers({
         require('lspconfig').tsserver.setup {
             on_attach = on_attach,
             capabilities = capabilities,
+            -- TODO: Have to figure out an alternative config for monorepo to prevent
+            -- Deno from injecting TS projects.
             -- Monorepo support: spawn one instance of lsp within the git
             -- repos.
-            root_dir = require('lspconfig.util').root_pattern('.git'),
+            --  root_dir = require('lspconfig.util').root_pattern('.git'),
+            root_dir = require('lspconfig.util').root_pattern('package.json'),
             settings = {
                 javascript = inlay_hint_tsjs,
                 typescript = inlay_hint_tsjs,
             }
+        }
+    end,
+    ["denols"] = function()
+        require('lspconfig').denols.setup {
+            on_attach = on_attach,
+            capabilities = capabilities,
+            root_dir = require('lspconfig.util').root_pattern("deno.json", "deno.jsonc"),
         }
     end,
     -- ["rust_analyzer"] = function()
@@ -660,7 +679,7 @@ require("rust-tools").setup {
         inlay_hints = {
             -- automatically set inlay hints (type hints)
             -- default: true
-            auto = true,
+            auto = false,
 
             -- Only show inlay hints for the current line
             only_current_line = false,
@@ -853,6 +872,7 @@ require('zk.commands').add("ZkOrphans", function(options)
     -- zk.edit opens notes picker
     require('zk').edit(options, { title = "Zk Orphans (unlinked notes)" })
 end)
+--
 -- ZkGrep: opens file picker
 -- In the case where `match_ctor` is falsy, create a prompt.
 -- This is so that we distinguish between ZkGrep and ZkNotes
@@ -920,6 +940,3 @@ require('lualine').setup {
 
 require('nvim-surround').setup {}
 
-vim.cmd([[
-let g:conjure#mapping#doc_word = v:false
-]])

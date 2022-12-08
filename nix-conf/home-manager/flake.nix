@@ -28,7 +28,10 @@
       system = "x86_64-linux";
       overlays = [ nixgl.overlay rust-overlay.overlays.default ];
       # pkgs = nixpkgs.legacyPackages.${system}.appendOverlays overlays;
-      pkgs = import nixpkgs { inherit system overlays; };
+      pkgs = import nixpkgs {
+        inherit system overlays;
+        config = { allowUnfree = true; };
+      };
       lib = (import ../lib-nix { inherit pkgs from-yaml; lib = pkgs.lib; });
     in
     {
@@ -74,22 +77,24 @@
               };
             };
           };
-          # NOTE: This is never actually tested
-          "ubuntu_admin" = home-manager.lib.homeManagerConfiguration {
-            inherit pkgs;
-            modules = [
-              ./home.nix
-            ];
-            extraSpecialArgs = {
-              myLib = lib;
-              myHome = {
-                username = "ubuntu_admin";
-                homeDirectory = "/home/ubuntu_admin";
-                shellInitExtra = ''
-                '' + x11_wsl;
-              };
-            };
-          };
+          # NOTE: This is never actually tested. This is for Ubuntu@Felia
+          # "ubuntu_admin" = home-manager.lib.homeManagerConfiguration {
+          #   inherit pkgs;
+          #   modules = [
+          #     ./home.nix
+          #   ];
+          #   extraSpecialArgs = {
+          #     myLib = lib;
+          #     myHome = {
+          #       username = "ubuntu_admin";
+          #       homeDirectory = "/home/ubuntu_admin";
+          #       shellInitExtra = ''
+          #       '' + x11_wsl;
+          #     };
+          #   };
+          # };
+
+          # Personal laptop
           hwtr = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
             modules = [
@@ -100,9 +105,9 @@
               myHome = {
                 username = "hwtr";
                 homeDirectory = "/home/hwtr";
-                packages = [ 
-                  pkgs.nixgl.nixGLIntel 
-                  # pkgs.postman 
+                packages = [
+                  pkgs.nixgl.nixGLIntel
+                  pkgs.postman
                 ];
                 shellAliases = {
                   nixGL = "nixGLIntel";
