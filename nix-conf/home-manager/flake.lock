@@ -45,22 +45,6 @@
         "type": "github"
       }
     },
-    "from-yaml": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1667993187,
-        "narHash": "sha256-JG1XYGCmR7Jqawvs8AO4c2mrOl37BXGGgU9cfeL0b8k=",
-        "owner": "pegasust",
-        "repo": "fromYaml",
-        "rev": "ef0ed4acfc4a6b7a0f1515cb48f5dbdda89dac3c",
-        "type": "github"
-      },
-      "original": {
-        "owner": "pegasust",
-        "repo": "fromYaml",
-        "type": "github"
-      }
-    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -151,7 +135,6 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "from-yaml": "from-yaml",
         "home-manager": "home-manager",
         "nixgl": "nixgl",
         "nixpkgs": "nixpkgs_2",

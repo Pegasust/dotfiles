@@ -2,6 +2,7 @@
 { config
 , pkgs # This is by default just ``= import <nixpkgs>{}`
 , myHome
+, myLib
 , ...
 }:
 let
@@ -28,20 +29,7 @@ let
     # ]))
   ];
   proj_root = builtins.toString ./../..;
-  # TODO: put this in a seperate library
-  # callPackage supports both PATH and function as first param!
-  yamlToJsonDrv = yamlContent: outputPath: pkgs.callPackage
-    ({ runCommand }:
-      # runCommand source: https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/trivial-builders.nix#L33
-      runCommand outputPath { inherit yamlContent; nativeBuildInputs = [ pkgs.yq ]; }
-        # run yq which outputs '.' (no filter) on file at yamlPath
-        # note that $out is passed onto the bash/sh script for execution
-        ''
-          echo "$yamlContent" | yq >$out
-        '')
-    { };
-  # fromYamlPath = yamlPath: builtins.fromJSON (builtins.readFile (yamlToJsonDrv yamlPath "any-output.json"));
-  fromYaml = yamlContent: builtins.fromJSON (builtins.readFile (yamlToJsonDrv yamlContent "any_output.json"));
+  inherit (myLib) fromYaml;
 in
 {
   home = {

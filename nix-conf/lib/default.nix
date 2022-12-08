@@ -1,5 +1,9 @@
-{pkgs, lib, from-yaml, ...}@flake_import: 
-{
-    fromYaml = import "${from-yaml}/fromYaml.nix" {inherit lib;};
-    
+{ pkgs
+, lib
+, ... }@flake_import:
+let serde = import ./serde { inherit pkgs lib; };
+in
+pkgs.lib // lib // {
+  fromYaml = serde.fromYaml;
+  fromYamlPath = serde.fromYamlPath;
 }

@@ -9,10 +9,6 @@
     flake-utils.url = "github:numtide/flake-utils";
     nixgl.url = "github:guibou/nixGL";
     rust-overlay.url = "github:oxalica/rust-overlay";
-    from-yaml = {
-      url = "github:pegasust/fromYaml";
-      flake = false;
-    };
   };
 
   outputs =
@@ -21,7 +17,6 @@
     , nixgl
     , rust-overlay
     , flake-utils
-    , from-yaml
     , ...
     }:
     let
@@ -32,7 +27,7 @@
         inherit system overlays;
         config = { allowUnfree = true; };
       };
-      lib = (import ../lib-nix { inherit pkgs from-yaml; lib = pkgs.lib; });
+      lib = (import ../lib { inherit pkgs; lib = pkgs.lib; });
     in
     {
       homeConfigurations =
