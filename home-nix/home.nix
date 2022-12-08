@@ -22,7 +22,7 @@ let nvim_pkgs = [
   (pkgs.python310Full.withPackages (pypkgs: [
     # pypkgs.python-lsp-server # python-lsp. Now we'll have to tell mason to look for this
     pypkgs.pynvim # nvim provider
-    pypkgs.ujson  # pylsp seems to rely on this. satisfy it lol
+    pypkgs.ujson # pylsp seems to rely on this. satisfy it lol
   ]))
 ]; in
 {
@@ -57,8 +57,12 @@ let nvim_pkgs = [
   ] ++ (myHome.packages or [ ]) ++ nvim_pkgs);
 
   ## Configs ## 
+  # neovim
   xdg.configFile."nvim/init.lua".text = builtins.readFile ../neovim/init.lua;
+  # starship sh
   xdg.configFile."starship.toml".text = builtins.readFile ../starship/starship.toml;
+  # zk
+  xdg.configFile."config.toml".text = builtins.readFile ../zk/config.toml;
 
   ## Programs ##
   programs.jq = {
