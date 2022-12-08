@@ -395,7 +395,7 @@ remap('n', '<leader>gs', function() require('neogit').open({}) end);
 -- LSP settings
 -- This function gets run when an LSP connects to a particular buffer.
 require("inlay-hints").setup {
-    only_current_line = true,
+    only_current_line = false,
     eol = {
         right_align = true,
     }
@@ -440,9 +440,10 @@ local on_attach = function(client, bufnr)
     nmap('<leader>wl', function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 
-        -- enable inlay hints if available
-        require('inlay-hints').on_attach(client, bufnr)
     end, '[W]orkspace [L]ist Folders')
+
+    -- enable inlay hints if available
+    require('inlay-hints').on_attach(client, bufnr)
 
 end
 -- nvim-cmp
@@ -678,7 +679,7 @@ require("rust-tools").setup {
         inlay_hints = {
             -- automatically set inlay hints (type hints)
             -- default: true
-            auto = true,
+            auto = false,
 
             -- Only show inlay hints for the current line
             only_current_line = false,

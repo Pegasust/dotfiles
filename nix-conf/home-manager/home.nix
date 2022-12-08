@@ -30,7 +30,6 @@ let
   proj_root = builtins.toString ./../..;
   # TODO: put this in a seperate library
   # callPackage supports both PATH and function as first param!
-  # TODO: support yaml string with writeTextFile (provided by callPackge)
   yamlToJsonDrv = yamlContent: outputPath: pkgs.callPackage ({ runCommand }:
       # runCommand source: https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/trivial-builders.nix#L33
       runCommand outputPath { inherit yamlContent; nativeBuildInputs = [ pkgs.yq ]; }
