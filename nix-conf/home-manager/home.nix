@@ -1,8 +1,13 @@
-# myHome is injected from extraSpecialArgs in flake.nix
-{ config
+# This is a nix module, with an additional wrapper from home-manager
+# myHome, myLib is injected from extraSpecialArgs in flake.nix
+# This file represents the base settings for each machine
+# Additional configurations goes to profiles/<user>
+# or inlined in flake.nix
+{ config # Represents the realized final configuration
 , pkgs # This is by default just ``= import <nixpkgs>{}`
 , myHome
 , myLib
+, option # The options we're given, this might be useful for typesafety?
 , ...
 }:
 let
@@ -42,10 +47,7 @@ in
     pkgs.htop
     pkgs.ripgrep
     pkgs.unzip
-    pkgs.rust-bin.nightly.latest.default # Needed for alacritty?
-
     # pkgs.nodejs-18_x
-    # pkgs.rust-analyzer  # This should be very specific to env
 
 
     # cool utilities
