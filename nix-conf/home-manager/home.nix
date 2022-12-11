@@ -74,11 +74,6 @@ in
   programs.jq = {
     enable = true;
   };
-  programs.alacritty = myHome.programs.alacritty or {
-    enable = true;
-    # settings = myLib.fromYaml (builtins.readFile "${proj_root}/alacritty/alacritty.yml");
-    settings = fromYaml (builtins.readFile "${proj_root}//alacritty/alacritty.yml");
-  };
   # nix: Propagates the environment with packages and vars when enter (children of)
   # a directory with shell.nix-compatible and .envrc
   programs.direnv = {

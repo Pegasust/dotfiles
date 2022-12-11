@@ -1,5 +1,5 @@
 { pkgs
-, lib
+, lib ? pkgs.lib
 , ... }@flake_import:
 let serde = import ./serde { inherit pkgs lib; };
 in

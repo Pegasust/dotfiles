@@ -27,7 +27,8 @@
         inherit system overlays;
         config = { allowUnfree = true; };
       };
-      lib = (import ../lib { inherit pkgs; lib = pkgs.lib; });
+      # lib = (import ../lib { inherit pkgs; lib = pkgs.lib; });
+      mkModuleArgs = import ./base/mkModuleArgs.nix;
     in
     {
       homeConfigurations =
@@ -46,8 +47,8 @@
             # optionally pass inarguments to module
             # we migrate this from in-place modules to allow flexibility
             # in this case, we can add "home" to input arglist of home.nix
-            extraSpecialArgs = {
-              myLib = lib;
+            extraSpecialArgs = mkModuleArgs {
+              inherit pkgs;
               myHome = {
                 username = "hungtr";
                 homeDirectory = "/home/hungtr";
@@ -62,8 +63,8 @@
             # optionally pass inarguments to module
             # we migrate this from in-place modules to allow flexibility
             # in this case, we can add "home" to input arglist of home.nix
-            extraSpecialArgs = {
-              myLib = lib;
+            extraSpecialArgs = mkModuleArgs {
+              inherit pkgs;
               myHome = {
                 username = "nixos";
                 homeDirectory = "/home/nixos";
@@ -94,9 +95,13 @@
             inherit pkgs;
             modules = [
               ./home.nix
+              ./base/alacritty.nix
+              {
+                base.alacritty.font.family = "BitstreamVeraSansMono Nerd Font";
+              }
             ];
-            extraSpecialArgs = {
-              myLib = lib;
+            extraSpecialArgs = mkModuleArgs {
+              inherit pkgs;
               myHome = {
                 username = "hwtr";
                 homeDirectory = "/home/hwtr";
