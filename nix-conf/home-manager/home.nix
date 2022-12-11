@@ -47,8 +47,7 @@ in
     pkgs.htop
     pkgs.ripgrep
     pkgs.unzip
-    # pkgs.nodejs-18_x
-
+    pkgs.zip
 
     # cool utilities
     pkgs.yq # Yaml adaptor for jq (only pretty print, little query)
