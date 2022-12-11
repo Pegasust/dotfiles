@@ -139,9 +139,4 @@ in
     };
     initExtra = myHome.shellInitExtra or "";
   };
-  programs.ssh = {
-    enable = true;
-    forwardAgent = true;
-    extraConfig = builtins.readFile "${proj_root}/ssh/config";
-  };
 }
