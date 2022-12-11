@@ -60,6 +60,12 @@
             inherit pkgs;
             modules = [
               ./home.nix
+              {
+                base.shells = {
+                  shellInitExtra = ''
+                '' + x11_wsl;
+                };
+              }
             ];
             # optionally pass inarguments to module
             # we migrate this from in-place modules to allow flexibility
@@ -69,8 +75,6 @@
               myHome = {
                 username = "nixos";
                 homeDirectory = "/home/nixos";
-                shellInitExtra = ''
-                '' + x11_wsl;
               };
             };
           };
@@ -98,6 +102,11 @@
               ./home.nix
               {
                 base.alacritty.font.family = "BitstreamVeraSansMono Nerd Font";
+                base.shells = {
+                  shellAliases = {
+                    nixGL = "nixGLIntel";
+                  };
+                };
               }
             ];
             extraSpecialArgs = mkModuleArgs {
@@ -109,9 +118,6 @@
                   pkgs.nixgl.nixGLIntel
                   pkgs.postman
                 ];
-                shellAliases = {
-                  nixGL = "nixGLIntel";
-                };
               };
             };
           };

@@ -67,38 +67,12 @@ in
 
   ## Configs ## 
   xdg.configFile."nvim/init.lua".source = "${proj_root}//neovim/init.lua";
-  xdg.configFile."starship.toml".source = "${proj_root}//starship/starship.toml";
   xdg.configFile."zk/config.toml".source = "${proj_root}//zk/config.toml";
 
   ## Programs ##
   programs.jq = {
     enable = true;
   };
-  # nix: Propagates the environment with packages and vars when enter (children of)
-  # a directory with shell.nix-compatible and .envrc
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-    # nix-direnv.enableFlakes = true; # must remove. this will always be supported.
-  };
-  # z <path> as smarter cd
-  programs.zoxide = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-  programs.tmux = {
-    enable = true;
-    extraConfig = builtins.readFile "${proj_root}/tmux/tmux.conf";
-  };
-  programs.exa = {
-    enable = true;
-    enableAliases = true;
-  };
-  programs.starship = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-  programs.fzf.enable = true;
   programs.neovim = {
     enable = true;
     viAlias = true;
@@ -114,28 +88,5 @@ in
     # extraConfig actually writes to init-home-manager.vim (not lua)
     # https://github.com/nix-community/home-manager/pull/3287
     # extraConfig = builtins.readFile "${proj_root}/neovim/init.lua";
-  };
-  programs.bash = {
-    enable = true;
-    enableCompletion = true;
-    initExtra = myHome.shellInitExtra or "";
-  };
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    enableAutosuggestions = true;
-    shellAliases = {
-      nix-rebuild = "sudo nixos-rebuild switch";
-      hm-switch = "home-manager switch --flake";
-    } // (myHome.shellAliases or { });
-    history = {
-      size = 10000;
-      path = "${config.xdg.dataHome}/zsh/history";
-    };
-    oh-my-zsh = {
-      enable = true;
-      plugins = [ "git" "sudo" "command-not-found" "gitignore" "ripgrep" "rust" ];
-    };
-    initExtra = myHome.shellInitExtra or "";
   };
 }
