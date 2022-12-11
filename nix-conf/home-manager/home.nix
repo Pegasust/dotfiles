@@ -139,40 +139,6 @@ in
     };
     initExtra = myHome.shellInitExtra or "";
   };
-  programs.git = {
-    enable = true;
-    lfs.enable = true;
-    aliases = {
-      a = "add";
-      c = "commit";
-      ca = "commit --amend";
-      cm = "commit -m";
-      lol = "log --graph --decorate --pretty=oneline --abbrev-commit";
-      lola = "log --graph --decorate --pretty=oneline --abbrev-commit --all";
-      sts = "status";
-      co = "checkout";
-      b = "branch";
-    };
-    # No idea why this is not appearing in home-manager search
-    # It's in source code, though
-    userName = "pegasust";
-    userEmail = "pegasucksgg@gmail.com";
-    extraConfig = {
-      merge = { tool = "vimdiff"; conflictstyle = "diff3"; };
-    };
-    ignores = [
-      # vscode-related settings
-      ".vscode"
-      # envrc cached outputs
-      ".direnv"
-    ];
-    extraConfig = {
-      # cache credential for 50 minutes (a pomodoro session)
-      credential.helper = "cache --timeout=3000";
-    };
-    # why is this no longer valid?
-    # pull = { rebase=true; };
-  };
   programs.ssh = {
     enable = true;
     forwardAgent = true;

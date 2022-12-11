@@ -28,7 +28,8 @@
         config = { allowUnfree = true; };
       };
       # lib = (import ../lib { inherit pkgs; lib = pkgs.lib; });
-      mkModuleArgs = import ./base/mkModuleArgs.nix;
+      base = import ./base;
+      inherit (base) mkModuleArgs;
     in
     {
       homeConfigurations =
@@ -41,7 +42,7 @@
         rec {
           "hungtr" = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
-            modules = [
+            modules = base.modules ++ [
               ./home.nix
             ];
             # optionally pass inarguments to module
@@ -93,9 +94,8 @@
           # Personal laptop
           hwtr = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
-            modules = [
+            modules = base.modules ++ [
               ./home.nix
-              ./base/alacritty.nix
               {
                 base.alacritty.font.family = "BitstreamVeraSansMono Nerd Font";
               }
