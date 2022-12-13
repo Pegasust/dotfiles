@@ -280,7 +280,8 @@ end, { desc = '[F]ind [D]iagnostics' })
 
 -- ZK remap stuffs
 remap('n', '<leader>zf', function()
-    vim.cmd([[:ZkNotes]])
+    -- vim.cmd([[:ZkNotes]])
+    require('zk').edit({}, {multi_select = false})
 end, { desc = '[Z]ettelkasten [F]iles' })
 
 remap('n', '<leader>zg', function()
@@ -388,7 +389,7 @@ harpoon_nav('8', 8)
 harpoon_nav('9', 9)
 harpoon_nav('0', 10)
 
--- neogit: easy-to-see git status
+-- neogit: easy-to-see git status. Provides only productivity on staging/unstage
 require('neogit').setup {}
 remap('n', '<leader>gs', function() require('neogit').open({}) end);
 
@@ -890,7 +891,7 @@ require('zk.commands').add("ZkGrep", function(match_ctor)
     elseif type(match_ctor) == 'string' then
         match = { match = grep_str }
     end
-    require('zk').edit(match, { title = "Grep: '" .. grep_str .. "'" })
+    require('zk').edit(match, { title = "Grep: '" .. grep_str .. "'", mutli_select = false})
 end)
 
 
