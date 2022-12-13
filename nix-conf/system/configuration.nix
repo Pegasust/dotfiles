@@ -2,7 +2,7 @@
 let
   hostname = specialArgs.hostname;
   enableSSH = specialArgs.enableSSH or true;
-  _networking = { hostName = hostname; } // (specialArgs._networking or { });
+  _networking = lib.recursiveUpdate { hostName = hostname; } (specialArgs._networking or { });
   _boot = specialArgs._boot or { };
   _services = specialArgs._services or { };
   includeHardware = specialArgs.includeHardware or true;
@@ -63,7 +63,7 @@ with lib;
   ];
   # tailscale is mandatory : ^)
   # inherit services;
-  services = _services // {
+  services = lib.recursiveUpdate _services {
     tailscale.enable = true;
   };
   # create a oneshot job to authenticate to Tailscale
@@ -97,7 +97,7 @@ with lib;
   # Don't touch networking.firewall.enable, just configure everything else.
   # inherit networking;
   # inherit _networking;
-  networking = _networking // {
+  networking = lib.recursiveUpdate _networking {
     firewall =
       if _networking ? firewall.enable && _networking.firewall.enable then {
         trustedInterfaces = _networking.firewall.trustedInterfaces or [ ] ++ [

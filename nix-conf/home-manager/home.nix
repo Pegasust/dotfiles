@@ -124,10 +124,10 @@ in
     enable = true;
     enableCompletion = true;
     enableAutosuggestions = true;
-    shellAliases = {
+    shellAliases = pkgs.lib.recursiveUpdate {
       nix-rebuild = "sudo nixos-rebuild switch";
       hm-switch = "home-manager switch --flake";
-    } // (myHome.shellAliases or { });
+    } (myHome.shellAliases or { });
     history = {
       size = 10000;
       path = "${config.xdg.dataHome}/zsh/history";

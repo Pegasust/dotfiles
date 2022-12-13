@@ -25,10 +25,16 @@ in
     '';
     example = true;
   };
+  options.base.alacritty._actualConfig = myLib.mkOption {
+    type = myLib.types.attrs;
+    visible = false;
+    default = actualConfig;
+    description = "underlying default config";
+  };
 
   config.programs.alacritty = {
     enable = cfg.enable;
-    settings = actualConfig // {
+    settings = myLib.recursiveUpdate actualConfig {
       font.normal.family = cfg.font.family;
     };
   };

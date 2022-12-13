@@ -3,10 +3,11 @@
 , ...
 }@inputs:
 let
-  _lib = lib // import ../../lib { inherit pkgs lib; };
+  recursiveUpdate = lib.recursiveUpdate;
+  _lib = recursiveUpdate lib (import ../../lib { inherit pkgs lib; });
 in
 # TODO: Unpollute inputs
-inputs // {
+recursiveUpdate inputs {
   proj_root = builtins.toString ./../../..;
   myLib = _lib;
 }
