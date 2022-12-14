@@ -2,4 +2,7 @@
 # personalized/custom packages
 { pkgs, lib, ... }@pkgs_input: {
   # dot-hwtr = import "./dot-hwtr" pkgs_input;
+  cargo-bacon = pkgs.rustPlatform.buildRustPackage rec { 
+      pname = "bacon";
+  };
 }
