@@ -54,7 +54,7 @@ in
     pkgs.xorg.xclock # TODO: only include if have GL # For testing GL installation
     pkgs.logseq # TODO: only include if have GL # Obsidian alt
     pkgs.mosh # Parsec for SSH
-    pkgs.nixops_unstable # nixops v2
+    # pkgs.nixops_unstable # nixops v2 # insecure for now
     pkgs.lynx # Web browser at your local terminal
 
     # pkgs.tailscale # VPC;; This should be installed in system-nix
