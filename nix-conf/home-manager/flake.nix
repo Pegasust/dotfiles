@@ -33,7 +33,8 @@
         config = { allowUnfree = true; };
       };
       # lib = (import ../lib { inherit pkgs; lib = pkgs.lib; });
-      mkModuleArgs = import ./base/mkModuleArgs.nix;
+      base = import ./base;
+      inherit (base) mkModuleArgs;
     in
     {
       homeConfigurations =
@@ -46,7 +47,7 @@
         rec {
           "hungtr" = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
-            modules = [
+            modules = base.modules ++ [
               ./home.nix
             ];
             # optionally pass inarguments to module
@@ -64,6 +65,12 @@
             inherit pkgs;
             modules = [
               ./home.nix
+              {
+                base.shells = {
+                  shellInitExtra = ''
+                '' + x11_wsl;
+                };
+              }
             ];
             # optionally pass inarguments to module
             # we migrate this from in-place modules to allow flexibility
@@ -73,8 +80,6 @@
               myHome = {
                 username = "nixos";
                 homeDirectory = "/home/nixos";
-                shellInitExtra = ''
-                '' + x11_wsl;
               };
             };
           };
@@ -98,11 +103,15 @@
           # Personal laptop
           hwtr = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
-            modules = [
+            modules = base.modules ++ [
               ./home.nix
-              ./base/alacritty.nix
               {
                 base.alacritty.font.family = "BitstreamVeraSansMono Nerd Font";
+                base.shells = {
+                  shellAliases = {
+                    nixGL = "nixGLIntel";
+                  };
+                };
               }
             ];
             extraSpecialArgs = mkModuleArgs {
@@ -114,9 +123,6 @@
                   pkgs.nixgl.nixGLIntel
                   pkgs.postman
                 ];
-                shellAliases = {
-                  nixGL = "nixGLIntel";
-                };
               };
             };
           };

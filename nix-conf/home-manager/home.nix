@@ -66,39 +66,12 @@ in
 
   ## Configs ## 
   xdg.configFile."nvim/init.lua".source = "${proj_root}//neovim/init.lua";
-  xdg.configFile."starship.toml".source = "${proj_root}//starship/starship.toml";
   xdg.configFile."zk/config.toml".source = "${proj_root}//zk/config.toml";
 
   ## Programs ##
   programs.jq = {
     enable = true;
   };
-  # nix: Propagates the environment with packages and vars when enter (children of)
-  # a directory with shell.nix-compatible and .envrc
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-    # nix-direnv.enableFlakes = true; # must remove. this will always be supported.
-  };
-  # z <path> as smarter cd
-  programs.zoxide = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-  programs.tmux = {
-    enable = true;
-    extraConfig = builtins.readFile "${proj_root}/tmux/tmux.conf";
-  };
-  programs.exa = {
-    enable = true;
-    enableAliases = true;
-  };
-  programs.starship = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-  programs.home-manager.enable = true;
-  programs.fzf.enable = true;
   programs.neovim = {
     enable = true;
     viAlias = true;
@@ -114,67 +87,5 @@ in
     # extraConfig actually writes to init-home-manager.vim (not lua)
     # https://github.com/nix-community/home-manager/pull/3287
     # extraConfig = builtins.readFile "${proj_root}/neovim/init.lua";
-  };
-  programs.bash = {
-    enable = true;
-    enableCompletion = true;
-    initExtra = myHome.shellInitExtra or "";
-  };
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    enableAutosuggestions = true;
-    shellAliases = pkgs.lib.recursiveUpdate {
-      nix-rebuild = "sudo nixos-rebuild switch";
-      hm-switch = "home-manager switch --flake";
-    } (myHome.shellAliases or { });
-    history = {
-      size = 10000;
-      path = "${config.xdg.dataHome}/zsh/history";
-    };
-    oh-my-zsh = {
-      enable = true;
-      plugins = [ "git" "sudo" "command-not-found" "gitignore" "ripgrep" "rust" ];
-    };
-    initExtra = myHome.shellInitExtra or "";
-  };
-  programs.git = {
-    enable = true;
-    lfs.enable = true;
-    aliases = {
-      a = "add";
-      c = "commit";
-      ca = "commit --amend";
-      cm = "commit -m";
-      lol = "log --graph --decorate --pretty=oneline --abbrev-commit";
-      lola = "log --graph --decorate --pretty=oneline --abbrev-commit --all";
-      sts = "status";
-      co = "checkout";
-      b = "branch";
-    };
-    # No idea why this is not appearing in home-manager search
-    # It's in source code, though
-    userName = "pegasust";
-    userEmail = "pegasucksgg@gmail.com";
-    extraConfig = {
-      merge = { tool = "vimdiff"; conflictstyle = "diff3"; };
-    };
-    ignores = [
-      # vscode-related settings
-      ".vscode"
-      # envrc cached outputs
-      ".direnv"
-    ];
-    extraConfig = {
-      # cache credential for 50 minutes (a pomodoro session)
-      credential.helper = "cache --timeout=3000";
-    };
-    # why is this no longer valid?
-    # pull = { rebase=true; };
-  };
-  programs.ssh = {
-    enable = true;
-    forwardAgent = true;
-    extraConfig = builtins.readFile "${proj_root}/ssh/config";
   };
 }
