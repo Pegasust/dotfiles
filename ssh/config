@@ -42,9 +42,8 @@ Host pixi
     User hungtr
     Port 22
 
-# Ubuntu 4G Pegasust-gh@Linode
-Host ash
-    HostName 192.155.95.41
-    User hungtr
+Host mokoi
+    HostName 129.146.98.121
+    User ubuntu_admin
     Port 22
 
