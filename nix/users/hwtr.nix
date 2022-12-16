@@ -3,7 +3,7 @@
   homeConfig = home-manager.lib.homeManagerConfiguration {
     inherit pkgs;
     modules = base.modules ++ [
-      ./home.nix
+      ./home.req.nix
       {
         base.alacritty.font.family = "BitstreamVeraSansMono Nerd Font";
         base.shells = {
@@ -13,7 +13,7 @@
         };
       }
     ];
-    extraSpecialArgs = mkModuleArgs {
+    extraSpecialArgs = lib.mkModuleArgs {
       inherit pkgs;
       myHome = {
         username = "hwtr";
