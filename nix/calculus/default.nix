@@ -13,12 +13,12 @@ builtins // rec {
   filter_ = list: fn: (builtins.filter fn list);
 
   # :: [T] -> (T -> V) -> {T[int] = V;}
-  list2Attrs_ = list: fn_k_v (builtins.foldl' (acc: k: acc // { k = (fn_k_v k); }) { } list);
-  list2Attrs = fn_k_v: list (list2Attrs_ list fn_k_v);
+  list2Attrs_ = list: fn_k_v: (builtins.foldl' (acc: k: acc // { "${k}" = (fn_k_v k); }) { } list);
+  list2Attrs = fn_k_v: list: (list2Attrs_ list fn_k_v);
 
   # range :: int -> int -> [int]
   rangeIn = lib.range;
-  rangeEx = start: stop: (lib.range start stop-1);
+  rangeEx = start: stop: (lib.range start (stop -1));
 
   # [T] -> int
   len = builtins.length;
