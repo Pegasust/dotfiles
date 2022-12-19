@@ -32,7 +32,7 @@
       # fundamental functions that should only take 2 keystrokes instead of builtins (8)
       c_ = import ./calculus;
       overlays = [ rust-overlay.overlays.default nixgl.overlay ];
-    in c_
+    in 
     { };
 
 }

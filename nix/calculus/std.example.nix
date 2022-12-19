@@ -1,3 +1,4 @@
+# An example on how this would be imported (along with test cases)
 let
   pkgs = import <nixpkgs> { };
   inherit (pkgs) lib;
