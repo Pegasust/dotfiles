@@ -57,6 +57,9 @@ in
     # pkgs.nixops_unstable # nixops v2 # insecure for now
     pkgs.lynx # Web browser at your local terminal
 
+    # Personal management
+    pkgs.keepass
+
     # pkgs.tailscale # VPC;; This should be installed in system-nix
     pkgs.python310 # dev packages should be in project
     # pkgs.python310.numpy
