@@ -17,12 +17,8 @@ with lib;
   ];
   boot = _boot;
 
-# prune old builds
+  # prune old builds
   nix.settings.auto-optimise-store = true;
-
-  system.stateVersion = "22.05";
-  # users.users.<defaultUser>.uid = 1000;
-  # networking.hostName = "nixos";
 
   # Enable nix flakes
   nix.package = pkgs.nixFlakes;
@@ -116,6 +112,8 @@ with lib;
         checkReversePath = "loose";
       } else { enable = false; };
   };
+
+  environment.noXlibs = lib.mkForce false;
 
 }
 
