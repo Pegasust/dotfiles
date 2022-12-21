@@ -1,7 +1,6 @@
 #!/usr/bin/env sh
 # NOTE: Untested on case of no home-manager
 set -xv
-
 # Where this script located
 SCRIPT_DIR=$(realpath $(dirname $0))
 echo "SCRIPT_DIR: ${SCRIPT_DIR}"

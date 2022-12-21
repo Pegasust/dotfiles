@@ -35,6 +35,13 @@
       # lib = (import ../lib { inherit pkgs; lib = pkgs.lib; });
       base = import ./base;
       inherit (base) mkModuleArgs;
+      kde_module = {config, pkgs, ...}: {
+        fonts.fontconfig.enable = true;
+        home.packages = [(pkgs.nerdfonts.override {fonts = ["DroidSansMono"];})];
+        # For some reasons, Windows es in the font name as DroidSansMono NF
+        # so we need to override this
+        base.alacritty.font.family = "DroidSansMono Nerd Font";
+      };
     in
     {
       homeConfigurations =
@@ -49,6 +56,23 @@
             inherit pkgs;
             modules = base.modules ++ [
               ./home.nix
+            ];
+            # optionally pass inarguments to module
+            # we migrate this from in-place modules to allow flexibility
+            # in this case, we can add "home" to input arglist of home.nix
+            extraSpecialArgs = mkModuleArgs {
+              inherit pkgs;
+              myHome = {
+                username = "hungtr";
+                homeDirectory = "/home/hungtr";
+              };
+            };
+          };
+          "hungtr@bao" = home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+            modules = base.modules ++ [
+              ./home.nix
+              kde_module
             ];
             # optionally pass inarguments to module
             # we migrate this from in-place modules to allow flexibility
