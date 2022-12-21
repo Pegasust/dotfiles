@@ -91,4 +91,7 @@ in
     # https://github.com/nix-community/home-manager/pull/3287
     # extraConfig = builtins.readFile "${proj_root}/neovim/init.lua";
   };
+  # not exist in home-manager
+  # have to do it at system level
+  # services.ntp.enable = true; # automatic time
 }

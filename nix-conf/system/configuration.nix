@@ -61,6 +61,7 @@ with lib;
   # inherit services;
   services = lib.recursiveUpdate _services {
     tailscale.enable = true;
+    ntp.enable = true;
   };
   # create a oneshot job to authenticate to Tailscale
   systemd.services.tailscale-autoconnect = {

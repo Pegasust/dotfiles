@@ -12,7 +12,7 @@ HOME_MANAGER_DIR="${SCRIPT_DIR}/../nix-conf/home-manager"
 if [ $(home-manager >/dev/null 2>&1) ]; then
     nix-shell -p home-manager --run "home-manager switch --flake $HOME_MANAGER_DIR"
 else
-    home-manager switch --flake "$HOME_MANAGER_DIR"
+    home-manager switch -b backup --flake "$HOME_MANAGER_DIR"
 fi
 
 
