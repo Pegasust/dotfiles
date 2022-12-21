@@ -16,6 +16,7 @@
       flake = false;
     };
     naersk.url = "github:nix-community/naersk";
+    nixos-wsl.url = "github:nix-community/NixOS-WSL";
   };
   outputs =
     { nixpkgs
@@ -25,6 +26,7 @@
     , rust-overlay
       # , flake-compat # This is only a placeholder for version control by flake.lock
     , naersk
+    , nixos-wsl
     , ...
     }:
 
@@ -33,6 +35,7 @@
       c_ = import ./calculus;
       overlays = [ rust-overlay.overlays.default nixgl.overlay ];
     in 
-    { };
+    { 
+    };
 
 }
