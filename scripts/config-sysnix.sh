@@ -30,6 +30,20 @@ if [ ! -f "${HARDWARE_CONF}" ]; then
 fi
 git add "${HARDWARE_CONF}"
 
+# Copy ssh/id-rsa details onto ssh/authorized_keys
+SSH_PRIV="${HOME}/.ssh/id_rsa"
+SSH_PUB="${SSH_PRIV}.pub"
+SSH_DIR="${SCRIPT_DIR}/../ssh"
+if [ ! -f "${SSH_PRIV}" ]; then
+	ssh-keygen -b 2048 -t rsa -f "${SSH_PRIV}" -q -N ""
+fi
+# idempotently adds to authorized_keys
+cat "${SSH_PUB}" >> "${SSH_DIR}/authorized_keys"
+# If we do this, then uniq is performed first :?
+# sort "${SSH_DIR}/authorized_keys" | uniq >"${SSH_DIR}/authorized_keys"
+sort "${SSH_DIR}/authorized_keys" | uniq | tee "${SSH_DIR}/authorized_keys"
+cat "${SSH_DIR}/authorized_keys"
+
 echo "Apply nixos-rebuild"
 sudo nixos-rebuild switch --flake "${SYSNIX_DIR}#${HOSTNAME}"
 

@@ -184,6 +184,17 @@
 	      specialArgs.hostname = "bao";
         modules = [
           ./configuration.nix
+          # automount using s3fs
+          ({config, pkgs, lib, ...}: {
+            environment.systemPackages = [pkgs.s3fs]; # s3fs-fuse
+            # Sadly, this uses systemd, so we can't put it in home-manager yet
+            # WIP
+            # services.autofs = {
+            #   enable = true;
+            #   autoMaster = 
+            # };
+          })
+          # GPU, sound, networking stuffs
           ({ config, pkgs, lib, ... }:
           let
             gpu_pkgs = [ pkgs.clinfo pkgs.lshw pkgs.glxinfo pkgs.pciutils ];
