@@ -11,9 +11,9 @@
         system = "x86_64-linux";
         modules = [
           ./wsl-configuration.nix
-	  {
-	    system.stateVersion = "22.05";
-	  }
+          {
+            system.stateVersion = "22.05";
+          }
         ];
         specialArgs = {
           # includeHardware = false;
@@ -28,9 +28,9 @@
         system = "x86_64-linux";
         modules = [
           ./configuration.nix
-	  {
-	    system.stateVersion = "22.05";
-	  }
+          {
+            system.stateVersion = "22.05";
+          }
         ];
         specialArgs = {
           hostname = "lizzi";
@@ -87,9 +87,9 @@
         system = "x86_64-linux";
         modules = [
           ./configuration.nix
-	  {
-	    system.stateVersion = "22.05";
-	  }
+          {
+            system.stateVersion = "22.05";
+          }
         ];
         specialArgs = {
           hostname = "pixi";
@@ -143,9 +143,9 @@
         system = "x86_64-linux";
         modules = [
           ./configuration.nix
-	  {
-	    system.stateVersion = "22.05";
-	  }
+          {
+            system.stateVersion = "22.05";
+          }
         ];
         specialArgs = {
           hostname = "nyx";
@@ -171,9 +171,9 @@
         system = "x86_64-linux";
         modules = [
           ./configuration.nix
-	  {
-	    system.stateVersion = "22.05";
-	  }
+          {
+            system.stateVersion = "22.05";
+          }
         ];
         specialArgs = {
           hostname = "nixos";
@@ -181,10 +181,9 @@
       };
       nixosConfigurations.bao = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-	specialArgs.hostname = "bao";
+	      specialArgs.hostname = "bao";
         modules = [
           ./configuration.nix
-
           ({ config, pkgs, lib, ... }:
           let
             gpu_pkgs = [ pkgs.clinfo pkgs.lshw pkgs.glxinfo pkgs.pciutils ];
@@ -217,13 +216,7 @@
             };
             systemPackages = [] ++ gpu_pkgs;
           in
-          lib.recursiveUpdate gpu_conf (lib.recursiveUpdate nv_rtx3060
-          {
-            imports =
-              [ # Include the results of the hardware scan.
-                ./profiles/bao/hardware-configuration.nix
-              ];
-
+          lib.recursiveUpdate gpu_conf (lib.recursiveUpdate nv_rtx3060 {
             # Use UEFI
             boot.loader.systemd-boot.enable = true;
 
@@ -237,8 +230,7 @@
             services.xserver.displayManager.sddm.enable = true;
             services.xserver.desktopManager.plasma5.enable = true;
 
-            
-
+            time.timeZone = "America/Phoenix";
             # Configure keymap in X11
             services.xserver.layout = "us";
             # services.xserver.xkbOptions = {
@@ -310,7 +302,6 @@
             # Before changing this value read the documentation for this option
             # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
             system.stateVersion = "22.11"; # Did you read the comment?
-
           }))
         ];
       };
