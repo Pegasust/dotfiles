@@ -192,9 +192,8 @@
               hardware.opengl = {
                 enable = true;
                 extraPackages = let 
-          	inherit (pkgs) rocm-opencl-icd rocm-opencl-runtime;
-          	in 
-          	[rocm-opencl-icd rocm-opencl-runtime];
+                  inherit (pkgs) rocm-opencl-icd rocm-opencl-runtime;
+                  in [rocm-opencl-icd rocm-opencl-runtime];
                 # Vulkan
                 driSupport = true;
                 driSupport32Bit = true;
@@ -227,6 +226,7 @@
 
             # Enable the X11 windowing system.
             services.xserver.enable = true;
+            # KDE & Plasma 5
             services.xserver.displayManager.sddm.enable = true;
             services.xserver.desktopManager.plasma5.enable = true;
 
@@ -241,9 +241,28 @@
             # Enable CUPS to print documents.
             # services.printing.enable = true;
 
-            # Enable sound.
+            # Enable sound. (pulse audio)
             sound.enable = true;
+            programs.dconf.enable = true;
             hardware.pulseaudio.enable = true;
+            hardware.pulseaudio.support32Bit = true;
+            nixpkgs.config.pulseaudio = true;
+            hardware.pulseaudio.extraConfig = "load-module module-combine-sink";
+
+            # Sound: pipewire
+            # sound.enable = false;
+            # hardware.pulseaudio.enable = false;
+            # services.pipewire = {
+            #   enable = true;
+            #   alsa.enable = true;
+            #   alsa.support32Bit = true;
+            #   pulse.enable = true;
+            #   # Might want to use JACK in the future
+            #   jack.enable = true;
+            # };
+            #
+            # security.rtkit.enable = true;
+
 
             # Enable touchpad support (enabled default in most desktopManager).
             # services.xserver.libinput.enable = true;
@@ -260,7 +279,7 @@
             # Just an initial user to get this started lol
             users.users.user = {
               initialPassword = "pw123";
-              extraGroups = [ "wheel" "networkmanager" ];
+              extraGroups = [ "wheel" "networkmanager" "audio"];
               isNormalUser = true;
             };
 
