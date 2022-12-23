@@ -188,11 +188,24 @@
           ({config, pkgs, lib, ...}: {
             environment.systemPackages = [pkgs.s3fs]; # s3fs-fuse
             # Sadly, this uses systemd, so we can't put it in home-manager yet
-            # WIP
-            # services.autofs = {
-            #   enable = true;
-            #   autoMaster = 
-            # };
+            # HACK: need to store secret somewhere so that root can access this
+            # because autofs runs as root
+            services.autofs = let 
+              personalStorage = [
+                "hot -fstype=fuse,use_cache=/tmp,del_cache,allow_other,url=f5i0.ph.idrivee2-32.com :s3fs#hungtr-hot"
+              ];
+              persoConf = pkgs.writeText "personal" (builtins.concatStringsSep "\n" personalStorage);
+            in {
+              enable = true;
+              # Creates /perso directory with every subdirectory declared by ${personalStorage}
+              # as of now (might be stale), /perso/hot is the only mount accessible
+              # that is also managed by s3fs
+              autoMaster = ''
+                /perso file:${persoConf}
+              '';
+              timeout = 600; # default, 600 seconds (10 mins) of inactivity => unmount
+              debug = true; # writes to journalctl
+            };
           })
           # GPU, sound, networking stuffs
           ({ config, pkgs, lib, ... }:
