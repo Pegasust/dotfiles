@@ -43,7 +43,8 @@ in
     stateVersion = myHome.stateVersion or "22.05";
   };
   home.packages = pkgs.lib.unique ([
-    pkgs.ncdu
+    # pkgs.ncdu
+    pkgs.rclone
     pkgs.htop
     pkgs.ripgrep
     pkgs.unzip

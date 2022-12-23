@@ -12,7 +12,6 @@
       lib = nixpkgs.lib; 
       proj_root = ./../..;
       # TODO: Change respectively to the system or make a nix shell to alias `nix run github:ryantm/agenix -- `
-      additionalPackages = [agenix.defaultPackage.x86_64-linux];
       base_modules = [
         agenix.nixosModule
         {
@@ -22,7 +21,10 @@
             # owner = "hungtr";
             # group = "users";
           };
-          environment.systemPackages = additionalPackages;
+          age.secrets._nhitrl_cred = {
+            file = ./secrets/_nhitrl.age;
+          };
+          environment.systemPackages = [agenix.defaultPackage.x86_64-linux];
         }
       ];
     in {
@@ -206,12 +208,17 @@
           ./configuration.nix
           # automount using s3fs
           ({config, pkgs, lib, ...}: {
-            environment.systemPackages = [pkgs.s3fs]; # s3fs-fuse
+            environment.systemPackages = [pkgs.s3fs pkgs.cifs-utils]; # s3fs-fuse
             # Sadly, autofs uses systemd, so we can't put it in home-manager
             # HACK: need to store secret somewhere so that root can access this
             # because autofs may run as root for now, we enforce putting the secret in this monorepo
             # services.rpcbind.enable = true;
             services.autofs = let 
+              # confToBackendArg {lol="what"; empty=""; name_only=null;} -> "lol=what,empty=,name_only"
+              # TODO: change null -> true/false. This allows overriding & better self-documentation
+              confToBackendArg = conf: (lib.concatStringsSep ","
+                (lib.mapAttrsToList (name: value: "${name}${lib.optionalString (value != null) "=${value}"}") conf));
+
               # mount_dest: path ("wow")
               # backend_args: nix attrs representing the arguments to be passed to s3fs 
               #    ({"-fstype" = "fuse"; "use_cache" = "/tmp";})
@@ -226,9 +233,6 @@
                 bucket
               }@inputs: let
                 s3fs-exec = "${pkgs.s3fs}/bin/s3fs";
-                # confToBackendArg {lol="what"; empty=""; name_only=null;} -> "lol=what,empty=,name_only"
-                confToBackendArg = conf: (lib.concatStringsSep ","
-                  (lib.mapAttrsToList (name: value: "${name}${lib.optionalString (value != null) "=${value}"}") conf));
               in "${mount_dest} ${confToBackendArg backend_args} :${s3fs-exec}\#${bucket}";
               personalStorage = [
                 (autofs-s3fs_entry {
@@ -245,6 +249,26 @@
                   };
                   bucket = "hungtr-hot";
                 })
+                (let args = {
+                  "-fstype" = "cifs";
+                  credentials = config.age.secrets._nhitrl_cred.path;
+                  user = null;
+                  uid = "1001";
+                  gid = "100";
+                  dir_mode = "0777";
+                  file_mode = "0777";
+                };
+                in "felia_d ${confToBackendArg args} ://felia.coati-celsius.ts.net/d")
+                (let args = {
+                  "-fstype" = "cifs";
+                  credentials = config.age.secrets._nhitrl_cred.path;
+                  user = null;
+                  uid = "1001";
+                  gid = "100";
+                  dir_mode = "0777";
+                  file_mode = "0777";
+                };
+                in "felia_f ${confToBackendArg args} ://felia.coati-celsius.ts.net/f")
               ];
               persoConf = pkgs.writeText "auto.personal" (builtins.concatStringsSep "\n" personalStorage);
             in {

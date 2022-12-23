@@ -12,4 +12,5 @@ let
   c_ = builtins;
 in {
   "system/secrets/s3fs.age".publicKeys = c_.attrValues (all);
+  "system/secrets/_nhitrl.age".publicKeys = c_.attrValues (all);
 }
