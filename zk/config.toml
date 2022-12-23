@@ -1,7 +1,7 @@
 [note] # Settings that reflect the creation of a new note
 language = "en"
 default-title = "Untitled"
-filename = "{{date now 'timestamp'}}" # Loyal to my current style: 202208201345
+filename = "{{format-date now 'timestamp'}}" # Loyal to my current style: 202208201345
 extension = "md" # might switch to mdx
 
 [extra]

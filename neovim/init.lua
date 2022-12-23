@@ -95,6 +95,9 @@ endif
 ]])
 
 vim.cmd([[
+set ignorecase
+set smartcase
+set incsearch
 set number relativenumber
 set tabstop=4 softtabstop=4
 set autoindent
