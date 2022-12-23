@@ -16,7 +16,12 @@
       base_modules = [
         agenix.nixosModule
         {
-          age.secrets.s3fs.file = ./secrets/s3fs.age;
+          age.secrets.s3fs = {
+            file = ./secrets/s3fs.age;
+            # mode = "600";  # owner + group only
+            # owner = "hungtr";
+            # group = "users";
+          };
           environment.systemPackages = additionalPackages;
         }
       ];
@@ -205,6 +210,7 @@
             # Sadly, autofs uses systemd, so we can't put it in home-manager
             # HACK: need to store secret somewhere so that root can access this
             # because autofs may run as root for now, we enforce putting the secret in this monorepo
+            # services.rpcbind.enable = true;
             services.autofs = let 
               # mount_dest: path ("wow")
               # backend_args: nix attrs representing the arguments to be passed to s3fs 
@@ -223,7 +229,7 @@
                 # confToBackendArg {lol="what"; empty=""; name_only=null;} -> "lol=what,empty=,name_only"
                 confToBackendArg = conf: (lib.concatStringsSep ","
                   (lib.mapAttrsToList (name: value: "${name}${lib.optionalString (value != null) "=${value}"}") conf));
-              in "${mount_dest} ${confToBackendArg backend_args} ${s3fs-exec}#${bucket}";
+              in "${mount_dest} ${confToBackendArg backend_args} :${s3fs-exec}\#${bucket}";
               personalStorage = [
                 (autofs-s3fs_entry {
                   mount_dest = "hot";
@@ -232,14 +238,15 @@
                     use_cache = "/tmp";
                     del_cache = null;
                     allow_other = null;
-                    url = "https://f5i0.ph.idrivee2-32.com";
+                    url = ''"https://f5i0.ph.idrivee2-32.com"'';
                     # TODO: builtins.readFile requires a Git-controlled file
                     passwd_file = config.age.secrets.s3fs.path;
+                    # dbglevel = "debug"; # enable this for better debugging info in journalctl
                   };
                   bucket = "hungtr-hot";
                 })
               ];
-              persoConf = pkgs.writeText "personal" (builtins.concatStringsSep "\n" personalStorage);
+              persoConf = pkgs.writeText "auto.personal" (builtins.concatStringsSep "\n" personalStorage);
             in {
               enable = true;
               # Creates /perso directory with every subdirectory declared by ${personalStorage}
@@ -249,7 +256,7 @@
                 /perso file:${persoConf}
               '';
               timeout = 600; # default, 600 seconds (10 mins) of inactivity => unmount
-              debug = true; # writes to journalctl
+              # debug = true; # writes to more to journalctl
             };
           })
           # GPU, sound, networking stuffs
