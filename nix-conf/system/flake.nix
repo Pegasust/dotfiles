@@ -1,15 +1,24 @@
 {
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
+    # TODO: when sops-nix is supported in home-manager, switch to home-manager instead
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, ... }:
-    let lib = nixpkgs.lib; in
-    {
+  outputs = { self, nixpkgs, sops-nix, ... }:
+    let 
+      lib = nixpkgs.lib; 
+      proj_root = builtins.toString ./../..;
+      # TODO: when sops-nix is supported in home-manager, switch to home-manager instead
+      base_modules = [sops-nix.nixosModules.sops];
+    in {
       # Windows with NixOS WSL
       nixosConfigurations.Felia = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        modules = [
+        modules = base_modules ++ [
           ./wsl-configuration.nix
           {
             system.stateVersion = "22.05";
@@ -26,7 +35,7 @@
       };
       nixosConfigurations.lizzi = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        modules = [
+        modules = base_modules ++ [
           ./configuration.nix
           {
             system.stateVersion = "22.05";
@@ -85,7 +94,7 @@
       # Generic machine
       nixosConfigurations.pixi = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        modules = [
+        modules = base_modules ++ [
           ./configuration.nix
           {
             system.stateVersion = "22.05";
@@ -141,7 +150,7 @@
       };
       nixosConfigurations.nyx = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        modules = [
+        modules = base_modules ++ [
           ./configuration.nix
           {
             system.stateVersion = "22.05";
@@ -169,7 +178,7 @@
       };
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        modules = [
+        modules = base_modules ++ [
           ./configuration.nix
           {
             system.stateVersion = "22.05";
@@ -182,17 +191,49 @@
       nixosConfigurations.bao = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
 	      specialArgs.hostname = "bao";
-        modules = [
+        modules = base_modules ++ [
           ./configuration.nix
           # automount using s3fs
           ({config, pkgs, lib, ...}: {
             environment.systemPackages = [pkgs.s3fs]; # s3fs-fuse
-            # Sadly, this uses systemd, so we can't put it in home-manager yet
+            # Sadly, autofs uses systemd, so we can't put it in home-manager
             # HACK: need to store secret somewhere so that root can access this
-            # because autofs runs as root
+            # because autofs may run as root for now, we enforce putting the secret in this monorepo
             services.autofs = let 
+              # mount_dest: path ("wow")
+              # backend_args: nix attrs representing the arguments to be passed to s3fs 
+              #    ({"-fstype" = "fuse"; "use_cache" = "/tmp";})
+              # bucket: bucket name (hungtr-hot)
+              #     NOTE: s3 custom provider will be provided inside
+              #    backend_args, so just put the bucket name here
+              #
+              #-> "${mount_dest} ${formatted_args} ${s3fs-bin}#${bucket}"
+              autofs-s3fs_entry = {
+                mount_dest,
+                backend_args? {"-fstype" = "fuse";}, 
+                bucket
+              }@inputs: let
+                s3fs-exec = "${pkgs.s3fs}/bin/s3fs";
+                # confToBackendArg {lol="what"; empty=""; name_only=null;} -> "lol=what,empty=,name_only"
+                confToBackendArg = conf: (lib.concatStringsSep ","
+                  (lib.mapAttrsToList (name: value: "${name}${lib.optionalString (value != null) "=${value}"}") conf));
+              in "${mount_dest} ${confToBackendArg backend_args} ${s3fs-exec}#${bucket}";
               personalStorage = [
-                "hot -fstype=fuse,use_cache=/tmp,del_cache,allow_other,url=f5i0.ph.idrivee2-32.com :s3fs#hungtr-hot"
+                # (autofs-s3fs_entry {
+                #   mount_dest = "hot";
+                #   backend_args = {
+                #     "-fstype" = "fuse";
+                #     use_cache = "/tmp";
+                #     del_cache = null;
+                #     allow_other = null;
+                #     url = "https://f5i0.ph.idrivee2-32.com";
+                #     # TODO: builtins.readFile requires a Git-controlled file
+                #     passwd_file = (pkgs.writeText "env.s3fs.idrive" (builtins.readFile 
+                #       "${proj_root}//secrets/env.s3fs"
+                #     ));
+                #   };
+                #   bucket = "hungtr-hot";
+                # })
               ];
               persoConf = pkgs.writeText "personal" (builtins.concatStringsSep "\n" personalStorage);
             in {
