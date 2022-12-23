@@ -1,14 +1,24 @@
 {
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
-    agenix.url = "github:ryantm/agenix";
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, agenix, ... }:
     let 
       lib = nixpkgs.lib; 
       proj_root = ./../..;
-      base_modules = [agenix.nixosModule];
+      # TODO: Change respectively to the system or make a nix shell to alias `nix run github:ryantm/agenix -- `
+      additionalPackages = [agenix.defaultPackage.x86_64-linux];
+      base_modules = [
+        agenix.nixosModule
+        {
+          environment.systemPackages = additionalPackages;
+        }
+      ];
     in {
       # Windows with NixOS WSL
       nixosConfigurations.Felia = nixpkgs.lib.nixosSystem {
@@ -214,21 +224,21 @@
                   (lib.mapAttrsToList (name: value: "${name}${lib.optionalString (value != null) "=${value}"}") conf));
               in "${mount_dest} ${confToBackendArg backend_args} ${s3fs-exec}#${bucket}";
               personalStorage = [
-                (autofs-s3fs_entry {
-                  mount_dest = "hot";
-                  backend_args = {
-                    "-fstype" = "fuse";
-                    use_cache = "/tmp";
-                    del_cache = null;
-                    allow_other = null;
-                    url = "https://f5i0.ph.idrivee2-32.com";
-                    # TODO: builtins.readFile requires a Git-controlled file
-                    passwd_file = (pkgs.writeText "env.s3fs.idrive" (builtins.readFile 
-                      ./../../secrets/env.s3fs
-                    ));
-                  };
-                  bucket = "hungtr-hot";
-                })
+                # (autofs-s3fs_entry {
+                #   mount_dest = "hot";
+                #   backend_args = {
+                #     "-fstype" = "fuse";
+                #     use_cache = "/tmp";
+                #     del_cache = null;
+                #     allow_other = null;
+                #     url = "https://f5i0.ph.idrivee2-32.com";
+                #     # TODO: builtins.readFile requires a Git-controlled file
+                #     passwd_file = (pkgs.writeText "env.s3fs.idrive" (builtins.readFile 
+                #       ./../../secrets/env.s3fs
+                #     ));
+                #   };
+                #   bucket = "hungtr-hot";
+                # })
               ];
               persoConf = pkgs.writeText "personal" (builtins.concatStringsSep "\n" personalStorage);
             in {

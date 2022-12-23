@@ -1,12 +1,32 @@
 {
   "nodes": {
+    "agenix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1665870395,
+        "narHash": "sha256-Tsbqb27LDNxOoPLh0gw2hIb6L/6Ow/6lIBvqcHzEKBI=",
+        "owner": "ryantm",
+        "repo": "agenix",
+        "rev": "a630400067c6d03c9b3e0455347dc8559db14288",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ryantm",
+        "repo": "agenix",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1669140675,
-        "narHash": "sha256-npzfyfLECsJWgzK/M4gWhykP2DNAJTYjgY2BWkz/oEQ=",
+        "lastModified": 1671359686,
+        "narHash": "sha256-3MpC6yZo+Xn9cPordGz2/ii6IJpP2n8LE8e/ebUXLrs=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "2788904d26dda6cfa1921c5abb7a2466ffe3cb8c",
+        "rev": "04f574a1c0fde90b51bf68198e2297ca4e7cccf4",
         "type": "github"
       },
       "original": {
@@ -15,47 +35,10 @@
         "type": "indirect"
       }
     },
-    "nixpkgs-stable": {
-      "locked": {
-        "lastModified": 1671459584,
-        "narHash": "sha256-6wRK7xmeHfClJ0ICOkax1avLZVGTDqBodQlkl/opccY=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "87b58217c9a05edcf7630b9be32570f889217aef",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "release-22.11",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs",
-        "sops-nix": "sops-nix"
-      }
-    },
-    "sops-nix": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "nixpkgs-stable": "nixpkgs-stable"
-      },
-      "locked": {
-        "lastModified": 1671472949,
-        "narHash": "sha256-9iHSGpljCX+RypahQssBXPwkru9onfKfceCTeVrMpH4=",
-        "owner": "Mic92",
-        "repo": "sops-nix",
-        "rev": "32840f16ffa0856cdf9503a8658f2dd42bf70342",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Mic92",
-        "repo": "sops-nix",
-        "type": "github"
+        "agenix": "agenix",
+        "nixpkgs": "nixpkgs"
       }
     }
   },
