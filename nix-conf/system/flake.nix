@@ -16,6 +16,7 @@
       base_modules = [
         agenix.nixosModule
         {
+          age.secrets.s3fs.file = ./secrets/s3fs.age;
           environment.systemPackages = additionalPackages;
         }
       ];
@@ -224,21 +225,19 @@
                   (lib.mapAttrsToList (name: value: "${name}${lib.optionalString (value != null) "=${value}"}") conf));
               in "${mount_dest} ${confToBackendArg backend_args} ${s3fs-exec}#${bucket}";
               personalStorage = [
-                # (autofs-s3fs_entry {
-                #   mount_dest = "hot";
-                #   backend_args = {
-                #     "-fstype" = "fuse";
-                #     use_cache = "/tmp";
-                #     del_cache = null;
-                #     allow_other = null;
-                #     url = "https://f5i0.ph.idrivee2-32.com";
-                #     # TODO: builtins.readFile requires a Git-controlled file
-                #     passwd_file = (pkgs.writeText "env.s3fs.idrive" (builtins.readFile 
-                #       ./../../secrets/env.s3fs
-                #     ));
-                #   };
-                #   bucket = "hungtr-hot";
-                # })
+                (autofs-s3fs_entry {
+                  mount_dest = "hot";
+                  backend_args = {
+                    "-fstype" = "fuse";
+                    use_cache = "/tmp";
+                    del_cache = null;
+                    allow_other = null;
+                    url = "https://f5i0.ph.idrivee2-32.com";
+                    # TODO: builtins.readFile requires a Git-controlled file
+                    passwd_file = config.age.secrets.s3fs.path;
+                  };
+                  bucket = "hungtr-hot";
+                })
               ];
               persoConf = pkgs.writeText "personal" (builtins.concatStringsSep "\n" personalStorage);
             in {
