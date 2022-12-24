@@ -354,15 +354,19 @@
             services.xserver.displayManager.sddm.enable = true;
             services.xserver.desktopManager.plasma5 = {
               enable = true;
-              excludePackages = let qt = pkgs.libsForQt5; in [
-                qt.elisa       # audio viewer
-                qt.konsole     # I use alacritty instaed
-                qt.plasma-browser-integration
-                qt.print-manager # will enable if I need
-                qt.khelpcenter   # why not just write manpages instead :(
-                qt.ksshaskpass   # pls just put prompts on my dear terminal
+              excludePackages = let plasma5 = pkgs.libsForQt5; in [
+                plasma5.elisa       # audio viewer
+                plasma5.konsole     # I use alacritty instaed
+                plasma5.plasma-browser-integration
+                plasma5.print-manager # will enable if I need
+                plasma5.khelpcenter   # why not just write manpages instead :(
+                # plasma5.ksshaskpass   # pls just put prompts on my dear terminal
               ];
             };
+            
+            # disables KDE's setting of askpassword
+            programs.ssh.askPassword = "";  
+            programs.ssh.enableAskPassword = false;
 
             time.timeZone = "America/Phoenix";
             # Configure keymap in X11
