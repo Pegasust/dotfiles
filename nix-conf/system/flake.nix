@@ -360,6 +360,7 @@
                 qt.plasma-browser-integration
                 qt.print-manager # will enable if I need
                 qt.khelpcenter   # why not just write manpages instead :(
+                qt.ksshaskpass   # pls just put prompts on my dear terminal
               ];
             };
 
