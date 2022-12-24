@@ -286,7 +286,7 @@
           # GPU, sound, networking stuffs
           ({ config, pkgs, lib, ... }:
           let
-            gpu_pkgs = [ pkgs.clinfo pkgs.lshw pkgs.glxinfo pkgs.pciutils ];
+            gpu_pkgs = [ pkgs.clinfo pkgs.lshw pkgs.glxinfo pkgs.pciutils pkgs.vulkan-tools ];
             gpu_conf = {
               # openCL
               hardware.opengl = {

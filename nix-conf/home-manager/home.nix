@@ -95,4 +95,9 @@ in
   # not exist in home-manager
   # have to do it at system level
   # services.ntp.enable = true; # automatic time
+  programs.nix-index = {
+    enable = true;
+    enableBashIntegration = true;
+    enableZshIntegration = true;
+  };
 }
