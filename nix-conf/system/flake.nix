@@ -21,6 +21,9 @@
             # owner = "hungtr";
             # group = "users";
           };
+          age.secrets."s3fs.digital-garden" = {
+            file = ./secrets/s3fs.digital-garden.age;
+          };
           age.secrets._nhitrl_cred = {
             file = ./secrets/_nhitrl.age;
           };
@@ -235,19 +238,40 @@
                 s3fs-exec = "${pkgs.s3fs}/bin/s3fs";
               in "${mount_dest} ${confToBackendArg backend_args} :${s3fs-exec}\#${bucket}";
               personalStorage = [
+                # hungtr-hot @ phoenix is broken :)
+                # (autofs-s3fs_entry {
+                #   mount_dest = "hot";
+                #   backend_args = {
+                #     "-fstype" = "fuse";
+                #     use_cache = "/tmp";
+                #     del_cache = null;
+                #     allow_other = null;
+                #     url = ''"https://f5i0.ph.idrivee2-32.com"'';
+                #     # TODO: builtins.readFile requires a Git-controlled file
+                #     passwd_file = config.age.secrets.s3fs.path;
+                #     dbglevel = "debug"; # enable this for better debugging info in journalctl
+                #     uid = "1000"; # default user
+                #     gid = "100";  # users
+                #     umask="003";  # others read only, fully shared for users group
+                #     # _netdev = null; # ignored by s3fs (https://github.com/s3fs-fuse/s3fs-fuse/blob/master/src/s3fs.cpp#L4910)
+                #   };
+                #   bucket = "hungtr-hot";
+                # })
                 (autofs-s3fs_entry {
-                  mount_dest = "hot";
+                  mount_dest = "garden";
                   backend_args = {
                     "-fstype" = "fuse";
                     use_cache = "/tmp";
                     del_cache = null;
                     allow_other = null;
-                    url = ''"https://f5i0.ph.idrivee2-32.com"'';
-                    # TODO: builtins.readFile requires a Git-controlled file
-                    passwd_file = config.age.secrets.s3fs.path;
-                    # dbglevel = "debug"; # enable this for better debugging info in journalctl
+                    url = "https://v5h5.la11.idrivee2-14.com";
+                    passwd_file = config.age.secrets."s3fs.digital-garden".path;
+                    dbglevel = "debug"; # enable this for better debugging info in journalctl
+                    uid = "1000"; # default user
+                    gid = "100";  # users
+                    umask="003";  # others read only, fully shared for users group
                   };
-                  bucket = "hungtr-hot";
+                  bucket = "digital-garden";
                 })
                 (let args = {
                   "-fstype" = "cifs";
@@ -279,7 +303,7 @@
               autoMaster = ''
                 /perso file:${persoConf}
               '';
-              timeout = 600; # default, 600 seconds (10 mins) of inactivity => unmount
+              timeout = 30; # default: 600, 600 seconds (10 mins) of inactivity => unmount
               # debug = true; # writes to more to journalctl
             };
           })
@@ -328,7 +352,16 @@
             services.xserver.enable = true;
             # KDE & Plasma 5
             services.xserver.displayManager.sddm.enable = true;
-            services.xserver.desktopManager.plasma5.enable = true;
+            services.xserver.desktopManager.plasma5 = {
+              enable = true;
+              excludePackages = let qt = pkgs.libsForQt5; in [
+                qt.elisa       # audio viewer
+                qt.konsole     # I use alacritty instaed
+                qt.plasma-browser-integration
+                qt.print-manager # will enable if I need
+                qt.khelpcenter   # why not just write manpages instead :(
+              ];
+            };
 
             time.timeZone = "America/Phoenix";
             # Configure keymap in X11

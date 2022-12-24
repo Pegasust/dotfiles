@@ -39,10 +39,11 @@ if [ ! -f "${SSH_PRIV}" ]; then
 fi
 # idempotently adds to authorized_keys
 cat "${SSH_PUB}" >> "${SSH_DIR}/authorized_keys"
-# If we do this, then uniq is performed first :?
 # sort "${SSH_DIR}/authorized_keys" | uniq >"${SSH_DIR}/authorized_keys"
-sort "${SSH_DIR}/authorized_keys" | uniq | tee "${SSH_DIR}/authorized_keys"
-cat "${SSH_DIR}/authorized_keys"
+# NOTE: if we do sort... file >file, the ">file" is performed first, which truncates
+# the file before we open to read. Hence, `sort [...] file >file` yields empty file.
+# Because of this, we have to use `-o`
+sort -u "${SSH_DIR}/authorized_keys" -o "${SSH_DIR}/authorized_keys"
 
 echo "Apply nixos-rebuild"
 sudo nixos-rebuild switch --flake "${SYSNIX_DIR}#${HOSTNAME}"
