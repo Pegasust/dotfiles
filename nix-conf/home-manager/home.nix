@@ -15,15 +15,14 @@ let
     # Yes, I desperately want neovim to work out-of-the-box without flake.nix for now
     # I want at least python LSP to work everywhere because it's basically
     # an alternative to bash script when I move to OpenColo
-    pkgs.gccStdenv
-    pkgs.gcc
-    pkgs.tree-sitter
-    pkgs.ripgrep
-    pkgs.fzf
+    # pkgs.gccStdenv
+    # pkgs.gcc
+    # pkgs.tree-sitter
+    pkgs.fzf  # file name fuzzy search
     # pkgs.sumneko-lua-language-server
-    pkgs.ripgrep
-    pkgs.zk
-    pkgs.fd
+    pkgs.ripgrep  # content fuzzy search
+    pkgs.zk  # Zettelkasten (limited support)
+    pkgs.fd  # Required by a Telescope plugin (?)
     pkgs.stdenv.cc.cc.lib
     # Python3 as alternative to bash scripts :^)
     # (pkgs.python310Full.withPackages (pypkgs: [
@@ -44,14 +43,14 @@ in
   };
   home.packages = pkgs.lib.unique ([
     # pkgs.ncdu
-    pkgs.rclone
-    pkgs.htop
-    pkgs.ripgrep
-    pkgs.unzip
-    pkgs.zip
+    pkgs.rclone   # cloud file operations
+    pkgs.htop     # system diagnostics in CLI
+    pkgs.ripgrep  # content fuzzy search
+    pkgs.unzip    # compression
+    pkgs.zip      # compression
 
     # cool utilities
-    pkgs.yq # Yaml adaptor for jq (only pretty print, little query)
+    pkgs.yq       # Yaml adaptor for jq (only pretty print, little query)
     pkgs.xorg.xclock # TODO: only include if have GL # For testing GL installation
     pkgs.logseq # TODO: only include if have GL # Obsidian alt
     pkgs.mosh # Parsec for SSH
@@ -59,7 +58,7 @@ in
     pkgs.lynx # Web browser at your local terminal
 
     # Personal management
-    pkgs.keepass
+    pkgs.keepass  # password manager. wish there is a keepass-query
 
     # pkgs.tailscale # VPC;; This should be installed in system-nix
     pkgs.python310 # dev packages should be in project
@@ -76,6 +75,7 @@ in
   programs.jq = {
     enable = true;
   };
+  # TODO: override the original package, inject tree-sitter and stuffs
   programs.neovim = {
     enable = true;
     viAlias = true;

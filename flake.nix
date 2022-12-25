@@ -36,12 +36,12 @@
 
     # inject nixpkgs.lib onto c_ (calculus)
     _lib = pkgs.lib;
-    inputs = (lib.recursiveUpdate {inherit system, })
+    inputs = (_lib.recursiveUpdate {inherit system;} _inputs);
     inputs_w_pkgs = (_lib.recursiveUpdate {inherit pkgs;} inputs);
     lib = _lib.recursiveUpdate (import ./lib inputs_w_pkgs) _lib;
 
     # update inputs with our library and past onto our end configurations
-    inputs_w_lib = (lib.recursiveUpdate lib inputs_w_pkgs);
+    inputs_w_lib = (lib.recursiveUpdate {inherit lib;} inputs_w_pkgs);
     modules = (import ./modules inputs_w_lib);
     hosts = (import ./hosts inputs_w_lib); 
     users = (import ./users inputs_w_lib);
@@ -50,6 +50,6 @@
   in {
     # inherit (hosts) nixosConfigurations;
     # inherit (users) homeConfigurations;
-    devShell = import ./shell final_inputs;
+    devShell."${system}" = import ./shell.nix final_inputs;
   };
 }
