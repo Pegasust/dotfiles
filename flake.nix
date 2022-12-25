@@ -36,7 +36,12 @@
 
     # inject nixpkgs.lib onto c_ (calculus)
     _lib = pkgs.lib;
-    inputs = (_lib.recursiveUpdate {inherit system;} _inputs);
+    inputs = (_lib.recursiveUpdate {
+      inherit system; 
+      # NOTE: this will only read files that are within git tree
+      # all secrets should go into secrets.nix and secrets/*.age
+      proj_root = builtins.toString ./.;
+    } _inputs);
     inputs_w_pkgs = (_lib.recursiveUpdate {inherit pkgs;} inputs);
     lib = _lib.recursiveUpdate (import ./lib inputs_w_pkgs) _lib;
 
@@ -50,6 +55,6 @@
   in {
     # inherit (hosts) nixosConfigurations;
     # inherit (users) homeConfigurations;
-    devShell."${system}" = import ./shell.nix final_inputs;
+    devShell."${system}" = import ./dev-shell.nix final_inputs;
   };
 }
