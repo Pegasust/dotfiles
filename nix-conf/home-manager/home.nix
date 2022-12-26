@@ -18,13 +18,15 @@ let
     # an alternative to bash script when I move to OpenColo
     # pkgs.gccStdenv
     # pkgs.gcc
-    # pkgs.tree-sitter
+    pkgs.tree-sitter
     pkgs.fzf  # file name fuzzy search
     # pkgs.sumneko-lua-language-server
     pkgs.ripgrep  # content fuzzy search
     pkgs.zk  # Zettelkasten (limited support)
     pkgs.fd  # Required by a Telescope plugin (?)
     pkgs.stdenv.cc.cc.lib
+    rust_pkgs
+    pkgs.rust-analyzer
     # Python3 as alternative to bash scripts :^)
     # (pkgs.python310Full.withPackages (pypkgs: [
     #   # python-lsp-server's dependencies is absolutely astronomous
@@ -40,18 +42,29 @@ let
         extensions = [ "rust-src" ];
       }
     ));
-  my_neovim = pkgs.neovim-unwrapped.overrideDerivation (old: {
-# TODO: is there a more beautiful way to override propagatedBuildInputs?
-    name = "hungtr-" + old.name;
-    buildInputs = (old.buildInputs or []) ++ [
-      pkgs.tree-sitter # highlighting
-      rust_pkgs        # for potentially rust-analyzer
-      pkgs.fzf
-      pkgs.ripgrep
-      pkgs.zk
-      pkgs.fd
-    ];
-  });
+# NOTE: Failure 1: buildInputs is pretty much ignored
+#   my_neovim = pkgs.neovim-unwrapped.overrideDerivation (old: {
+# # TODO: is there a more beautiful way to override propagatedBuildInputs?
+#     name = "hungtr-" + old.name;
+#     buildInputs = (old.buildInputs or []) ++ [
+#       pkgs.tree-sitter # highlighting
+#       rust_pkgs        # for potentially rust-analyzer
+#       pkgs.fzf
+#       pkgs.ripgrep
+#       pkgs.zk
+#       pkgs.fd
+#     ];
+# NOTE: Failure 2: propagatedBuildInputs probably only concerns dyn libs
+#   });
+  # NOTE: Failure 3: must be unwrapped neovim because home-manager does the wrapping
+  # my_neovim = pkgs.neovim;
+
+  # NOTE: Add packages to nvim_pkgs instead, so that it's available at userspace
+  # and is added to the path after wrapping.
+  # check: nix repl `homeConfigurations.hungtr.config.programs.neovim.finalPackage.buildCommand`
+  # see: :/--suffix.*PATH
+  # there should be mentions of additional packages
+  my_neovim = pkgs.neovim-unwrapped;
   inherit (myLib) fromYaml;
 in
 {
@@ -84,7 +97,9 @@ in
     # pkgs.python310.numpy
     # pkgs.python310Packages.tensorflow
     # pkgs.python310Packages.scikit-learn
-  ] ++ (myHome.packages or [ ]) ++ nvim_pkgs);
+  ] ++ (myHome.packages or [ ]) 
+  # ++ nvim_pkgs
+  );
 
   ## Configs ## 
   xdg.configFile."nvim/init.lua".source = "${proj_root.config.path}//neovim/init.lua";
