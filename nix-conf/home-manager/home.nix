@@ -20,7 +20,7 @@ let
     pkgs.gcc
     pkgs.tree-sitter
     pkgs.fzf  # file name fuzzy search
-    # pkgs.sumneko-lua-language-server
+    pkgs.sumneko-lua-language-server
     pkgs.ripgrep  # content fuzzy search
     pkgs.zk  # Zettelkasten (limited support)
     pkgs.fd  # Required by a Telescope plugin (?)
