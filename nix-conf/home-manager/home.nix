@@ -8,6 +8,7 @@
 , myHome
 , myLib
 , option # The options we're given, this might be useful for typesafety?
+, proj_root
 , ...
 }:
 let
@@ -32,7 +33,25 @@ let
     #   pypkgs.ujson  # pylsp seems to rely on this. satisfy it lol
     # ]))
   ];
-  proj_root = builtins.toString ./../..;
+  rust_pkgs = (pkgs.rust-bin.selectLatestNightlyWith
+    (
+      toolchain:
+      toolchain.default.override {
+        extensions = [ "rust-src" ];
+      }
+    ));
+  my_neovim = pkgs.neovim-unwrapped.overrideDerivation (old: {
+# TODO: is there a more beautiful way to override propagatedBuildInputs?
+    name = "hungtr-" + old.name;
+    buildInputs = (old.buildInputs or []) ++ [
+      pkgs.tree-sitter # highlighting
+      rust_pkgs        # for potentially rust-analyzer
+      pkgs.fzf
+      pkgs.ripgrep
+      pkgs.zk
+      pkgs.fd
+    ];
+  });
   inherit (myLib) fromYaml;
 in
 {
@@ -68,8 +87,8 @@ in
   ] ++ (myHome.packages or [ ]) ++ nvim_pkgs);
 
   ## Configs ## 
-  xdg.configFile."nvim/init.lua".source = "${proj_root}//neovim/init.lua";
-  xdg.configFile."zk/config.toml".source = "${proj_root}//zk/config.toml";
+  xdg.configFile."nvim/init.lua".source = "${proj_root.config.path}//neovim/init.lua";
+  xdg.configFile."zk/config.toml".source = "${proj_root.config.path}//zk/config.toml";
 
   ## Programs ##
   programs.jq = {
@@ -78,11 +97,13 @@ in
   # TODO: override the original package, inject tree-sitter and stuffs
   programs.neovim = {
     enable = true;
+    package = my_neovim;
     viAlias = true;
     vimAlias = true;
     withPython3 = true;
     withNodeJs = true;
     extraPackages = nvim_pkgs;
+    # only for here for archive-documentation
     # extraPython3Packages = (pypkgs: [
     #   # pypkgs.python-lsp-server
     #   pypkgs.ujson

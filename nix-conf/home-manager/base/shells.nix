@@ -36,7 +36,7 @@ in
     };
   };
   config = myLib.mkIf cfg.enable {
-    xdg.configFile."starship.toml".source = "${proj_root}//starship/starship.toml";
+    xdg.configFile."starship.toml".source = "${proj_root.config.path}//starship/starship.toml";
     # nix: Propagates the environment with packages and vars when enter (children of)
     # a directory with shell.nix-compatible and .envrc
     programs.direnv = {
@@ -51,7 +51,7 @@ in
     };
     programs.tmux = {
       enable = true;
-      extraConfig = builtins.readFile "${proj_root}/tmux/tmux.conf";
+      extraConfig = builtins.readFile "${proj_root.config.path}/tmux/tmux.conf";
     };
     programs.exa = {
       enable = true;
