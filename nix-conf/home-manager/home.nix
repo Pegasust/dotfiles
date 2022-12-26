@@ -17,7 +17,7 @@ let
     # I want at least python LSP to work everywhere because it's basically
     # an alternative to bash script when I move to OpenColo
     # pkgs.gccStdenv
-    # pkgs.gcc
+    pkgs.gcc
     pkgs.tree-sitter
     pkgs.fzf  # file name fuzzy search
     # pkgs.sumneko-lua-language-server
