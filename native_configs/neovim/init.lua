@@ -258,11 +258,11 @@ remap('n', '<leader>ff', function()
 end, { desc = '[F]ind [F]ile' })
 
 remap('n', '<leader>fa', function()
-    require('telescope.builtin').find_files(require('telescope.themes').get_ivy({
+    require('telescope.builtin').find_files({
         hidden = true,
         no_ignore = true,
         follow = true,
-    }))
+    })
 end, { desc = '[F]ind [A]ll files' })
 
 remap('n', '<leader>fg', function()
