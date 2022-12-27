@@ -10,6 +10,6 @@
   };
   rust-monorepo = {
     path = ./rust-monorepo;
-    description = "hungtr's opinionated Rust monorepo, extended from ./rust, using Cargo workspace";
+    description = "Opinionated Rust monorepo, extended from ./rust, using Cargo workspace";
   };
 }
