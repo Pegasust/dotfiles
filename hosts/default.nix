@@ -20,8 +20,6 @@ config = {
     ];
   };
 };
-# This middle function propagates variables to be used by mkHostFromPropagated
-# The purpose is to debug things
 propagate = hostConfig@{metadata, nixosConfig}: let 
   # req
   inherit (metadata) hostName;
@@ -35,24 +33,8 @@ propagate = hostConfig@{metadata, nixosConfig}: let
   hardwareConfig = import "${proj_root.hosts.path}/${hostName}/hardware-configuration.nix";
   # alias to prevent infinite recursion
   _nixosConfig = nixosConfig;
-  # debug stuffs (removable)
-  debugModule = ({lib, proj_root, ...}: let debugAttrOpt = debugVar: lib.mkOption {
-    type = lib.types.attrs;
-    description = "Debug for info for ${debugVar}";
-    visible = false;
-    internal = true;
-    readOnly = true;
-  }; in {
-    options = {
-      debugLib = debugAttrOpt "lib";
-      debug_proj_root = debugAttrOpt "proj_root";
-    };
-    config.debugLib = lib;
-    config.debug_proj_root = proj_root;
-  });
 in {
   inherit hostName ssh_pubkey users nixosVersion system preset hardwareConfig;
-  debugLib = finalInputs.lib;
   nixosConfig = _nixosConfig // {
     inherit system;
     modules = [
@@ -68,7 +50,6 @@ in {
         networking.hostName = hostName;
         users.users = users;
       }
-      debugModule
       {
         imports = [agenix.nixosModule];
         environment.systemPackages = [agenix.defaultPackage.x86_64-linux];
@@ -80,14 +61,15 @@ in {
 };
 # we are blessed by the fact that we engulfed nixpkgs.lib.* at top level
 mkHostFromPropagated = propagatedHostConfig@{nixosConfig,...}: nixpkgs.lib.nixosSystem nixosConfig;
+<<<<<<< HEAD
 mkHost = hostConfig: (lib.pipe [propagate mkHostFromPropagated] hostConfig);
 trimNull = lib.filterAttrsRecursive (name: value: value != null);
 flattenPubkey = lib.mapAttrs (hostName: meta_config: meta_config.metadata.ssh_pubkey);
+=======
+mkHost = hostConfig: (lib.pipe hostConfig [propagate mkHostFromPropagated]);
+>>>>>>> 4619ea4 (rekey)
 in {
   nixosConfigurations = lib.mapAttrs (name: hostConfig: mkHost hostConfig) config;
   # {bao = "ssh-ed25519 ..."; another_host = "ssh-rsa ...";}
-  pubKeys = trimNull (flattenPubkey config);
-  debug = {
-    propagated = lib.mapAttrs (name: hostConfig: propagate hostConfig) config;
-  };
+  pubKeys = lib.getPubkey config;
 }

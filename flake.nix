@@ -89,20 +89,20 @@
 
   in {
     inherit (hosts) nixosConfigurations;
-    # inherit (users) homeConfigurations;
+    inherit (users) homeConfigurations;
     inherit lib proj_root;
     devShell."${system}" = import ./dev-shell.nix final_inputs;
     templates = import ./templates final_inputs;
-
-    unit_tests = lib.runTests unit_tests;
     secrets = {
       pubKeys = {
         hosts = hosts.pubKeys;
         users = users.pubKeys;
       };
     };
+
+    unit_tests = lib.runTests unit_tests;
     debug = {
-      inherit final_inputs hosts users modules lib inputs_w_pkgs unit_tests pkgs;
+      inherit final_inputs hosts users modules lib unit_tests pkgs;
     };
   };
 }

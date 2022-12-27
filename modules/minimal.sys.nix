@@ -1,13 +1,15 @@
 {pkgs
 ,lib
 ,proj_root
+,modulesPath
 ,...
 }:{
+  imports = ["${modulesPath}/profiles/minimal.nix"];
   # prune old builds after a while
-  nix.settings.auto-optimize-store = true;
+  nix.settings.auto-optimise-store = true;
   nix.package = pkgs.nixFlakes;             # nix flakes
   nix.extraOptions = ''
-    experimental=feature = nix-command flakes
+    experimental-features = nix-command flakes
   '';
   programs.neovim = {
       enable = true;
