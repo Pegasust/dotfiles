@@ -40,7 +40,18 @@
       inherit system; 
       # NOTE: this will only read files that are within git tree
       # all secrets should go into secrets.nix and secrets/*.age
-      proj_root = builtins.toString ./.;
+      proj_root = let 
+        path = builtins.toString ./.;
+      in {
+        inherit path;
+        configs.path = "${path}/native-configs";
+        scripts.path = "${path}/scripts";
+        secrets.path = "${path}/secrets";
+        testdata.path = "${path}/tests";
+        modules.path = "${path}/modules";
+        hosts.path = "${path}/hosts";
+        users.path = "${path}/users";
+      };
     } _inputs);
     inputs_w_pkgs = (_lib.recursiveUpdate {inherit pkgs;} inputs);
     lib = _lib.recursiveUpdate (import ./lib inputs_w_pkgs) _lib;
@@ -51,10 +62,19 @@
     hosts = (import ./hosts inputs_w_lib); 
     users = (import ./users inputs_w_lib);
     
+    # {nixpkgs, agenix, home-manager, flake-utils, nixgl, rust-overlay, flake-compat
+    # ,pkgs, lib (extended), proj_root}
     final_inputs = inputs_w_lib;
   in {
-    # inherit (hosts) nixosConfigurations;
+    inherit (hosts) nixosConfigurations;
     # inherit (users) homeConfigurations;
+    inherit lib;
     devShell."${system}" = import ./dev-shell.nix final_inputs;
+    templates = import ./templates final_inputs;
+
+    unit_tests = (lib.runTests 
+      (import ./lib/test.nix final_inputs) //
+      {});
+    secrets = import ./secrets final_inputs;
   };
 }

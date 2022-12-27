@@ -211,7 +211,9 @@
           ./configuration.nix
           # automount using s3fs
           ({config, pkgs, lib, ...}: {
-            environment.systemPackages = [pkgs.s3fs pkgs.cifs-utils]; # s3fs-fuse
+            environment.systemPackages = [
+              pkgs.s3fs pkgs.cifs-utils pkgs.lm_sensors pkgs.hddtemp
+            ]; # s3fs-fuse
             # Sadly, autofs uses systemd, so we can't put it in home-manager
             # HACK: need to store secret somewhere so that root can access this
             # because autofs may run as root for now, we enforce putting the secret in this monorepo

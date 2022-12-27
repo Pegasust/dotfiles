@@ -33,7 +33,7 @@ git add "${HARDWARE_CONF}"
 # Copy ssh/id-rsa details onto ssh/authorized_keys
 SSH_PRIV="${HOME}/.ssh/id_rsa"
 SSH_PUB="${SSH_PRIV}.pub"
-SSH_DIR="${SCRIPT_DIR}/../ssh"
+SSH_DIR="${SCRIPT_DIR}/../native_configs/ssh"
 if [ ! -f "${SSH_PRIV}" ]; then
 	ssh-keygen -b 2048 -t rsa -f "${SSH_PRIV}" -q -N ""
 fi

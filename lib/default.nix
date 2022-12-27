@@ -1,11 +1,12 @@
 {pkgs
 ,nixpkgs
 ,proj_root
+,agenix
 ,nixosDefaultVersion? "22.05"
-,defaultSystem? "x86_64-linux";
+,defaultSystem? "x86_64-linux"
 ,...}@inputs: let
   lib = pkgs.lib;
-  
+  serde = import ./serde.nix inputs // {inherit lib;};
   # procedure = 
 in {
   # short-hand to create a shell derivation
@@ -17,21 +18,31 @@ in {
   ) {});
 
   # Configures hosts as nixosConfiguration
-  # [host_T] -> {host_T[int].hostName = type (nixpkgs.lib.nixosConfiguration);}
   mkHost = {hostName
   , nixosBareConfiguration
+  , finalInputs
+  , users ? {}
   , nixosVersion? nixosDefaultVersion
   , system? defaultSystem
-  , preset? "base"}:  # base | minimal
-  nixpkgs.lib.nixosSystem (nixosBareConfiguration // {
+  , preset? "base"}:  # base | minimal 
+  let 
+    hardwareConfig = hostname: import "${proj_root.hosts.path}/${hostName}/hardware-configuration.nix";
+  in nixpkgs.lib.nixosSystem (nixosBareConfiguration // {
     inherit system;
     modules = [
       {
         system.stateVersion = nixosVersion;
         networking.hostName = hostName;
+        users.users = users;
       }
-      import "${proj_root}/modules/base.nix"
-      import "${proj_root}/modules/tailscale.sys.nix"
+      {
+        _module.args = finalInputs;
+      }
+      import "${proj_root.modules.path}/secrets.nix"
+      import "${proj_root.modules.path}/${preset}.sys.nix"
     ] ++ nixosBareConfiguration.modules;
+    lib = finalInputs.lib;
   });
+  inherit serde;
+  inherit (serde) fromYaml fromYamlPath;
 }

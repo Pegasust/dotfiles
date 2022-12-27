@@ -33,7 +33,7 @@ with lib;
   };
   users.users.root = {
     # openssh runs in root, no? This is because port < 1024 requires root.
-    openssh.authorizedKeys.keys = lib.strings.splitString "\n" (builtins.readFile "${proj_root}/ssh/authorized_keys");
+    openssh.authorizedKeys.keys = lib.strings.splitString "\n" (builtins.readFile "${proj_root}/native_configs/ssh/authorized_keys");
   };
 
   # Some basic programs
