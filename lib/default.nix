@@ -2,7 +2,7 @@
 ,nixpkgs
 ,proj_root
 ,nixosDefaultVersion? "22.05"
-,defaultSystem? "x86_64-linux";
+,defaultSystem? "x86_64-linux"
 ,...}@inputs: let
   lib = pkgs.lib;
   
