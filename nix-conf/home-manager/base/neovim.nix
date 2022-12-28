@@ -83,5 +83,6 @@ in
       # https://github.com/nix-community/home-manager/pull/3287
       # extraConfig = builtins.readFile "${proj_root}/neovim/init.lua";
     };
+    home.packages = nvim_pkgs;
   };
 }
