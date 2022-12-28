@@ -5,7 +5,7 @@
 }:
 let
   inherit (myLib) fromYaml;
-  actualConfig = fromYaml (builtins.readFile "${proj_root}//alacritty/alacritty.yml");
+  actualConfig = fromYaml (builtins.readFile "${proj_root.config.path}//alacritty/alacritty.yml");
   cfg = config.base.alacritty;
 in
 {

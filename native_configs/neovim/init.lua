@@ -216,7 +216,7 @@ require('telescope').setup {
             case_mode = 'smart_case'
         },
         file_browser = {
-            theme = "ivy",
+            theme = require('telescope.themes').get_ivy().theme,
             hiject_netrw = true, -- disables netrw and use file-browser instead
             mappings = {
                 ["i"] = {}, -- disable any shortcut in insert mode for now
@@ -246,7 +246,7 @@ pcall(require('telescope').load_extension, 'file_browser')
 remap('n', '<C-p>', '<cmd>Telescope<cr>', { desc = 'Open Telescope general search' })
 
 remap('n', '<leader>fm', function()
-    require("telescope").extensions.file_browser.file_browser()
+    require("telescope").extensions.file_browser.file_browser({})
 end, { desc = '[F]ile [M]utation' })
 
 remap('n', '<leader>ff', function()
@@ -284,7 +284,7 @@ end, { desc = '[F]ind [D]iagnostics' })
 -- ZK remap stuffs
 remap('n', '<leader>zf', function()
     -- vim.cmd([[:ZkNotes]])
-    require('zk').edit({}, {multi_select = false})
+    require('zk').edit({}, { multi_select = false })
 end, { desc = '[Z]ettelkasten [F]iles' })
 
 remap('n', '<leader>zg', function()
@@ -894,7 +894,7 @@ require('zk.commands').add("ZkGrep", function(match_ctor)
     elseif type(match_ctor) == 'string' then
         match = { match = grep_str }
     end
-    require('zk').edit(match, { title = "Grep: '" .. grep_str .. "'", mutli_select = false})
+    require('zk').edit(match, { title = "Grep: '" .. grep_str .. "'", mutli_select = false })
 end)
 
 
@@ -943,4 +943,3 @@ require('lualine').setup {
 }
 
 require('nvim-surround').setup {}
-
