@@ -94,6 +94,12 @@ if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 endif
 ]])
 
+-- Starts the basic terminals
+-- TODO: Use a different harpooon for terminals
+vim.cmd([[
+autocmd VimEnter * :exe ":term" | :exe ":file term:ctl"
+]])
+
 vim.cmd([[
 set ignorecase
 set smartcase
@@ -365,12 +371,14 @@ require('guess-indent').setup {
 }
 
 -- harpoon: mark significant files & switch between them
-remap('n', '<leader>m', function() require('harpoon.mark').add_file() end)
+remap('n', '<leader>m', function() require('harpoon.mark').add_file() end, { desc = "[H]arpoon [M]ark" })
 local function harpoon_nav(key, nav_file_index, lead_keybind)
     lead_keybind = lead_keybind or '<leader>h'
     assert(type(key) == "string", "expect key to be string(keybind)")
     assert(type(nav_file_index) == "number" and nav_file_index >= 1, "expect 1-indexed number for file index")
-    return remap('n', lead_keybind .. key, function() require('harpoon.ui').nav_file(nav_file_index) end)
+    return remap('n', lead_keybind .. key,
+        function() require('harpoon.ui').nav_file(nav_file_index) end,
+        { desc = "[H]arpoon navigate " .. tostring(nav_file_index) })
 end
 
 -- remap letters to index. Inspired by alternating number of Dvorak programmer
@@ -380,21 +388,18 @@ harpoon_nav('j', 2)
 harpoon_nav('d', 3)
 harpoon_nav('k', 4)
 remap('n', '<leader>hh', function() require('harpoon.ui').toggle_quick_menu() end)
--- harpoon: navigate by numbers
-harpoon_nav('1', 1)
-harpoon_nav('2', 2)
-harpoon_nav('3', 3)
-harpoon_nav('4', 4)
-harpoon_nav('5', 5)
-harpoon_nav('6', 6)
-harpoon_nav('7', 7)
-harpoon_nav('8', 8)
-harpoon_nav('9', 9)
-harpoon_nav('0', 10)
+for i = 1, 10 do
+    -- harpoon: navigate files by numbers
+    harpoon_nav(tostring(i % 10), i)
+    -- harpoon: navigate terms by numbers
+    remap('n', '<leader>t' .. tostring(i % 10), function()
+        require('harpoon.term').gotoTerminal(i)
+    end)
+end
 
 -- neogit: easy-to-see git status. Provides only productivity on staging/unstage
 require('neogit').setup {}
-remap('n', '<leader>gs', function() require('neogit').open({}) end);
+remap('n', '<leader>gs', function() require('neogit').open({}) end, { desc = "[G]it [S]tatus" });
 
 -- LSP settings
 -- This function gets run when an LSP connects to a particular buffer.
