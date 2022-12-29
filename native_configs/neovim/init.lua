@@ -94,12 +94,6 @@ if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 endif
 ]])
 
--- Starts the basic terminals
--- TODO: Use a different harpooon for terminals
-vim.cmd([[
-autocmd VimEnter * :exe ":term" | :exe ":file term:ctl"
-]])
-
 vim.cmd([[
 set ignorecase
 set smartcase
