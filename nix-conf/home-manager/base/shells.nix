@@ -81,7 +81,19 @@ in
       };
       oh-my-zsh = {
         enable = true;
-        plugins = [ "git" "sudo" "command-not-found" "gitignore" "ripgrep" "rust" ];
+        plugins = [
+          "git"   # git command aliases: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git#aliases
+          "sudo"  # double-escape to prepend sudo
+          "command-not-found" # suggests which package to install; does not support nixos (we have solution already)
+          "gitignore" # `gi list` -> `gi java >>.gitignore`
+          "ripgrep"   # adds completion for `rg`
+          "rust"      # compe for rustc/cargo
+          "vi-mode"   # edit promps with vi motions :)
+        ];
+      };
+      sessionVariables = {
+        VI_MODE_RESET_PROMPT_ON_MODE_CHANGE = true;
+        VI_MODE_SET_CURSOR = true;
       };
       initExtra = cfg.shellInitExtra or "";
     };

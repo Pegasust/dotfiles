@@ -94,6 +94,25 @@ if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 endif
 ]])
 
+-- special terminals, place them at 4..=7 for ergonomics
+vim.api.nvim_create_autocmd({"VimEnter"}, {
+    callback = function()
+    -- term:ctl at 4
+    require('harpoon.term').gotoTerminal(4)
+    vim.cmd([[:exe ":file term:ctl"]])
+    -- term:dev at 5
+    require('harpoon.term').gotoTerminal(5)
+    vim.cmd([[:exe ":file term:dev"]])
+    -- term:repl at 7
+    require('harpoon.term').gotoTerminal(7)
+    vim.cmd([[:exe ":file term:repl"]])
+    -- term:repl at 6
+    require('harpoon.term').gotoTerminal(6)
+    vim.cmd([[:exe ":file term:repl2"]])
+    end
+})
+
+
 vim.cmd([[
 set ignorecase
 set smartcase
@@ -130,8 +149,8 @@ vim.g.maplocalleader = ','
 
 -- basic keymaps
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true }) -- since we're using space for leader
-vim.keymap.set('t', '<Esc>', '<C-\\><C-n>)') -- make :terminal escape out
-vim.keymap.set({ 'n', 'i', 'v' }, '<c-l>', '<Cmd>:mode<Cr>') -- redraw on every mode
+vim.keymap.set('t', '<C-\\><Esc>', '<C-\\><C-n>)') -- make :terminal escape out
+vim.keymap.set({ 'n', 'i', 'v' }, '<c-l>', '<Cmd>mode<Cr>', {desc = ""}) -- redraw on every mode
 
 -- diagnostics (errors/warnings to be shown)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
