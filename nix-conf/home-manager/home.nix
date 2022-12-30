@@ -64,4 +64,5 @@ in
     enableBashIntegration = true;
     enableZshIntegration = true;
   };
+  base.keepass.enable = true;
 }

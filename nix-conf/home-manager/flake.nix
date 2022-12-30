@@ -14,19 +14,24 @@
       url = "github:edolstra/flake-compat";
       flake = false;
     };
+    kpcli-py = {
+      url = "github:rebkwok/kpcli";
+      flake = false;
+    };
   };
 
   outputs =
-    { nixpkgs
+    flake_inputs@{ nixpkgs
     , home-manager
     , nixgl
     , rust-overlay
     , flake-utils
+    , kpcli-py
     , ...
     }:
     let
       system = "x86_64-linux";
-      overlays = [ nixgl.overlay rust-overlay.overlays.default ];
+      overlays = import ./../../overlays.nix flake_inputs;
       # pkgs = nixpkgs.legacyPackages.${system}.appendOverlays overlays;
       pkgs = import nixpkgs {
         inherit system overlays;
@@ -140,8 +145,10 @@
               {
                 base.graphics.enable = true;
                 base.alacritty.font.family = "BitstreamVeraSansMono Nerd Font";
+                base.keepass.path = "/media/homelab/f/PersistentHotStorage/keepass.kdbx";
               }
             ];
+            
             extraSpecialArgs = mkModuleArgs {
               inherit pkgs;
               myHome = {

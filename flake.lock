@@ -102,6 +102,22 @@
         "type": "github"
       }
     },
+    "kpcli-py": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1619087457,
+        "narHash": "sha256-iRNLq5s2WJJHwB4beP5xQDKrBPWS/42s/ozLoSa5gAE=",
+        "owner": "rebkwok",
+        "repo": "kpcli",
+        "rev": "e4d699e3b3d28887f74185f8fa69d0aade111d84",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rebkwok",
+        "repo": "kpcli",
+        "type": "github"
+      }
+    },
     "nixgl": {
       "inputs": {
         "flake-utils": "flake-utils_2",
@@ -173,6 +189,7 @@
         "flake-compat": "flake-compat",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
+        "kpcli-py": "kpcli-py",
         "nixgl": "nixgl",
         "nixpkgs": "nixpkgs_2",
         "rust-overlay": "rust-overlay"

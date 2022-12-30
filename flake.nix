@@ -18,6 +18,10 @@
       url = "github:edolstra/flake-compat";
       flake = false;
     };
+    kpcli-py = {
+      url = "github:rebkwok/kpcli";
+      flake = false;
+    };
   };
 
   outputs = {
@@ -29,6 +33,7 @@
     system = "x86_64-linux";
     pkgs = import nixpkgs {
       inherit system;
+      overlays = import ./overlays.nix _inputs;
       config = {
         allowUnfree = true;
       };
@@ -89,7 +94,7 @@
     unit_tests = lib.runTests unit_tests;
     secrets = import ./secrets final_inputs;
     debug = {
-      inherit final_inputs hosts users modules lib inputs_w_pkgs unit_tests;
+      inherit final_inputs hosts users modules lib inputs_w_pkgs unit_tests pkgs;
     };
   };
 }
