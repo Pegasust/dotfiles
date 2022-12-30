@@ -97,18 +97,18 @@ endif
 -- special terminals, place them at 4..=7 for ergonomics
 vim.api.nvim_create_autocmd({"VimEnter"}, {
     callback = function()
-    -- term:ctl at 4
-    require('harpoon.term').gotoTerminal(4)
-    vim.cmd([[:exe ":file term:ctl"]])
-    -- term:dev at 5
-    require('harpoon.term').gotoTerminal(5)
-    vim.cmd([[:exe ":file term:dev"]])
-    -- term:repl at 7
-    require('harpoon.term').gotoTerminal(7)
-    vim.cmd([[:exe ":file term:repl"]])
-    -- term:repl at 6
-    require('harpoon.term').gotoTerminal(6)
-    vim.cmd([[:exe ":file term:repl2"]])
+        local function named_term(term_idx, term_name)
+            require('harpoon.term').gotoTerminal(term_idx)
+            vim.cmd([[:exe ":file ]]..term_name..[[" | :bfirst]])
+        end
+        -- term:ctl at 4
+        named_term(4, "term:ctl")
+        -- term:dev at 5
+        named_term(5, "term:dev")
+        -- term:repl at 7
+        named_term(7, "term:repl")
+        -- term:repl at 6
+        named_term(6, "term:repl2")
     end
 })
 
@@ -383,7 +383,7 @@ require('guess-indent').setup {
     },
 }
 
--- harpoon: mark significant files & switch between them
+-- harpoon: O(1) buffer/terminal switching
 remap('n', '<leader>m', function() require('harpoon.mark').add_file() end, { desc = "[H]arpoon [M]ark" })
 local function harpoon_nav(key, nav_file_index, lead_keybind)
     lead_keybind = lead_keybind or '<leader>h'
