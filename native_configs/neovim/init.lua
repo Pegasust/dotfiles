@@ -148,8 +148,12 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ','
 
 -- basic keymaps
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true }) -- since we're using space for leader
-vim.keymap.set('t', '<Esc>', '<C-\\><C-n>)') -- make :terminal escape out
+-- Since we use space for leader, we're asserting that this does nothing by itself
+vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+-- make :terminal escape out. For zsh-vi-mode, just use Alt-M or any keybind
+-- that does not collide with vi-motion keybind. This is because
+-- <Alt-x> -> ^[x; while <Esc> on the terminal is ^[
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>)')
 vim.keymap.set({ 'n', 'i', 'v' }, '<c-l>', '<Cmd>mode<Cr>', {desc = ""}) -- redraw on every mode
 
 -- diagnostics (errors/warnings to be shown)
