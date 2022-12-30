@@ -17,6 +17,7 @@ in
 {
   imports = [
     ./base/neovim.nix
+    ./base/keepass.nix
   ];
   home = {
     username = myHome.username;
