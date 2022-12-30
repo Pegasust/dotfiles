@@ -96,6 +96,9 @@ in
         # VI_MODE_RESET_PROMPT_ON_MODE_CHANGE = true;
         # VI_MODE_SET_CURSOR = true;
         # ZVM_VI_ESCAPE_BINDKEY = "";
+        ZVM_READKEY_ENGINE="$ZVM_READKEY_ENGINE_NEX";
+        ZVM_KEYTIMEOUT=0.004; # 40ms, or subtly around 25 FPS. I'm a gamer :)
+        ZVM_ESCAPE_KEYTIMEOUT=0.004; # 40ms, or subtly around 25 FPS. I'm a gamer :)
       };
       initExtra = (cfg.shellInitExtra or "") + ''
         source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
