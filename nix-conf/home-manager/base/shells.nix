@@ -3,6 +3,7 @@
 { config
 , proj_root
 , myLib
+, pkgs
 , ...
 }:
 let cfg = config.base.shells;
@@ -83,19 +84,23 @@ in
         enable = true;
         plugins = [
           "git"   # git command aliases: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git#aliases
-          "sudo"  # double-escape to prepend sudo
+          # "sudo"  # double-escape to prepend sudo  # UPDATE: just use vi-mode lol
           "command-not-found" # suggests which package to install; does not support nixos (we have solution already)
           "gitignore" # `gi list` -> `gi java >>.gitignore`
           "ripgrep"   # adds completion for `rg`
           "rust"      # compe for rustc/cargo
-          "vi-mode"   # edit promps with vi motions :)
+          # "vi-mode"   # edit promps with vi motions :)
         ];
       };
       sessionVariables = {
-        VI_MODE_RESET_PROMPT_ON_MODE_CHANGE = true;
-        VI_MODE_SET_CURSOR = true;
+        # VI_MODE_RESET_PROMPT_ON_MODE_CHANGE = true;
+        # VI_MODE_SET_CURSOR = true;
+        # ZVM_VI_ESCAPE_BINDKEY = "";
       };
-      initExtra = cfg.shellInitExtra or "";
+      initExtra = (cfg.shellInitExtra or "") + ''
+        source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+      '';
+
     };
   };
 }

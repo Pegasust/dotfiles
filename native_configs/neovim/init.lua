@@ -149,7 +149,7 @@ vim.g.maplocalleader = ','
 
 -- basic keymaps
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true }) -- since we're using space for leader
-vim.keymap.set('t', '<C-\\><Esc>', '<C-\\><C-n>)') -- make :terminal escape out
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>)') -- make :terminal escape out
 vim.keymap.set({ 'n', 'i', 'v' }, '<c-l>', '<Cmd>mode<Cr>', {desc = ""}) -- redraw on every mode
 
 -- diagnostics (errors/warnings to be shown)

@@ -90,11 +90,11 @@
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-KP+2qdZlhmRkrafuuEofg7YnNdVmGV95ipvpuqmJneI=",
-        "path": "/nix/store/843qksh68zpgs3bx048k0h589ax1v90z-source/out-of-tree/nixGL",
+        "path": "/nix/store/lla48fa225m9f1aisby3zrh860j781gy-source/out-of-tree/nixGL",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/843qksh68zpgs3bx048k0h589ax1v90z-source/out-of-tree/nixGL",
+        "path": "/nix/store/lla48fa225m9f1aisby3zrh860j781gy-source/out-of-tree/nixGL",
         "type": "path"
       }
     },
