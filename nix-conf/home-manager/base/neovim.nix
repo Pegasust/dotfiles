@@ -1,4 +1,9 @@
-{ pkgs, lib, config, ... }:
+# TODO: vim-plug and Mason supports laziness. Probably worth it to explore
+# incremental dependencies based on the project
+#
+# One thing to consider, though, /nix/store of `nix-shell` or `nix-develop`
+# might be different from `home-manager`'s
+{ pkgs, lib, config, proj_root, ... }:
 let
   # NOTE: Failure 1: buildInputs is pretty much ignored
   #   my_neovim = pkgs.neovim-unwrapped.overrideDerivation (old: {
@@ -83,6 +88,7 @@ in
       # https://github.com/nix-community/home-manager/pull/3287
       # extraConfig = builtins.readFile "${proj_root}/neovim/init.lua";
     };
-    home.packages = nvim_pkgs;
+    # home.packages = nvim_pkgs;
+    xdg.configFile."nvim/init.lua".source = "${proj_root.config.path}//neovim/init.lua";
   };
 }

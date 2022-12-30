@@ -33,14 +33,12 @@ in
 
     # cool utilities
     pkgs.yq       # Yaml adaptor for jq (only pretty print, little query)
-    pkgs.xorg.xclock # TODO: only include if have GL # For testing GL installation
+    pkgs.xorg.xclock # TODO: only include if have gui # For testing GL installation
     pkgs.logseq # TODO: only include if have GL # Obsidian alt
     pkgs.mosh # Parsec for SSH
     # pkgs.nixops_unstable # nixops v2 # insecure for now
     pkgs.lynx # Web browser at your local terminal
-
-    # Personal management
-    pkgs.keepass  # password manager. wish there is a keepass-query
+    pkgs.zk
 
     # pkgs.tailscale # VPC;; This should be installed in system-nix
     pkgs.python310 # dev packages should be in project
@@ -51,7 +49,6 @@ in
   );
 
   ## Configs ## 
-  xdg.configFile."nvim/init.lua".source = "${proj_root.config.path}//neovim/init.lua";
   xdg.configFile."zk/config.toml".source = "${proj_root.config.path}//zk/config.toml";
 
   ## Programs ##

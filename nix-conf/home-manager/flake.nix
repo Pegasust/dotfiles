@@ -7,7 +7,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
-    nixgl.url = "github:guibou/nixGL";
+    nixgl.url = "./../../out-of-tree/nixGL";
     rust-overlay.url = "github:oxalica/rust-overlay";
     # Allows default.nix to call onto flake.nix. Useful for nix eval and automations
     flake-compat = {
@@ -47,6 +47,9 @@
       };
     in
     {
+      debug = {
+        inherit overlays pkgs base;
+      };
       homeConfigurations =
         let x11_wsl = ''
           # x11 output for WSL
@@ -133,13 +136,10 @@
             inherit pkgs;
             modules = base.modules ++ [
               ./home.nix
+              ./base/graphics.nix
               {
+                base.graphics.enable = true;
                 base.alacritty.font.family = "BitstreamVeraSansMono Nerd Font";
-                base.shells = {
-                  shellAliases = {
-                    nixGL = "nixGLIntel";
-                  };
-                };
               }
             ];
             extraSpecialArgs = mkModuleArgs {
@@ -148,7 +148,6 @@
                 username = "hwtr";
                 homeDirectory = "/home/hwtr";
                 packages = [
-                  pkgs.nixgl.nixGLIntel
                   pkgs.postman
                 ];
               };
