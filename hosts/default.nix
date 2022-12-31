@@ -50,7 +50,7 @@ in {
 };
 mkHostFromPropagated = propagatedHostConfig@{nixosConfig,...}: nixpkgs.lib.nixosSystem nixosConfig;
 mkHost = hostConfig: (lib.pipe [propagate mkHostFromPropagated] hostConfig);
-trimNull = lib.filterAttrs (name: value: value != null);
+trimNull = lib.filterAttrsRecursive (name: value: value != null);
 flattenPubkey = lib.mapAttrs (hostName: meta_config: meta_config.metadata.ssh_pubkey);
 in {
   inherit config;

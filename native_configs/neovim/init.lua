@@ -94,6 +94,25 @@ if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 endif
 ]])
 
+-- special terminals, place them at 4..=7 for ergonomics
+vim.api.nvim_create_autocmd({"VimEnter"}, {
+    callback = function()
+        local function named_term(term_idx, term_name)
+            require('harpoon.term').gotoTerminal(term_idx)
+            vim.cmd([[:exe ":file ]]..term_name..[[" | :bfirst]])
+        end
+        -- term:ctl at 4
+        named_term(4, "term:ctl")
+        -- term:dev at 5
+        named_term(5, "term:dev")
+        -- term:repl at 7
+        named_term(7, "term:repl")
+        -- term:repl at 6
+        named_term(6, "term:repl2")
+    end
+})
+
+
 vim.cmd([[
 set ignorecase
 set smartcase
@@ -129,9 +148,13 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ','
 
 -- basic keymaps
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true }) -- since we're using space for leader
-vim.keymap.set('t', '<Esc>', '<C-\\><C-n>)') -- make :terminal escape out
-vim.keymap.set({ 'n', 'i', 'v' }, '<c-l>', '<Cmd>:mode<Cr>') -- redraw on every mode
+-- Since we use space for leader, we're asserting that this does nothing by itself
+vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+-- make :terminal escape out. For zsh-vi-mode, just use Alt-Z or any keybind
+-- that does not collide with vi-motion keybind. This is because
+-- <Alt-x> -> ^[x; while <Esc> on the terminal is ^[
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>)')
+vim.keymap.set({ 'n', 'i', 'v' }, '<c-l>', '<Cmd>mode<Cr>', {desc = ""}) -- redraw on every mode
 
 -- diagnostics (errors/warnings to be shown)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
@@ -364,13 +387,15 @@ require('guess-indent').setup {
     },
 }
 
--- harpoon: mark significant files & switch between them
-remap('n', '<leader>m', function() require('harpoon.mark').add_file() end)
+-- harpoon: O(1) buffer/terminal switching
+remap('n', '<leader>m', function() require('harpoon.mark').add_file() end, { desc = "[H]arpoon [M]ark" })
 local function harpoon_nav(key, nav_file_index, lead_keybind)
     lead_keybind = lead_keybind or '<leader>h'
     assert(type(key) == "string", "expect key to be string(keybind)")
     assert(type(nav_file_index) == "number" and nav_file_index >= 1, "expect 1-indexed number for file index")
-    return remap('n', lead_keybind .. key, function() require('harpoon.ui').nav_file(nav_file_index) end)
+    return remap('n', lead_keybind .. key,
+        function() require('harpoon.ui').nav_file(nav_file_index) end,
+        { desc = "[H]arpoon navigate " .. tostring(nav_file_index) })
 end
 
 -- remap letters to index. Inspired by alternating number of Dvorak programmer
@@ -380,21 +405,18 @@ harpoon_nav('j', 2)
 harpoon_nav('d', 3)
 harpoon_nav('k', 4)
 remap('n', '<leader>hh', function() require('harpoon.ui').toggle_quick_menu() end)
--- harpoon: navigate by numbers
-harpoon_nav('1', 1)
-harpoon_nav('2', 2)
-harpoon_nav('3', 3)
-harpoon_nav('4', 4)
-harpoon_nav('5', 5)
-harpoon_nav('6', 6)
-harpoon_nav('7', 7)
-harpoon_nav('8', 8)
-harpoon_nav('9', 9)
-harpoon_nav('0', 10)
+for i = 1, 10 do
+    -- harpoon: navigate files by numbers
+    harpoon_nav(tostring(i % 10), i)
+    -- harpoon: navigate terms by numbers
+    remap('n', '<leader>t' .. tostring(i % 10), function()
+        require('harpoon.term').gotoTerminal(i)
+    end)
+end
 
 -- neogit: easy-to-see git status. Provides only productivity on staging/unstage
 require('neogit').setup {}
-remap('n', '<leader>gs', function() require('neogit').open({}) end);
+remap('n', '<leader>gs', function() require('neogit').open({}) end, { desc = "[G]it [S]tatus" });
 
 -- LSP settings
 -- This function gets run when an LSP connects to a particular buffer.

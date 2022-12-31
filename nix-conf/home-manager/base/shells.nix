@@ -3,6 +3,7 @@
 { config
 , proj_root
 , myLib
+, pkgs
 , ...
 }:
 let cfg = config.base.shells;
@@ -81,9 +82,28 @@ in
       };
       oh-my-zsh = {
         enable = true;
-        plugins = [ "git" "sudo" "command-not-found" "gitignore" "ripgrep" "rust" ];
+        plugins = [
+          "git"   # git command aliases: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git#aliases
+          # "sudo"  # double-escape to prepend sudo  # UPDATE: just use vi-mode lol
+          "command-not-found" # suggests which package to install; does not support nixos (we have solution already)
+          "gitignore" # `gi list` -> `gi java >>.gitignore`
+          "ripgrep"   # adds completion for `rg`
+          "rust"      # compe for rustc/cargo
+          # "vi-mode"   # edit promps with vi motions :)
+        ];
       };
-      initExtra = cfg.shellInitExtra or "";
+      sessionVariables = {
+        # VI_MODE_RESET_PROMPT_ON_MODE_CHANGE = true;
+        # VI_MODE_SET_CURSOR = true;
+        # ZVM_VI_ESCAPE_BINDKEY = "";
+        ZVM_READKEY_ENGINE="$ZVM_READKEY_ENGINE_NEX";
+        ZVM_KEYTIMEOUT=0.004; # 40ms, or subtly around 25 FPS. I'm a gamer :)
+        ZVM_ESCAPE_KEYTIMEOUT=0.004; # 40ms, or subtly around 25 FPS. I'm a gamer :)
+      };
+      initExtra = (cfg.shellInitExtra or "") + ''
+        source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+      '';
+
     };
   };
 }

@@ -7,26 +7,31 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
-    nixgl.url = "github:guibou/nixGL";
+    nixgl.url = "./../../out-of-tree/nixGL";
     rust-overlay.url = "github:oxalica/rust-overlay";
     # Allows default.nix to call onto flake.nix. Useful for nix eval and automations
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
     };
+    kpcli-py = {
+      url = "github:rebkwok/kpcli";
+      flake = false;
+    };
   };
 
   outputs =
-    { nixpkgs
+    flake_inputs@{ nixpkgs
     , home-manager
     , nixgl
     , rust-overlay
     , flake-utils
+    , kpcli-py
     , ...
     }:
     let
       system = "x86_64-linux";
-      overlays = [ nixgl.overlay rust-overlay.overlays.default ];
+      overlays = import ./../../overlays.nix flake_inputs;
       # pkgs = nixpkgs.legacyPackages.${system}.appendOverlays overlays;
       pkgs = import nixpkgs {
         inherit system overlays;
@@ -47,6 +52,9 @@
       };
     in
     {
+      debug = {
+        inherit overlays pkgs base;
+      };
       homeConfigurations =
         let x11_wsl = ''
           # x11 output for WSL
@@ -133,22 +141,20 @@
             inherit pkgs;
             modules = base.modules ++ [
               ./home.nix
+              ./base/graphics.nix
               {
+                base.graphics.enable = true;
                 base.alacritty.font.family = "BitstreamVeraSansMono Nerd Font";
-                base.shells = {
-                  shellAliases = {
-                    nixGL = "nixGLIntel";
-                  };
-                };
+                base.keepass.path = "/media/homelab/f/PersistentHotStorage/keepass.kdbx";
               }
             ];
+            
             extraSpecialArgs = mkModuleArgs {
               inherit pkgs;
               myHome = {
                 username = "hwtr";
                 homeDirectory = "/home/hwtr";
                 packages = [
-                  pkgs.nixgl.nixGLIntel
                   pkgs.postman
                 ];
               };

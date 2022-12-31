@@ -25,6 +25,7 @@
                 }
               ))
             pkgs.rust-analyzer
+            pkgs.bacon  # rust background code checker
           ];
           RUST_SRC_PATH = rustPlatform.rustLibSrc;
           shellHook = ''
