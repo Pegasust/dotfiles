@@ -77,6 +77,11 @@ in
       vimAlias = true;
       withPython3 = true;
       withNodeJs = true;
+      # Attempt 4: Correct way to make neovim aware of packages
+      # homeConfigurations.config.programs.neovim takes UNWRAPPED neovim
+      # and wraps it. 
+      # Ideally, we build our own neovim and add that to config.home.packages
+      # to share it with nixOS. But we don't really need to share
       extraPackages = nvim_pkgs;
       # only for here for archive-documentation
       # extraPython3Packages = (pypkgs: [
