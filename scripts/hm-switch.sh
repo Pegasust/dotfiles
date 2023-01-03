@@ -7,6 +7,9 @@ echo "SCRIPT_DIR: ${SCRIPT_DIR}"
 
 HOME_MANAGER_DIR="${SCRIPT_DIR}/../nix-conf/home-manager"
 
+# Mason is bad: it puts binaries onto xdg.data
+rm -rf ~/.local/share/nvim/mason
+
 # test if we have home-manager, if not, attempt to use nix to put home-manager to
 # our environment
 if [ $(home-manager >/dev/null 2>&1) ]; then
