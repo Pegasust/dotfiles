@@ -11,7 +11,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
-    nixgl.url = "github:guibou/nixGL";
+    nixgl.url = "path:out-of-tree/nixGL";
     rust-overlay.url = "github:oxalica/rust-overlay";
     # Allows default.nix to call onto flake.nix. Useful for nix eval and automations
     flake-compat = {
