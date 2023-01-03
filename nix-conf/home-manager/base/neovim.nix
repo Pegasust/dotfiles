@@ -47,9 +47,12 @@ let
 
     # Language-specific stuffs
     pkgs.sumneko-lua-language-server
-    pkgs.rust-analyzer
-    rust_pkgs
-    pkgs.evcxr # Rust REPL for Conjure!
+    # TODO: the devShell should provide rust-analyzer so that 
+    # cargo test builds binaries compatible with rust-analyzer 
+
+    # pkgs.rust-analyzer
+    # rust_pkgs
+    # pkgs.evcxr # Rust REPL for Conjure!
 
     # Python3 as alternative to bash scripts :^)
     # (pkgs.python310Full.withPackages (pypkgs: [
