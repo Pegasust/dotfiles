@@ -56,9 +56,5 @@ in
         KEEPASSDB_TIMEOUT = cfg.copy_timeout_secs;
       };
     });
-    # xdg.dataFile."keepass.kdbx".path = 
-    # base.shells.shellAliases = {
-      # kp = "kpcli --kdb=${cfg.path}";
-    # };
   };
 }

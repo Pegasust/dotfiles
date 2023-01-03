@@ -11,23 +11,21 @@
       let
         overlays = [ rust-overlay.overlays.default ];
         pkgs = import nixpkgs { inherit system overlays; };
+        rust_pkgs = (pkgs.rust-bin.selectLatestNightlyWith
+          (
+            toolchain:
+            toolchain.default.override {
+              extensions = [ "rust-src" "rust-analyzer" "rust-docs" "clippy" "miri" ];
+            }
+          ));
         naersk-lib = pkgs.callPackage naersk { };
       in
       {
         defaultPackage = naersk-lib.buildPackage ./.;
         devShell = with pkgs; mkShell {
           buildInputs = [
-            (pkgs.rust-bin.selectLatestNightlyWith
-              (
-                toolchain:
-                toolchain.default.override {
-                  extensions = [ "rust-src" ];
-                }
-              ))
-            pkgs.rust-analyzer
-            pkgs.bacon  # rust background code checker
+            rust_pkgs
           ];
-          RUST_SRC_PATH = rustPlatform.rustLibSrc;
           shellHook = ''
             # nix flake update # is this even needed?
           '';

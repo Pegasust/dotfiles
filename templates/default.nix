@@ -12,4 +12,8 @@
     path = ./rust-monorepo;
     description = "Opinionated Rust monorepo, extended from ./rust, using Cargo workspace";
   };
+  ts-turborepo = {
+    path = ./ts/turborepo;
+    description = "Typescript monorepo with tsconfig, eslint, but with minimal framework attached";
+  };
 }
