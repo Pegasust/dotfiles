@@ -1,6 +1,9 @@
 flake_input@{ kpcli-py, nixgl, rust-overlay, ... }: [
+
   nixgl.overlays.default
+
   rust-overlay.overlays.default
+
   (final: prev: {
     # use python3.9, which works because of cython somehow?
     kpcli-py = final.poetry2nix.mkPoetryApplication {
@@ -16,5 +19,6 @@ flake_input@{ kpcli-py, nixgl, rust-overlay, ... }: [
       });
     };
   })
+
 ]
 
