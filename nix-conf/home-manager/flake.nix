@@ -18,6 +18,7 @@
       url = "github:rebkwok/kpcli";
       flake = false;
     };
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
   outputs =
@@ -27,6 +28,7 @@
     , rust-overlay
     , flake-utils
     , kpcli-py
+    , neovim-nightly-overlay
     , ...
     }:
     let

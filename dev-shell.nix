@@ -12,6 +12,7 @@
   buildInputs = [
     # shell scripts
     (lib.shellAsDrv {script = ''echo "hello world"''; pname = "hello";})
+    (lib.shellAsDrv {script = builtins.readFile ./scripts/hm-switch.sh; pname = "hm-switch";})
   ];
 
   # env vars

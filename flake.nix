@@ -22,10 +22,12 @@
       url = "github:rebkwok/kpcli";
       flake = false;
     };
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
   outputs = {
-    nixpkgs, agenix, home-manager, flake-utils, nixgl, rust-overlay, flake-compat
+    nixpkgs, agenix, home-manager, flake-utils, nixgl, rust-overlay, flake-compat,
+    neovim-nightly-overlay
     ,...
   }@_inputs: let 
     # Context/global stuffs to be passed down

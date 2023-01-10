@@ -1,8 +1,10 @@
-flake_input@{ kpcli-py, nixgl, rust-overlay, ... }: [
+flake_input@{ kpcli-py, nixgl, rust-overlay, neovim-nightly-overlay, ... }: [
 
   nixgl.overlays.default
 
   rust-overlay.overlays.default
+
+  neovim-nightly-overlay.overlay
 
   (final: prev: {
     # use python3.9, which works because of cython somehow?
