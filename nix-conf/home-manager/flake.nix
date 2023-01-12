@@ -153,6 +153,7 @@
                 base.alacritty.font.family = "BitstreamVeraSansMono Nerd Font";
                 base.keepass.path = "/media/homelab/f/PersistentHotStorage/keepass.kdbx";
               }
+              ./base/productive_desktop.nix
             ];
             
             extraSpecialArgs = mkModuleArgs {
