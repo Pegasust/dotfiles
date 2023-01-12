@@ -96,7 +96,7 @@
     unit_tests = lib.runTests unit_tests;
     secrets = import ./secrets final_inputs;
     debug = {
-      inherit final_inputs hosts users modules lib inputs_w_pkgs unit_tests pkgs;
+      inherit final_inputs hosts users modules lib inputs_w_lib unit_tests pkgs;
     };
   };
 }
