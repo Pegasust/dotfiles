@@ -8,8 +8,9 @@
     (flake-utils.lib.eachDefaultSystem (system:
       let
         isIntelX86Platform = system == "x86_64-linux";
+        nix_pkgs = import nixpkgs {inherit system;};
         pkgs = import ./default.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = nix_pkgs;
           enable32bits = isIntelX86Platform;
           enableIntelX86Extensions = isIntelX86Platform;
         };

@@ -1,5 +1,6 @@
 flake_input@{ kpcli-py, nixgl, rust-overlay, neovim-nightly-overlay, ... }: [
 
+  # TODO: this is quite harmful to add globally. nixGL is built not to be pure
   nixgl.overlays.default
 
   rust-overlay.overlays.default
