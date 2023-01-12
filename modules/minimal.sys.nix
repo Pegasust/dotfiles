@@ -1,6 +1,7 @@
 {pkgs
 ,lib
 ,proj_root
+,...
 }:{
   # prune old builds after a while
   nix.settings.auto-optimize-store = true;
@@ -22,6 +23,6 @@
   ];
   users.users.root = {
     # openssh runs in root, no? This is because port < 1024 requires root.
-    openssh.authorizedKeys.keys = lib.strings.splitString "\n" (builtins.readFile "${proj_root}/ssh/authorized_keys");
+    openssh.authorizedKeys.keys = lib.strings.splitString "\n" (builtins.readFile "${proj_root.configs.path}/ssh/authorized_keys");
   };
 }

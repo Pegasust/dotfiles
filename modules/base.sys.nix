@@ -1,6 +1,7 @@
 {pkgs
 ,lib
 ,proj_root
+,...
 }:{
   imports = [
     ./minimal.sys.nix

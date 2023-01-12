@@ -1,7 +1,8 @@
 { pkgs
-, lib
+, my-lib
+,...
 }: {
-  environment.noXlibs = lib.mkForce false;
+  environment.noXlibs = my-lib.mkForce false;
   # TODO: wireless networking
 
   # Enable the X11 windowing system.

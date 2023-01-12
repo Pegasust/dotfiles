@@ -1,5 +1,5 @@
 # Personal configuration on storage solution
-{ pkgs, config, lib }: {
+{ pkgs, config, lib,... }: {
   environment.systemPackages = [
     pkgs.s3fs
     pkgs.cifs-utils

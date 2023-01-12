@@ -1,12 +1,12 @@
 {pkgs
-,nixpkgs
+# ,nixpkgs
 ,proj_root
-,agenix
+# ,agenix
 ,nixosDefaultVersion? "22.05"
 ,defaultSystem? "x86_64-linux"
 ,...}@inputs: let
   lib = pkgs.lib;
-  serde = import ./serde.nix inputs // {inherit lib;};
+  serde = import ./serde.nix (inputs // {inherit lib;});
   # procedure = 
 in {
   # short-hand to create a shell derivation

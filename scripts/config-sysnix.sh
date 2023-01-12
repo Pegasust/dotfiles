@@ -19,10 +19,10 @@ fi
 SCRIPT_DIR=$(realpath $(dirname $0))
 echo "SCRIPT_DIR: ${SCRIPT_DIR}"
 
-SYSNIX_DIR="${SCRIPT_DIR}/../nix-conf/system"
+SYSNIX_DIR="${SCRIPT_DIR}/.."
 
 # Copy hardware-configuration of existing machine onto our version control
-SYSNIX_PROF="${SYSNIX_DIR}/profiles/${HOSTNAME}"
+SYSNIX_PROF="${SYSNIX_DIR}/hosts/${HOSTNAME}"
 HARDWARE_CONF="${SYSNIX_PROF}/hardware-configuration.nix" 
 if [ ! -f "${HARDWARE_CONF}" ]; then
 	mkdir "$SYSNIX_PROF"

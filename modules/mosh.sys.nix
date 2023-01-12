@@ -1,6 +1,7 @@
 {pkgs
 ,lib
 ,config
+,...
 }: {
   environment.systemPackages = [pkgs.mosh];
   networking.firewall = lib.mkIf config.networking.firewall.enable {

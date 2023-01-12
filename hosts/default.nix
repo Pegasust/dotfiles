@@ -10,14 +10,18 @@ config = {
     system = "x86_64-linux";
     preset = "base";
   };
+  # TODO: add override so that we can add wsl config on top
   bao.nixosConfig = {
     modules = [
-      import ../modules/kde.sys.nix
-      import ../modules/pulseaudio.sys.nix
-      import ../modules/storage.perso.sys.nix
+      (import ../modules/nvgpu.sys.nix)
+      (import ../modules/kde.sys.nix)
+      (import ../modules/pulseaudio.sys.nix)
+      (import ../modules/storage.perso.sys.nix)
     ];
   };
 };
+# This middle function propagates variables to be used by mkHostFromPropagated
+# The purpose is to debug things
 propagate = hostConfig@{metadata, nixosConfig}: let 
   # req
   inherit (metadata) hostName;
@@ -29,36 +33,61 @@ propagate = hostConfig@{metadata, nixosConfig}: let
   preset = lib.attrByPath ["preset"] "base" metadata;
   # infer
   hardwareConfig = import "${proj_root.hosts.path}/${hostName}/hardware-configuration.nix";
+  # alias to prevent infinite recursion
+  _nixosConfig = nixosConfig;
+  # debug stuffs (removable)
+  debugModule = ({lib, proj_root, ...}: let debugAttrOpt = debugVar: lib.mkOption {
+    type = lib.types.attrs;
+    description = "Debug for info for ${debugVar}";
+    visible = false;
+    internal = true;
+    readOnly = true;
+  }; in {
+    options = {
+      debugLib = debugAttrOpt "lib";
+      debug_proj_root = debugAttrOpt "proj_root";
+    };
+    config.debugLib = lib;
+    config.debug_proj_root = proj_root;
+  });
 in {
   inherit hostName ssh_pubkey users nixosVersion system preset hardwareConfig;
-  nixosConfig = nixosConfig // {
+  debugLib = finalInputs.lib;
+  nixosConfig = _nixosConfig // {
     inherit system;
-    lib = finalInputs.lib;
     modules = [
+      {
+        config._module.args = {
+          inherit proj_root;
+          my-lib = finalInputs.lib;
+        };
+      }
+      hardwareConfig
       {
         system.stateVersion = nixosVersion;
         networking.hostName = hostName;
         users.users = users;
       }
+      debugModule
       {
-        _module.args = finalInputs;
+        imports = [agenix.nixosModule];
+        environment.systemPackages = [agenix.defaultPackage.x86_64-linux];
       }
-      import "${proj_root.modules.path}/secrets.nix"
-      import "${proj_root.modules.path}/${preset}.sys.nix"
-    ] ++ nixosConfig.modules;
+      (import "${proj_root.modules.path}/secrets.nix")
+      (import "${proj_root.modules.path}/${preset}.sys.nix")
+    ] ++ _nixosConfig.modules;
   };
 };
+# we are blessed by the fact that we engulfed nixpkgs.lib.* at top level
 mkHostFromPropagated = propagatedHostConfig@{nixosConfig,...}: nixpkgs.lib.nixosSystem nixosConfig;
 mkHost = hostConfig: (lib.pipe [propagate mkHostFromPropagated] hostConfig);
 trimNull = lib.filterAttrsRecursive (name: value: value != null);
 flattenPubkey = lib.mapAttrs (hostName: meta_config: meta_config.metadata.ssh_pubkey);
 in {
-  inherit config;
-  # nixosConfigurations = lib.mapAttrs (name: hostConfig: mkHost hostConfig) config;
-  nixosConfigurations = {};
+  nixosConfigurations = lib.mapAttrs (name: hostConfig: mkHost hostConfig) config;
+  # {bao = "ssh-ed25519 ..."; another_host = "ssh-rsa ...";}
+  pubKeys = trimNull (flattenPubkey config);
   debug = {
     propagated = lib.mapAttrs (name: hostConfig: propagate hostConfig) config;
   };
-  # {bao = "ssh-ed25519 ..."; another_host = "ssh-rsa ...";}
-  hostKeys = trimNull (flattenPubkey config);
 }
