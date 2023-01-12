@@ -6,7 +6,16 @@ flake_input@{ kpcli-py, nixgl, rust-overlay, neovim-nightly-overlay, ... }: [
 
   neovim-nightly-overlay.overlay
 
-  (final: prev: {
+  (final: prev: 
+  let 
+    nightlyRustWithExts = exts: final.rust-bin.selectLatestNightlyWith (
+      toolchain: toolchain.minimal.override.extensions = exts;
+    );
+    # https://rust-lang.github.io/rustup/concepts/profiles.html
+    rust-default-components = ["rust-docs" "rustfmt" "clippy"];
+    rust-dev-components = rust-default-components ++ ["rust-src" "rust-analyzer" "miri"];
+  in
+  {
     # use python3.9, which works because of cython somehow?
     kpcli-py = final.poetry2nix.mkPoetryApplication {
       projectDir = kpcli-py;
@@ -20,6 +29,10 @@ flake_input@{ kpcli-py, nixgl, rust-overlay, neovim-nightly-overlay, ... }: [
         );
       });
     };
+    
+    rust4devs = nightlyRustWithExts rust-dev-components;
+    rust4cargo = nightlyRustWithExts [];
+    rust4normi = nightlyRustWIthExts rust-default-components;
   })
 
 ]

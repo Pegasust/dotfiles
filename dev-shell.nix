@@ -14,6 +14,7 @@
     (lib.shellAsDrv {script = ''echo "hello world"''; pname = "hello";})
     # TODO: decompose hm-switch.sh with a base version (where HOME_MANAGER_BIN is injected)
     # (lib.shellAsDrv {script = builtins.readFile ./scripts/hm-switch.sh; pname = "hm-switch";})
+    pkgs.rust4cargo
   ];
 
   # env vars
