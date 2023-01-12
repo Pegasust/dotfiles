@@ -230,7 +230,7 @@
             };
             amd_rx470 = {
               # early amd gpu usage
-              # boot.initrd.kernelModules = ["amdgpu"];
+              boot.initrd.kernelModules = ["amdgpu"];
               services.xserver.enable = true;
               services.xserver.videoDrivers = ["amdgpu"];
             };
