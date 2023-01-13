@@ -121,7 +121,23 @@
               };
             };
           };
-          "htran" = home-manager.lib.homeManagerConfiguration { };
+          "htran" = home-manager.lib.homeManagerConfiguration { 
+            inherit pkgs;
+            modules = [
+              ./home.nix
+              {
+                base.graphics.enable = false;
+                base.keepass.path = "/Users/htran/keepass.kdbx";
+              }
+            ];
+            extraSpecialArgs = mkModuleArgs {
+              inherit pkgs;
+              myHome = {
+                username = "htran";
+                homeDirectory = "/Users/htran";
+              };
+            };
+          };
           "nixos@Felia" = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
             modules = [
