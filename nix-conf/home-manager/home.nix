@@ -26,14 +26,14 @@ in
   };
   home.packages = pkgs.lib.unique ([
     # pkgs.ncdu
-    pkgs.rclone   # cloud file operations
-    pkgs.htop     # system diagnostics in CLI
-    pkgs.ripgrep  # content fuzzy search
-    pkgs.unzip    # compression
-    pkgs.zip      # compression
+    pkgs.rclone # cloud file operations
+    pkgs.htop # system diagnostics in CLI
+    pkgs.ripgrep # content fuzzy search
+    pkgs.unzip # compression
+    pkgs.zip # compression
 
     # cool utilities
-    pkgs.yq       # Yaml adaptor for jq (only pretty print, little query)
+    pkgs.yq # Yaml adaptor for jq (only pretty print, little query)
     pkgs.xorg.xclock # TODO: only include if have gui # For testing GL installation
     pkgs.logseq # TODO: only include if have GL # Obsidian alt
     pkgs.mosh # Parsec for SSH
@@ -46,7 +46,7 @@ in
     # pkgs.python310.numpy
     # pkgs.python310Packages.tensorflow
     # pkgs.python310Packages.scikit-learn
-  ] ++ (myHome.packages or [ ]) 
+  ] ++ (myHome.packages or [ ])
   );
 
   ## Configs ## 

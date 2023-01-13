@@ -36,7 +36,18 @@
     , ...
     }:
     let
-      system = "x86_64-linux";
+      # config_fn:: system -> config
+      cross_platform = config_fn: ({
+        packages = builtins.foldl'
+          (prev: system: prev // {
+            "${system}" = config_fn system;
+          })
+          { }
+          flake-utils.lib.defaultSystems;
+      });
+    in
+    cross_platform (system:
+    let
       overlays = import ./../../overlays.nix flake_inputs;
       # pkgs = nixpkgs.legacyPackages.${system}.appendOverlays overlays;
       pkgs = import nixpkgs {
@@ -46,11 +57,11 @@
       # lib = (import ../lib { inherit pkgs; lib = pkgs.lib; });
       base = import ./base;
       inherit (base) mkModuleArgs;
-      
-      kde_module = {config, pkgs, ...}: {
+
+      kde_module = { config, pkgs, ... }: {
         fonts.fontconfig.enable = true;
         home.packages = [
-          (pkgs.nerdfonts.override {fonts = ["DroidSansMono"];})
+          (pkgs.nerdfonts.override { fonts = [ "DroidSansMono" ]; })
         ];
         # For some reasons, Windows es in the font name as DroidSansMono NF
         # so we need to override this
@@ -62,13 +73,14 @@
         inherit overlays pkgs base;
       };
       homeConfigurations =
-        let x11_wsl = ''
-          # x11 output for WSL
-          export DISPLAY=$(ip route list default | awk '{print $3}'):0
-          export LIBGL_ALWAYS_INDIRECT=1
-        '';
+        let
+          x11_wsl = ''
+            # x11 output for WSL
+            export DISPLAY=$(ip route list default | awk '{print $3}'):0
+            export LIBGL_ALWAYS_INDIRECT=1
+          '';
         in
-        rec {
+        {
           "hungtr" = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
             modules = base.modules ++ [
@@ -109,6 +121,7 @@
               };
             };
           };
+          "htran" = home-manager.lib.homeManagerConfiguration { };
           "nixos@Felia" = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
             modules = [
@@ -161,7 +174,7 @@
               }
               ./base/productive_desktop.nix
             ];
-            
+
             extraSpecialArgs = mkModuleArgs {
               inherit pkgs;
               myHome = {
@@ -174,5 +187,5 @@
             };
           };
         };
-    };
+    });
 }

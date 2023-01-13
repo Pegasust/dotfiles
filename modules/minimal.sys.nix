@@ -1,21 +1,21 @@
-{pkgs
-,lib
-,proj_root
-,modulesPath
-,...
-}:{
-  imports = ["${modulesPath}/profiles/minimal.nix"];
+{ pkgs
+, lib
+, proj_root
+, modulesPath
+, ...
+}: {
+  imports = [ "${modulesPath}/profiles/minimal.nix" ];
   # prune old builds after a while
   nix.settings.auto-optimise-store = true;
-  nix.package = pkgs.nixFlakes;             # nix flakes
+  nix.package = pkgs.nixFlakes; # nix flakes
   nix.extraOptions = ''
     experimental-features = nix-command flakes
   '';
   programs.neovim = {
-      enable = true;
-      defaultEditor = true;
+    enable = true;
+    defaultEditor = true;
   };
-  programs.git.enable = true;  
+  programs.git.enable = true;
   environment.systemPackages = [
     pkgs.gnumake
     pkgs.wget

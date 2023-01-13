@@ -5,24 +5,27 @@
 
 {
   imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
+    [
+      (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
   # boot.initrd.kernelModules = [ "amdgpu" ];
-  boot.initrd.kernelModules = [];
-  boot.kernelModules = [ "kvm-amd" "coretemp"];
+  boot.initrd.kernelModules = [ ];
+  boot.kernelModules = [ "kvm-amd" "coretemp" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
     # Might be wise to use /dev/nvme0p1 instead
-    { device = "/dev/disk/by-uuid/27fc09b3-e3b7-4883-94a0-c313a0e0abe2";
+    {
+      device = "/dev/disk/by-uuid/27fc09b3-e3b7-4883-94a0-c313a0e0abe2";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
     # Might be wise to use /dev/nvme0p2 instead
-    { device = "/dev/disk/by-uuid/EBA6-394D";
+    {
+      device = "/dev/disk/by-uuid/EBA6-394D";
       fsType = "vfat";
     };
 

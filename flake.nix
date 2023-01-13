@@ -123,5 +123,6 @@
       debug = {
         inherit final_inputs hosts users modules lib inputs_w_lib unit_tests pkgs nixpkgs;
       };
+      formatter."${system}" = pkgs.nixpkgs-fmt;
     };
 }

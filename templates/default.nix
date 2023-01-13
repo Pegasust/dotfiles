@@ -1,8 +1,8 @@
 # TODO: templates should be able to have initial states like
 # repo name, author,...
-{pkgs
-,lib
-,...
+{ pkgs
+, lib
+, ...
 }: {
   rust = {
     path = ./rust;

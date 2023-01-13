@@ -62,7 +62,7 @@ let
       It contains the builder for different nvidia configuration, parametrized by
       the version of the driver and sha256 sum of the driver installer file.
     */
-    nvidiaPackages = { version, sha256? fetch_db."${version}".sha256 }:
+    nvidiaPackages = { version, sha256 ? fetch_db."${version}".sha256 }:
       let
         nvidiaDrivers = (linuxPackages.nvidia_x11.override { }).overrideAttrs
           (oldAttrs: {

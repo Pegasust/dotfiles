@@ -22,8 +22,8 @@ in
     keyfile_path = lib.mkOption {
       type = lib.types.nullOr lib.types.path;
       description = ''
-      Path to key file for the database
-      If null, then the field is unset
+        Path to key file for the database
+        If null, then the field is unset
       '';
       default = null;
       example = "/path/to/mykeyfile.key";
@@ -47,7 +47,7 @@ in
     ] ++ (if cfg.use_gui or config.base.graphics._enable then [
       pkgs.keepass # Personal secret management
     ] else [ ]);
-    home.file.".kp/config.ini".text = lib.generators.toINI {} (trimNull {
+    home.file.".kp/config.ini".text = lib.generators.toINI { } (trimNull {
       default = {
         KEEPASSDB = cfg.path;
         KEEPASSDB_KEYFILE = cfg.keyfile_path;

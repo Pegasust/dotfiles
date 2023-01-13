@@ -1,4 +1,4 @@
-{config,...}: {
+{ config, ... }: {
   networking.wireless.enable = true;
   networking.wireless.environmentFile = config.age.secrets."wifi.env";
   networking.wireless.networks = {

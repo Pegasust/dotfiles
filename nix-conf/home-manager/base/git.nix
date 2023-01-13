@@ -66,9 +66,9 @@ in
       example = 3000;
     };
   };
-# TODO : anyway to override configuration?
+  # TODO : anyway to override configuration?
   config.programs.git = {
-    inherit (cfg) enable ignores; 
+    inherit (cfg) enable ignores;
     userName = cfg.name;
     userEmail = cfg.email;
     aliases = baseAliases // cfg.aliases;

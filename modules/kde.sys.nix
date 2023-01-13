@@ -1,6 +1,6 @@
 { pkgs
 , my-lib
-,...
+, ...
 }: {
   environment.noXlibs = my-lib.mkForce false;
   # TODO: wireless networking

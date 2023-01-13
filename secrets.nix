@@ -1,4 +1,4 @@
-let 
+let
   inherit ((import
     (
       let lock = builtins.fromJSON (builtins.readFile ./flake.lock); in
@@ -13,7 +13,8 @@ let
   inherit (pubKeys) users hosts;
   all = users // hosts;
   c_ = builtins;
-in {
+in
+{
   "secrets/s3fs.age".publicKeys = c_.attrValues (all);
   "secrets/s3fs.digital-garden.age".publicKeys = c_.attrValues (all);
   "secrets/_nhitrl.age".publicKeys = c_.attrValues (all);
