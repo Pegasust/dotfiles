@@ -108,6 +108,7 @@
                 # defaults to a bad value (on purpose), we should configure a
                 # it to be the proper path
                 base.keepass.path = "/perso/garden/keepass.kdbx";
+                base.graphics.useNixGL.defaultPackage = "nixGLNvidia";
               }
             ];
             # optionally pass inarguments to module
