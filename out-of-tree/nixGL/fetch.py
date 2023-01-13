@@ -41,10 +41,6 @@ def req_monad(url: str, err_fn, then_fn):
     return then_fn(res.data)
 
 identity = lambda e: e
-def _fail(msg: str|None=None):
-    if msg:
-        assert False, msg
-    assert False
 none_id = lambda _: None
 
 def get_sha256(version: str) -> str | None:
