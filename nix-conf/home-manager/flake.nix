@@ -91,6 +91,12 @@
               ./home.nix
               kde_module
               ./base/productive_desktop.nix
+              {
+                # since home.nix forces us to use keepass, and base.keepass.path
+                # defaults to a bad value (on purpose), we should configure a
+                # it to be the proper path
+                base.keepass.path = "/perso/garden/keepass.kdbx";
+              }
             ];
             # optionally pass inarguments to module
             # we migrate this from in-place modules to allow flexibility
