@@ -34,8 +34,8 @@ in
 
     # cool utilities
     pkgs.yq # Yaml adaptor for jq (only pretty print, little query)
-    pkgs.xorg.xclock # TODO: only include if have gui # For testing GL installation
-    pkgs.logseq # TODO: only include if have GL # Obsidian alt
+    # pkgs.xorg.xclock # TODO: only include if have gui # For testing GL installation
+    # pkgs.logseq # TODO: only include if have GL # Obsidian alt
     pkgs.mosh # Parsec for SSH
     # pkgs.nixops_unstable # nixops v2 # insecure for now
     pkgs.lynx # Web browser at your local terminal
@@ -46,7 +46,9 @@ in
     # pkgs.python310.numpy
     # pkgs.python310Packages.tensorflow
     # pkgs.python310Packages.scikit-learn
-  ] ++ (myHome.packages or [ ])
+  ] ++ (myHome.packages or [ ]) ++ (if pkgs.system == "x86_64-linux" then [
+    pkgs.logseq
+  ] else [ ])
   );
 
   ## Configs ## 
