@@ -77,37 +77,10 @@ let
               fetchurl { inherit url sha256; };
             useGLVND = true;
           });
-      in
-      {
-        inherit nvidiaDrivers;
         nvidiaLibsOnly = nvidiaDrivers.override {
           libsOnly = true;
           kernel = null;
         };
-
-        nixGLNvidiaBumblebee = writeExecutable {
-          name = "nixGLNvidiaBumblebee-${version}";
-          text = ''
-            #!${runtimeShell}
-            export LD_LIBRARY_PATH=${
-              lib.makeLibraryPath [ nvidiaDrivers ]
-            }"''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-            ${
-              bumblebee.override {
-                nvidia_x11 = nvidiaDrivers;
-                nvidia_x11_i686 = nvidiaDrivers.lib32;
-              }
-            }/bin/optirun --ldpath ${
-              lib.makeLibraryPath ([ libglvnd nvidiaDrivers ]
-                ++ lib.optionals enable32bits [
-                  nvidiaDrivers.lib32
-                  pkgsi686Linux.libglvnd
-                ])
-            } "$@"
-          '';
-        };
-
-        # TODO: 32bit version? Not tested.
         nixNvidiaWrapper = api:
           writeExecutable {
             name = "nix${api}Nvidia-${version}";
@@ -142,6 +115,34 @@ let
                 exec "$@"
             '';
           };
+      in
+      {
+        inherit nvidiaDrivers nvidiaLibsOnly;
+
+        nixGLNvidiaBumblebee = writeExecutable {
+          name = "nixGLNvidiaBumblebee-${version}";
+          text = ''
+            #!${runtimeShell}
+            export LD_LIBRARY_PATH=${
+              lib.makeLibraryPath [ nvidiaDrivers ]
+            }"''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+            ${
+              bumblebee.override {
+                nvidia_x11 = nvidiaDrivers;
+                nvidia_x11_i686 = nvidiaDrivers.lib32;
+              }
+            }/bin/optirun --ldpath ${
+              lib.makeLibraryPath ([ libglvnd nvidiaDrivers ]
+                ++ lib.optionals enable32bits [
+                  nvidiaDrivers.lib32
+                  pkgsi686Linux.libglvnd
+                ])
+            } "$@"
+          '';
+        };
+
+        # TODO: 32bit version? Not tested.
+        inherit nixNvidiaWrapper;
 
         # TODO: 32bit version? Not tested.
         nixGLNvidia = nixNvidiaWrapper "GL";

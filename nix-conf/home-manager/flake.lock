@@ -180,7 +180,7 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-KP+2qdZlhmRkrafuuEofg7YnNdVmGV95ipvpuqmJneI=",
+        "narHash": "sha256-GgIXbuHvwReBHZUyfSKS6DET3CfD6EEKABj6ndpcqHQ=",
         "path": "./../../out-of-tree/nixGL",
         "type": "path"
       },
