@@ -127,7 +127,9 @@
               ./home.nix
               {
                 base.graphics.enable = false;
+                base.graphics.useNixGL.defaultPackage = null;
                 base.keepass.path = "/Users/htran/keepass.kdbx";
+                # don't want to deal with GL stuffs on mac yet :/
               }
             ];
             extraSpecialArgs = mkModuleArgs {

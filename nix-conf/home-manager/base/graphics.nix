@@ -1,7 +1,7 @@
 { pkgs, config, lib, ... }:
 let
   cfg = config.base.graphics;
-  cfgEnable = cfg.enable or cfg.useNixGLPackage != null;
+  cfgEnable = cfg.enable or (cfg.useNixGL.defaultPackage != null);
   types = lib.types;
 in
 {
