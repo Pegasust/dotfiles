@@ -3,9 +3,9 @@
 # TODO: Add to* formats from pkgs.formats.*
 { pkgs
 , lib
-,...
+, ...
 } @ inputs:
-let 
+let
   yamlToJsonDrv = yamlContent: outputPath: pkgs.callPackage
     ({ runCommand }:
       # runCommand source: https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/trivial-builders.nix#L33
@@ -16,14 +16,16 @@ let
           echo "$yamlContent" | yq >$out
         '')
     { };
-in {
+in
+{
   # Takes in a yaml string and produces a derivation with translated JSON at $outputPath
   # similar to builtins.fromJSON, turns a YAML string to nix attrset
   fromYaml = yamlContent: builtins.fromJSON (builtins.readFile (yamlToJsonDrv yamlContent "any_output.json"));
   fromYamlPath = yamlPath: builtins.fromJSON (
     builtins.readFile (
-      yamlToJsonDrv (
-        builtins.readFile yamlPath) 
-      "any-output.json"));
+      yamlToJsonDrv
+        (
+          builtins.readFile yamlPath)
+        "any-output.json"));
   # TODO: fromToml?
 }

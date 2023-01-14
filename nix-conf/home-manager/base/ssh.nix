@@ -1,7 +1,7 @@
 { config
 , proj_root
 , myLib
-,  ...
+, ...
 }:
 let cfg = config.base.ssh;
 in

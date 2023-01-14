@@ -29,7 +29,7 @@ with lib;
     isNormalUser = true;
     home = "/home/hungtr";
     description = "pegasust/hungtr";
-    extraGroups = [ "wheel" "networkmanager" "audio"];
+    extraGroups = [ "wheel" "networkmanager" "audio" ];
   };
   users.users.root = {
     # openssh runs in root, no? This is because port < 1024 requires root.

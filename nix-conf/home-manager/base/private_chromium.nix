@@ -1,3 +1,5 @@
+# TODO: maybe throw if base.graphics is not enabled?
+# Though, headless chromium might be possible
 { config, pkgs, lib, ... }:
 let cfg = config.base.private_chromium;
 in

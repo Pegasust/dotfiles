@@ -1,7 +1,7 @@
 { pkgs, config, lib, ... }:
 let
   cfg = config.base.graphics;
-  cfgEnable = cfg.enable or cfg.useNixGLPackage != null;
+  cfgEnable = cfg.enable or (cfg.useNixGL.defaultPackage != null);
   types = lib.types;
 in
 {
@@ -11,7 +11,7 @@ in
     _enable = lib.mkOption {
       type = types.bool;
       description = "Whether the graphics is implicitly enabled (final)";
-      internal = true;
+      # internal = true;
       default = false;
     };
     useNixGL = {
@@ -35,7 +35,7 @@ in
   # they will also need to do `config.base.shells.enable`
   # generally, we want the behavior: import means enable
   config = lib.mkIf cfgEnable {
-    base.graphics._enable = cfgEnable;
+    base.graphics._enable = lib.mkForce true;
     base.shells = {
       shellAliases = lib.mkIf (cfg.useNixGL.defaultPackage != null) {
         nixGL = cfg.useNixGL.defaultPackage;

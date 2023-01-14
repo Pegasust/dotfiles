@@ -1,0 +1,4 @@
+[cargo-new]
+# since we already have a root .git
+vcs = "none"  # enum["git", "hg", "pijul", "fossil", "none"]
+

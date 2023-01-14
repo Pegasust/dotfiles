@@ -8,12 +8,14 @@
     (flake-utils.lib.eachDefaultSystem (system:
       let
         isIntelX86Platform = system == "x86_64-linux";
+        nix_pkgs = import nixpkgs { inherit system; };
         pkgs = import ./default.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = nix_pkgs;
           enable32bits = isIntelX86Platform;
           enableIntelX86Extensions = isIntelX86Platform;
         };
-      in rec {
+      in
+      rec {
 
         packages = {
           # makes it easy to use "nix run nixGL --impure -- program"
@@ -30,16 +32,16 @@
         # deprecated attributes for retro compatibility
         defaultPackage = packages;
       })) // rec {
-        # deprecated attributes for retro compatibility
-        overlay = overlays.default;
-        overlays.default = final: _:
-          let isIntelX86Platform = final.system == "x86_64-linux";
-          in {
-            nixgl = import ./default.nix {
-              pkgs = final;
-              enable32bits = isIntelX86Platform;
-              enableIntelX86Extensions = isIntelX86Platform;
-            };
+      # deprecated attributes for retro compatibility
+      overlay = overlays.default;
+      overlays.default = final: _:
+        let isIntelX86Platform = final.system == "x86_64-linux";
+        in {
+          nixgl = import ./default.nix {
+            pkgs = final;
+            enable32bits = isIntelX86Platform;
+            enableIntelX86Extensions = isIntelX86Platform;
           };
-      };
+        };
+    };
 }

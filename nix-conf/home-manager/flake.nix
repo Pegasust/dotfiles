@@ -18,6 +18,15 @@
       url = "github:rebkwok/kpcli";
       flake = false;
     };
+    neovim-nightly-overlay = {
+      url = "github:nix-community/neovim-nightly-overlay";
+      # Pin to a nixpkgs revision that doesn't have NixOS/nixpkgs#208103 yet
+      inputs.nixpkgs.url = "github:nixos/nixpkgs?rev=fad51abd42ca17a60fc1d4cb9382e2d79ae31836";
+    };
+    nix-index-database = {
+      url = "github:mic92/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -27,10 +36,22 @@
     , rust-overlay
     , flake-utils
     , kpcli-py
+    , neovim-nightly-overlay
     , ...
     }:
     let
-      system = "x86_64-linux";
+      # config_fn:: system -> config
+      cross_platform = config_fn: ({
+        packages = builtins.foldl'
+          (prev: system: prev // {
+            "${system}" = config_fn system;
+          })
+          { }
+          flake-utils.lib.defaultSystems;
+      });
+    in
+    cross_platform (system:
+    let
       overlays = import ./../../overlays.nix flake_inputs;
       # pkgs = nixpkgs.legacyPackages.${system}.appendOverlays overlays;
       pkgs = import nixpkgs {
@@ -40,11 +61,11 @@
       # lib = (import ../lib { inherit pkgs; lib = pkgs.lib; });
       base = import ./base;
       inherit (base) mkModuleArgs;
-      
-      kde_module = {config, pkgs, ...}: {
+
+      kde_module = { config, pkgs, ... }: {
         fonts.fontconfig.enable = true;
         home.packages = [
-          (pkgs.nerdfonts.override {fonts = ["DroidSansMono"];})
+          (pkgs.nerdfonts.override { fonts = [ "DroidSansMono" ]; })
         ];
         # For some reasons, Windows es in the font name as DroidSansMono NF
         # so we need to override this
@@ -56,13 +77,14 @@
         inherit overlays pkgs base;
       };
       homeConfigurations =
-        let x11_wsl = ''
-          # x11 output for WSL
-          export DISPLAY=$(ip route list default | awk '{print $3}'):0
-          export LIBGL_ALWAYS_INDIRECT=1
-        '';
+        let
+          x11_wsl = ''
+            # x11 output for WSL
+            export DISPLAY=$(ip route list default | awk '{print $3}'):0
+            export LIBGL_ALWAYS_INDIRECT=1
+          '';
         in
-        rec {
+        {
           "hungtr" = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
             modules = base.modules ++ [
@@ -85,6 +107,14 @@
               ./home.nix
               kde_module
               ./base/productive_desktop.nix
+              {
+                # since home.nix forces us to use keepass, and base.keepass.path
+                # defaults to a bad value (on purpose), we should configure a
+                # it to be the proper path
+                base.keepass.path = "/perso/garden/keepass.kdbx";
+                base.graphics.useNixGL.defaultPackage = "nixGLNvidia";
+                base.graphics.useNixGL.enable = true;
+              }
             ];
             # optionally pass inarguments to module
             # we migrate this from in-place modules to allow flexibility
@@ -94,6 +124,25 @@
               myHome = {
                 username = "hungtr";
                 homeDirectory = "/home/hungtr";
+              };
+            };
+          };
+          "htran" = home-manager.lib.homeManagerConfiguration { 
+            inherit pkgs;
+            modules = [
+              ./home.nix
+              {
+                base.graphics.enable = false;
+                base.graphics.useNixGL.defaultPackage = null;
+                base.keepass.path = "/Users/htran/keepass.kdbx";
+                # don't want to deal with GL stuffs on mac yet :/
+              }
+            ];
+            extraSpecialArgs = mkModuleArgs {
+              inherit pkgs;
+              myHome = {
+                username = "htran";
+                homeDirectory = "/Users/htran";
               };
             };
           };
@@ -147,8 +196,9 @@
                 base.alacritty.font.family = "BitstreamVeraSansMono Nerd Font";
                 base.keepass.path = "/media/homelab/f/PersistentHotStorage/keepass.kdbx";
               }
+              ./base/productive_desktop.nix
             ];
-            
+
             extraSpecialArgs = mkModuleArgs {
               inherit pkgs;
               myHome = {
@@ -161,5 +211,5 @@
             };
           };
         };
-    };
+    });
 }

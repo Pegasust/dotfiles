@@ -1,5 +1,5 @@
 # Personal configuration on storage solution
-{ pkgs, config, lib }: {
+{ pkgs, config, lib, ... }: {
   environment.systemPackages = [
     pkgs.s3fs
     pkgs.cifs-utils
@@ -70,28 +70,32 @@
           bucket = "digital-garden";
         })
         (
-          let args = {
-            "-fstype" = "cifs";
-            credentials = config.age.secrets._nhitrl_cred.path;
-            user = null;
-            uid = "1001";
-            gid = "100";
-            dir_mode = "0777";
-            file_mode = "0777";
-          };
-          in "felia_d ${confToBackendArg args} ://felia.coati-celsius.ts.net/d"
+          let
+            args = {
+              "-fstype" = "cifs";
+              credentials = config.age.secrets._nhitrl_cred.path;
+              user = null;
+              uid = "1001";
+              gid = "100";
+              dir_mode = "0777";
+              file_mode = "0777";
+            };
+          in
+          "felia_d ${confToBackendArg args} ://felia.coati-celsius.ts.net/d"
         )
         (
-          let args = {
-            "-fstype" = "cifs";
-            credentials = config.age.secrets._nhitrl_cred.path;
-            user = null;
-            uid = "1001";
-            gid = "100";
-            dir_mode = "0777";
-            file_mode = "0777";
-          };
-          in "felia_f ${confToBackendArg args} ://felia.coati-celsius.ts.net/f"
+          let
+            args = {
+              "-fstype" = "cifs";
+              credentials = config.age.secrets._nhitrl_cred.path;
+              user = null;
+              uid = "1001";
+              gid = "100";
+              dir_mode = "0777";
+              file_mode = "0777";
+            };
+          in
+          "felia_f ${confToBackendArg args} ://felia.coati-celsius.ts.net/f"
         )
       ];
       persoConf = pkgs.writeText "auto.personal" (builtins.concatStringsSep "\n" personalStorage);

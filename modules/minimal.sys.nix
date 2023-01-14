@@ -1,18 +1,21 @@
-{pkgs
-,lib
-,proj_root
-}:{
+{ pkgs
+, lib
+, proj_root
+, modulesPath
+, ...
+}: {
+  imports = [ "${modulesPath}/profiles/minimal.nix" ];
   # prune old builds after a while
-  nix.settings.auto-optimize-store = true;
-  nix.package = pkgs.nixFlakes;             # nix flakes
+  nix.settings.auto-optimise-store = true;
+  nix.package = pkgs.nixFlakes; # nix flakes
   nix.extraOptions = ''
-    experimental=feature = nix-command flakes
+    experimental-features = nix-command flakes
   '';
   programs.neovim = {
-      enable = true;
-      defaultEditor = true;
+    enable = true;
+    defaultEditor = true;
   };
-  programs.git.enable = true;  
+  programs.git.enable = true;
   environment.systemPackages = [
     pkgs.gnumake
     pkgs.wget
@@ -22,6 +25,6 @@
   ];
   users.users.root = {
     # openssh runs in root, no? This is because port < 1024 requires root.
-    openssh.authorizedKeys.keys = lib.strings.splitString "\n" (builtins.readFile "${proj_root}/ssh/authorized_keys");
+    openssh.authorizedKeys.keys = lib.strings.splitString "\n" (builtins.readFile "${proj_root.configs.path}/ssh/authorized_keys");
   };
 }

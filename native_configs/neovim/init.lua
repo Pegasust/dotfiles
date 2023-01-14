@@ -20,19 +20,37 @@ if empty(glob(plug_path))
 endif
 ]])
 
+local function truthy(v) return v ~= nil end
+
+local function cfg(cfg_var, do_fn) if truthy(cfg_var) then do_fn() end end
+
+local function cfg_render(do_fn)
+    local should_render = not truthy(os.getenv("NVIM_HEADLESS"))
+    cfg(should_render, do_fn)
+end
+
 -- vim-plug
 local Plug = vim.fn['plug#']
 
 vim.call('plug#begin')
 
 -- libs and dependencies
-Plug('nvim-lua/plenary.nvim')
+Plug('nvim-lua/plenary.nvim') -- The base of all plugins
 
 -- plugins
 Plug('tjdevries/nlua.nvim') -- adds symbols of vim stuffs in init.lua
 Plug('nvim-treesitter/nvim-treesitter') -- language parser engine for highlighting
 Plug('nvim-treesitter/nvim-treesitter-textobjects') -- more text objects
 Plug('nvim-telescope/telescope.nvim', { branch = '0.1.x' }) -- file browser
+-- TODO: this might need to be taken extra care in our Nix config
+-- What this Plug declaration means is this repo needs to be built on our running environment
+-- -----
+-- What to do:
+-- - Run `make` at anytime before Nix is done on this repository
+--   - Might mean that we fetch this repository, run make, and copy to destination folder
+-- - Make sure that if we run `make` at first Plug run, that `make` is idempotent
+-- OR
+--   Make sure that Plug does not run `make` and use the output it needs
 Plug('nvim-telescope/telescope-fzf-native.nvim',
     { ['do'] = 'make >> /tmp/log 2>&1' })
 Plug('nvim-telescope/telescope-file-browser.nvim')
@@ -67,15 +85,17 @@ Plug('Olical/conjure') -- REPL on the source for Clojure (and other LISPs)
 Plug('gennaro-tedesco/nvim-jqx') -- JSON formatter (use :Jqx*)
 Plug('kylechui/nvim-surround') -- surrounds with tags/parenthesis
 Plug('simrat39/rust-tools.nvim') -- config rust-analyzer and nvim integration
-Plug('simrat39/inlay-hints.nvim') -- type-hints with pseudo-virtual texts
 
 -- UI & colorscheme
-Plug('gruvbox-community/gruvbox') -- theme provider
-Plug('nvim-lualine/lualine.nvim') -- fancy status line
-Plug('lukas-reineke/indent-blankline.nvim') -- identation lines on blank lines
-Plug('kyazdani42/nvim-web-devicons') -- icons for folder and filetypes
-Plug('m-demare/hlargs.nvim') -- highlights arguments; great for func prog
-Plug('folke/todo-comments.nvim') -- Highlights TODO
+cfg_render(function()
+    Plug('simrat39/inlay-hints.nvim') -- type-hints with pseudo-virtual texts
+    Plug('gruvbox-community/gruvbox') -- theme provider
+    Plug('nvim-lualine/lualine.nvim') -- fancy status line
+    Plug('lukas-reineke/indent-blankline.nvim') -- identation lines on blank lines
+    Plug('kyazdani42/nvim-web-devicons') -- icons for folder and filetypes
+    Plug('m-demare/hlargs.nvim') -- highlights arguments; great for func prog
+    Plug('folke/todo-comments.nvim') -- Highlights TODO
+end)
 
 -- other utilities
 Plug('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
@@ -84,6 +104,11 @@ Plug('nvim-treesitter/playground') -- Sees Treesitter AST - less hair pulling, m
 Plug('saadparwaiz1/cmp_luasnip') -- snippet engine
 Plug('L3MON4D3/LuaSnip') -- snippet engine
 Plug('mickael-menu/zk-nvim') -- Zettelkasten
+-- Switch cases:
+-- `gsp` -> PascalCase (classes), `gsc` -> camelCase (Java), `gs_` -> snake_case (C/C++/Rust)
+-- `gsu` -> UPPER_CASE (CONSTs), `gsk` -> kebab-case (Clojure), `gsK` -> Title-Kebab-Case
+-- `gs.` -> dot.case (R)
+Plug('arthurxavierx/vim-caser') -- switch cases
 
 ---------
 vim.call('plug#end')
@@ -95,12 +120,13 @@ endif
 ]])
 
 -- special terminals, place them at 4..=7 for ergonomics
-vim.api.nvim_create_autocmd({"VimEnter"}, {
+vim.api.nvim_create_autocmd({ "VimEnter" }, {
     callback = function()
         local function named_term(term_idx, term_name)
             require('harpoon.term').gotoTerminal(term_idx)
-            vim.cmd([[:exe ":file ]]..term_name..[[" | :bfirst]])
+            vim.cmd([[:exe ":file ]] .. term_name .. [[" | :bfirst]])
         end
+
         -- term:ctl at 4
         named_term(4, "term:ctl")
         -- term:dev at 5
@@ -154,7 +180,7 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- that does not collide with vi-motion keybind. This is because
 -- <Alt-x> -> ^[x; while <Esc> on the terminal is ^[
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>)')
-vim.keymap.set({ 'n', 'i', 'v' }, '<c-l>', '<Cmd>mode<Cr>', {desc = ""}) -- redraw on every mode
+vim.keymap.set({ 'n', 'i', 'v' }, '<c-l>', '<Cmd>mode<Cr>', { desc = "" }) -- redraw on every mode
 
 -- diagnostics (errors/warnings to be shown)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
