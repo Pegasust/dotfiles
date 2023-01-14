@@ -15,7 +15,7 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
     # Allows default.nix to call onto flake.nix. Useful for nix eval and automations
     flake-compat = {
-      url = "github:edolstra/flake-compat";
+      url = "path:out-of-tree/flake-compat";
       flake = false;
     };
     kpcli-py = {
