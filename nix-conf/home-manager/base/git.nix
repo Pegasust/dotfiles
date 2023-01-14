@@ -44,6 +44,7 @@ in
       default = [
         ".vscode" # vscode settings
         ".direnv" # .envrc cached outputs
+        ".DS_Store" # MacOS users, amrite
       ];
       description = ''
         .gitignore patterns that are applied in every repository.

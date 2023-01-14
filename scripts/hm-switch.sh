@@ -24,7 +24,7 @@ rm -rf ~/.local/share/nvim/mason
 
 # test if we have home-manager, if not, attempt to use nix to put home-manager to
 # our environment
-if [ $(home-manager help >/dev/null 2>&1) ]; then
+if ! command -v home-manager ; then
     nix-shell -p home-manager --run "home-manager switch --flake $HOME_MANAGER_DIR $@"
 else
     home-manager switch -b backup --flake "$HOME_MANAGER_DIR" $@

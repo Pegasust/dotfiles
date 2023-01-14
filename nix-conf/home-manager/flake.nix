@@ -62,7 +62,7 @@
       base = import ./base;
       inherit (base) mkModuleArgs;
 
-      kde_module = { config, pkgs, ... }: {
+      nerd_font_module = { config, pkgs, ... }: {
         fonts.fontconfig.enable = true;
         home.packages = [
           (pkgs.nerdfonts.override { fonts = [ "DroidSansMono" ]; })
@@ -105,7 +105,7 @@
             inherit pkgs;
             modules = base.modules ++ [
               ./home.nix
-              kde_module
+              nerd_font_module
               ./base/productive_desktop.nix
               {
                 # since home.nix forces us to use keepass, and base.keepass.path
@@ -129,14 +129,17 @@
           };
           "htran" = home-manager.lib.homeManagerConfiguration { 
             inherit pkgs;
-            modules = [
+            modules = base.modules ++ [
               ./home.nix
               {
                 base.graphics.enable = false;
-                base.graphics.useNixGL.defaultPackage = null;
-                base.keepass.path = "/Users/htran/keepass.kdbx";
                 # don't want to deal with GL stuffs on mac yet :/
+                base.graphics.useNixGL.defaultPackage = null;
+                # NOTE: this actually does not exist
+                base.keepass.path = "/Users/htran/keepass.kdbx";
+                base.alacritty.font.size = 11.0;
               }
+              nerd_font_module
             ];
             extraSpecialArgs = mkModuleArgs {
               inherit pkgs;
