@@ -76,15 +76,12 @@ let
     };
   # we are blessed by the fact that we engulfed nixpkgs.lib.* at top level
   mkHostFromPropagated = propagatedHostConfig@{ nixosConfig, ... }: nixpkgs.lib.nixosSystem nixosConfig;
-  <<<<<<< HEAD
-    mkHost = hostConfig: (lib.pipe [ propagate mkHostFromPropagated ] hostConfig);
+  mkHost = hostConfig: (lib.pipe [ propagate mkHostFromPropagated ] hostConfig);
   trimNull = lib.filterAttrsRecursive (name: value: value != null);
   flattenPubkey = lib.mapAttrs (hostName: meta_config: meta_config.metadata.ssh_pubkey);
-  =======
-  mkHost = hostConfig: (lib.pipe hostConfig [ propagate mkHostFromPropagated ]);
-  >>>>>>> 4619ea4 (rekey)
-  in {
+in
+{
   nixosConfigurations = lib.mapAttrs (name: hostConfig: mkHost hostConfig) config;
   # {bao = "ssh-ed25519 ..."; another_host = "ssh-rsa ...";}
   pubKeys = lib.getPubkey config;
-  }
+}
