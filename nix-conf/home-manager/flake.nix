@@ -23,6 +23,10 @@
       # Pin to a nixpkgs revision that doesn't have NixOS/nixpkgs#208103 yet
       inputs.nixpkgs.url = "github:nixos/nixpkgs?rev=fad51abd42ca17a60fc1d4cb9382e2d79ae31836";
     };
+    nix-index-database = {
+      url = "github:mic92/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -109,6 +113,7 @@
                 # it to be the proper path
                 base.keepass.path = "/perso/garden/keepass.kdbx";
                 base.graphics.useNixGL.defaultPackage = "nixGLNvidia";
+                base.graphics.useNixGL.enable = true;
               }
             ];
             # optionally pass inarguments to module

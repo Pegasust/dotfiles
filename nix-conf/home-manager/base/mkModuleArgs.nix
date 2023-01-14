@@ -1,3 +1,5 @@
+# Turns given inputs into the standardized shape of the inputs to configure  
+# custom base modules in this directory.
 { pkgs
 , lib ? pkgs.lib
 , ...
