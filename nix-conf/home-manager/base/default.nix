@@ -1,4 +1,6 @@
-{
+{nix-index-database
+,...
+}@inputs:{
   mkModuleArgs = import ./mkModuleArgs.nix;
   modules = [
     ./alacritty.nix
@@ -8,5 +10,6 @@
     {
       config.programs.home-manager.enable = true;
     }
+    nix-index-database.hmModules.nix-index
   ];
 }

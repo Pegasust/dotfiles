@@ -19,6 +19,14 @@ in
         '';
         example = "DroidSansMono NF";
       };
+      font.size = myLib.mkOption {
+        type = myLib.types.number;
+        default = actualConfig.font.size;
+        description = ''
+          The default font size for Alacritty. This is probably measured in px.
+        '';
+        example = 7.0;
+      };
       enable = myLib.mkOption {
         type = myLib.types.bool;
         default = true;
@@ -45,6 +53,7 @@ in
     enable = cfg.enable;
     settings = myLib.recursiveUpdate actualConfig {
       font.normal.family = cfg.font.family;
+      font.size = cfg.font.size;
     };
   };
 }

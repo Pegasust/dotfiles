@@ -1,4 +1,8 @@
 {
+  nixConfig = {
+    accept-flake-config = true;
+    experimental-features = "nix-command flakes";
+  };
   description = "simple home-manager config";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -11,7 +15,7 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
     # Allows default.nix to call onto flake.nix. Useful for nix eval and automations
     flake-compat = {
-      url = "github:edolstra/flake-compat";
+      url = "path:../../out-of-tree/flake-compat";
       flake = false;
     };
     kpcli-py = {
@@ -59,10 +63,10 @@
         config = { allowUnfree = true; };
       };
       # lib = (import ../lib { inherit pkgs; lib = pkgs.lib; });
-      base = import ./base;
+      base = import ./base flake_inputs;
       inherit (base) mkModuleArgs;
 
-      kde_module = { config, pkgs, ... }: {
+      nerd_font_module = { config, pkgs, ... }: {
         fonts.fontconfig.enable = true;
         home.packages = [
           (pkgs.nerdfonts.override { fonts = [ "DroidSansMono" ]; })
@@ -105,7 +109,7 @@
             inherit pkgs;
             modules = base.modules ++ [
               ./home.nix
-              kde_module
+              nerd_font_module
               ./base/productive_desktop.nix
               {
                 # since home.nix forces us to use keepass, and base.keepass.path
@@ -127,16 +131,41 @@
               };
             };
           };
-          "htran" = home-manager.lib.homeManagerConfiguration { 
+          "hungtran" = home-manager.lib.homeManagerConfiguration { 
             inherit pkgs;
-            modules = [
+            modules = base.modules ++ [
               ./home.nix
               {
                 base.graphics.enable = false;
-                base.graphics.useNixGL.defaultPackage = null;
-                base.keepass.path = "/Users/htran/keepass.kdbx";
                 # don't want to deal with GL stuffs on mac yet :/
+                base.graphics.useNixGL.defaultPackage = null;
+                # NOTE: this actually does not exist
+                base.keepass.path = "/Users/htran/keepass.kdbx";
+                base.alacritty.font.size = 11.0;
               }
+              nerd_font_module
+            ];
+            extraSpecialArgs = mkModuleArgs {
+              inherit pkgs;
+              myHome = {
+                username = "hungtran";
+                homeDirectory = "/Users/hungtran";
+              };
+            };
+          };
+          "htran" = home-manager.lib.homeManagerConfiguration { 
+            inherit pkgs;
+            modules = base.modules ++ [
+              ./home.nix
+              {
+                base.graphics.enable = false;
+                # don't want to deal with GL stuffs on mac yet :/
+                base.graphics.useNixGL.defaultPackage = null;
+                # NOTE: this actually does not exist
+                base.keepass.path = "/Users/htran/keepass.kdbx";
+                base.alacritty.font.size = 11.0;
+              }
+              nerd_font_module
             ];
             extraSpecialArgs = mkModuleArgs {
               inherit pkgs;
