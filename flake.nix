@@ -1,4 +1,7 @@
 {
+  nixConfig = {
+    
+  };
   description = "My personal configuration in Nix (and some native configurations)";
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";

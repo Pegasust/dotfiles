@@ -1,4 +1,8 @@
 {
+  nixConfig = {
+    accept-flake-config = true;
+    experimental-features = "nix-command flakes";
+  };
   description = "simple home-manager config";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -59,7 +63,7 @@
         config = { allowUnfree = true; };
       };
       # lib = (import ../lib { inherit pkgs; lib = pkgs.lib; });
-      base = import ./base;
+      base = import ./base flake_inputs;
       inherit (base) mkModuleArgs;
 
       nerd_font_module = { config, pkgs, ... }: {

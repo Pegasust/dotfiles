@@ -2,7 +2,7 @@
 # NOTE: Untested on case of no home-manager
 set -xv
 # Where this script located
-SCRIPT_DIR=$(realpath $(dirname $0))
+SCRIPT_DIR=$(readlink -f $(dirname $0))
 echo "SCRIPT_DIR: ${SCRIPT_DIR}"
 
 HOME_MANAGER_DIR="${SCRIPT_DIR}/../nix-conf/home-manager"
