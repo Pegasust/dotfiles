@@ -10,7 +10,6 @@
 -- - zk  @ https://github.com/mickael-menu/zk
 -- - prettierd @ npm install -g @fsouza/prettierd
 
-local data_dir = vim.fn.stdpath('data')
 vim.cmd([[
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 let plug_path = data_dir . '/autoload/plug.vim'
@@ -23,11 +22,6 @@ endif
 local function truthy(v) return v ~= nil end
 
 local function cfg(cfg_var, do_fn) if truthy(cfg_var) then do_fn() end end
-
-local function cfg_render(do_fn)
-    local should_render = not truthy(os.getenv("NVIM_HEADLESS"))
-    cfg(should_render, do_fn)
-end
 
 -- vim-plug
 local Plug = vim.fn['plug#']
@@ -87,15 +81,13 @@ Plug('kylechui/nvim-surround') -- surrounds with tags/parenthesis
 Plug('simrat39/rust-tools.nvim') -- config rust-analyzer and nvim integration
 
 -- UI & colorscheme
-cfg_render(function()
-    Plug('simrat39/inlay-hints.nvim') -- type-hints with pseudo-virtual texts
-    Plug('gruvbox-community/gruvbox') -- theme provider
-    Plug('nvim-lualine/lualine.nvim') -- fancy status line
-    Plug('lukas-reineke/indent-blankline.nvim') -- identation lines on blank lines
-    Plug('kyazdani42/nvim-web-devicons') -- icons for folder and filetypes
-    Plug('m-demare/hlargs.nvim') -- highlights arguments; great for func prog
-    Plug('folke/todo-comments.nvim') -- Highlights TODO
-end)
+Plug('simrat39/inlay-hints.nvim') -- type-hints with pseudo-virtual texts
+Plug('gruvbox-community/gruvbox') -- theme provider
+Plug('nvim-lualine/lualine.nvim') -- fancy status line
+Plug('lukas-reineke/indent-blankline.nvim') -- identation lines on blank lines
+Plug('kyazdani42/nvim-web-devicons') -- icons for folder and filetypes
+Plug('m-demare/hlargs.nvim') -- highlights arguments; great for func prog
+Plug('folke/todo-comments.nvim') -- Highlights TODO
 
 -- other utilities
 Plug('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
@@ -139,30 +131,52 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
 })
 
 
-vim.cmd([[
-set ignorecase
-set smartcase
-set incsearch
-set number relativenumber
-set tabstop=4 softtabstop=4
-set autoindent
-set smartindent
-set expandtab
-set shiftwidth=4
-set exrc
-set incsearch
-set scrolloff=30
-set signcolumn=yes
-set colorcolumn=80
-set background=light
-]])
+vim.g.gruvbox_contrast_dark="soft";
+vim.g.gruvbox_contrast_light="soft";
+vim.opt.ignorecase = true;
+vim.opt.smartcase = true;
+vim.opt.incsearch = true;
+vim.opt.number = true;
+vim.opt.relativenumber = true;
+vim.opt.autoindent = true;
+vim.opt.smartindent = true;
+vim.opt.expandtab = true;
+vim.opt.exrc = true;
+
+vim.opt.tabstop = 4;
+vim.opt.softtabstop = 4;
+vim.opt.shiftwidth = 4;
+vim.opt.scrolloff = 30;
+vim.opt.signcolumn = "yes";
+vim.opt.colorcolumn = "80";
+
+vim.opt.background = "light";
+
+vim.api.nvim_create_user_command('Dark', function(opts)
+    -- opts: {name, args: str, fargs: Splited<str>, range, ...}
+    ---@type string
+    local contrast = (opts.args and string.len(opts.args) > 0) and opts.args or vim.g.gruvbox_contrast_dark;
+    vim.g.gruvbox_contrast_dark = contrast;
+    vim.opt.background = "dark";
+end,
+    {nargs = "?";})
+
+vim.api.nvim_create_user_command('Light', function(opts)
+    -- opts: {name, args: str, fargs: Splited<str>, range, ...}
+    ---@type string
+    local contrast = (opts.args and string.len(opts.args) > 0) and opts.args or vim.g.gruvbox_contrast_dark;
+    vim.g.gruvbox_contrast_light = contrast;
+    vim.opt.background = "light";
+end,
+    {nargs = "?";})
+
 vim.opt.lazyredraw = true
 vim.opt.termguicolors = true
 vim.opt.cursorline = true
 -- some plugins misbehave when we do swap files
 vim.opt.swapfile = false
 vim.opt.backup = false
-vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+vim.opt.undodir = vim.fn.stdpath('state')..'/.vim/undodir'
 vim.opt.undofile = true
 vim.opt.completeopt = 'menuone,noselect'
 -- vim.opt.clipboard = "unnamedplus"
