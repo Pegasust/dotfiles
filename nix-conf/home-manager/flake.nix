@@ -11,7 +11,7 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
     # Allows default.nix to call onto flake.nix. Useful for nix eval and automations
     flake-compat = {
-      url = "github:edolstra/flake-compat";
+      url = "path:../../out-of-tree/flake-compat";
       flake = false;
     };
     kpcli-py = {
@@ -124,6 +124,28 @@
               myHome = {
                 username = "hungtr";
                 homeDirectory = "/home/hungtr";
+              };
+            };
+          };
+          "hungtran" = home-manager.lib.homeManagerConfiguration { 
+            inherit pkgs;
+            modules = base.modules ++ [
+              ./home.nix
+              {
+                base.graphics.enable = false;
+                # don't want to deal with GL stuffs on mac yet :/
+                base.graphics.useNixGL.defaultPackage = null;
+                # NOTE: this actually does not exist
+                base.keepass.path = "/Users/htran/keepass.kdbx";
+                base.alacritty.font.size = 11.0;
+              }
+              nerd_font_module
+            ];
+            extraSpecialArgs = mkModuleArgs {
+              inherit pkgs;
+              myHome = {
+                username = "hungtran";
+                homeDirectory = "/Users/hungtran";
               };
             };
           };
