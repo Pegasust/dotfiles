@@ -1,10 +1,15 @@
 {
   nixConfig = {
-    
+    accept-flake-config = true;
+    experimental-features = "nix-command flakes";
+    # for darwin's browser
+    allowUnsupportedSystem = true;
   };
   description = "My personal configuration in Nix (and some native configurations)";
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
+    # continously merged & rebased lightweight .lib. Basically a huge extension to c_.
+    nixlib.url = "github:nix-community/nixpkgs.lib";
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -45,8 +50,50 @@
     , flake-compat
     , neovim-nightly-overlay
     , nix-index-database
+    , nixlib
     , ...
     }@_inputs:
+    let
+      # config_fn:: system -> config
+      # this function should take simple exports of homeConfigurations.${profile}, 
+      # nixosConfigurations.${profile}, devShells.${profile}, packages.${profile}
+      # and correctly produce 
+      cross_platform = config_fn: let 
+        # nixosConfigurations.${profile} -> nixosConfigurations.${system}.${profile}
+        # pass in: path.to.exports.nixosConfigurations
+        # get out: nixosConfigurations.${system} = {...}
+        strat_sandwich = field_name: config_field: system: {
+          "${field_name}"."${system}" = config_field;
+        };
+        # homeConfigurations.${profile} -> packages.${system}.homeConfigurations.${profile}
+        # pass in: path.to.exports.homeConfigurations
+        # get: packages.${system}.homeConfigurations
+        strat_wrap_packages = field_name: config_field: system: {
+          packages."${system}"."${field_name}" = config_field;
+        };
+        strat_noop = field_name: config_field: system: {"${field_name}" = config_field;};
+        strategyMap = {
+          nixosConfigurations = strat_sandwich;
+          templates =           strat_noop;
+          devShells =           strat_sandwich;
+          devShell =            strat_sandwich;
+          formatter =           strat_sandwich;
+          homeConfigurations =  strat_wrap_packages;
+          lib =                 strat_noop;
+          proj_root =           strat_noop;
+          unit_tests =          strat_noop;
+          secrets =             strat_noop;
+          debug =               strat_noop;
+        };
+        # takes in {homeConfigurations = ...; nixosConfigurations = ...}
+        # -> {packages.$system.homeConfigurations}
+        mapConfig = config: system: (builtins.foldl' 
+          (acc: confName: (strategyMap."${confName}" confName config."${confName}" system))
+          {} (builtins.attrNames config));
+      in builtins.foldl' nixlib.lib.recursiveUpdate {} (
+        builtins.map (system: (mapConfig (config_fn system) system)) flake-utils.lib.defaultSystems
+      );
+    in cross_platform (system:
     let
       # Context/global stuffs to be passed down
       # NOTE: this will only read files that are within git tree
@@ -65,17 +112,9 @@
           hosts.path = "${path}/hosts";
           users.path = "${path}/users";
         };
-      # TODO: adapt to different platforms think about different systems later
-      system = "x86_64-linux";
-      overlays = [
-        rust-overlay.overlays.default
-        (self: pkgs@{ lib, ... }: {
-          lib = pkgs.lib // (import ./lib (_inputs // { inherit pkgs proj_root; }));
-        })
-      ];
+      overlays = import ./overlays.nix (_inputs // {inherit system;});
       pkgs = import nixpkgs {
-        inherit system;
-        overlays = import ./overlays.nix _inputs;
+        inherit system overlays;
         config = {
           allowUnfree = true;
         };
@@ -121,7 +160,7 @@
       inherit (hosts) nixosConfigurations;
       inherit (users) homeConfigurations;
       inherit lib proj_root;
-      devShell."${system}" = import ./dev-shell.nix final_inputs;
+      devShells = import ./dev-shell.nix final_inputs;
       templates = import ./templates final_inputs;
       secrets = {
         pubKeys = {
@@ -130,10 +169,10 @@
         };
       };
 
-      unit_tests = lib.runTests unit_tests;
+      # unit_tests = lib.runTests unit_tests;
       debug = {
-        inherit final_inputs hosts users modules lib inputs_w_lib unit_tests pkgs nixpkgs;
+        inherit final_inputs hosts users modules lib inputs_w_lib unit_tests pkgs nixpkgs nixlib;
       };
       formatter."${system}" = pkgs.nixpkgs-fmt;
-    };
+    });
 }

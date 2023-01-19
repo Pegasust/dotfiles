@@ -2,6 +2,14 @@
   nixConfig = {
     accept-flake-config = true;
     experimental-features = "nix-command flakes";
+    extra-substituters = [
+      "https://nix-community.cachix.org"
+      "https://cache.nixos.org"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    ];
   };
   description = "simple home-manager config";
   inputs = {
@@ -56,7 +64,7 @@
     in
     cross_platform (system:
     let
-      overlays = import ./../../overlays.nix flake_inputs;
+      overlays = import ./../../overlays.nix (flake_inputs // {inherit system;});
       # pkgs = nixpkgs.legacyPackages.${system}.appendOverlays overlays;
       pkgs = import nixpkgs {
         inherit system overlays;
@@ -131,6 +139,7 @@
               };
             };
           };
+          # Personal darwin, effectively serves as the Darwin edge channel
           "hungtran" = home-manager.lib.homeManagerConfiguration { 
             inherit pkgs;
             modules = base.modules ++ [
@@ -140,10 +149,14 @@
                 # don't want to deal with GL stuffs on mac yet :/
                 base.graphics.useNixGL.defaultPackage = null;
                 # NOTE: this actually does not exist
-                base.keepass.path = "/Users/htran/keepass.kdbx";
+                base.keepass.path = "/Users/hungtran/keepass.kdbx";
                 base.alacritty.font.size = 11.0;
               }
               nerd_font_module
+              ./base/productive_desktop.nix
+              {
+                base.private_chromium.enable = false;
+              }
             ];
             extraSpecialArgs = mkModuleArgs {
               inherit pkgs;
@@ -153,6 +166,7 @@
               };
             };
           };
+          # Work darwin
           "htran" = home-manager.lib.homeManagerConfiguration { 
             inherit pkgs;
             modules = base.modules ++ [
@@ -164,6 +178,8 @@
                 # NOTE: this actually does not exist
                 base.keepass.path = "/Users/htran/keepass.kdbx";
                 base.alacritty.font.size = 11.0;
+                base.git.name = "Hung";
+                base.git.email = "htran@egihosting.com";
               }
               nerd_font_module
             ];

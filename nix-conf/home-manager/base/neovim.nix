@@ -1,5 +1,6 @@
 # TODO: vim-plug and Mason supports laziness. Probably worth it to explore
 # incremental dependencies based on the project
+# TODO: just install these things, then symlink to mason's bin directory
 #
 # One thing to consider, though, /nix/store of `nix-shell` or `nix-develop`
 # might be different from `home-manager`'s
@@ -44,23 +45,22 @@ let
     pkgs.zk # Zettelkasten (limited support)
     pkgs.fd # Required by a Telescope plugin (?)
     pkgs.stdenv.cc.cc.lib
+    pkgs.rnix-lsp  # doesn't work, Mason just installs it using cargo
+    pkgs.rust4cargo
+
 
     # Language-specific stuffs
     pkgs.sumneko-lua-language-server
+    # pkgs.python3Packages.python-lsp-server
+    pkgs.nodePackages.pyright
+    pkgs.python3Packages.pylint
+    pkgs.python3Packages.flake8
     # TODO: the devShell should provide rust-analyzer so that 
     # cargo test builds binaries compatible with rust-analyzer 
 
     # pkgs.rust-analyzer
     # rust_pkgs
     # pkgs.evcxr # Rust REPL for Conjure!
-
-    # Python3 as alternative to bash scripts :^)
-    # (pkgs.python310Full.withPackages (pypkgs: [
-    #   # python-lsp-server's dependencies is absolutely astronomous
-    #   # pypkgs.python-lsp-server # python-lsp. Now we'll have to tell mason to look for this
-    #   pypkgs.pynvim # nvim provider
-    #   pypkgs.ujson  # pylsp seems to rely on this. satisfy it lol
-    # ]))
   ];
 in
 {
