@@ -44,6 +44,9 @@ let
     pkgs.zk # Zettelkasten (limited support)
     pkgs.fd # Required by a Telescope plugin (?)
     pkgs.stdenv.cc.cc.lib
+    # pkgs.rnix-lsp  # doesn't work, Mason just installs it using cargo
+    pkgs.rust4cargo
+
 
     # Language-specific stuffs
     pkgs.sumneko-lua-language-server
