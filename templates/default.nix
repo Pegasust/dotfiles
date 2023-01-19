@@ -16,4 +16,8 @@
     path = ./ts/turborepo;
     description = "Typescript monorepo with tsconfig, eslint, but with minimal framework attached";
   };
+  py-poetry = {
+    path = ./py-poetry;
+    description = "Python repository with poetry & poetry2nix";
+  };
 }
