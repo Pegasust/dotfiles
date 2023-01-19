@@ -112,9 +112,9 @@
           hosts.path = "${path}/hosts";
           users.path = "${path}/users";
         };
+      overlays = import ./overlays.nix (_inputs // {inherit system;});
       pkgs = import nixpkgs {
-        inherit system;
-        overlays = import ./overlays.nix (_inputs // {inherit system;});
+        inherit system overlays;
         config = {
           allowUnfree = true;
         };
@@ -125,7 +125,7 @@
         nixpkgs.lib
         pkgs.lib
         (import ./lib {
-          inherit proj_root pkgs system;
+          inherit proj_root pkgs overlays system;
           inherit (pkgs) lib;
         })
       ]);
