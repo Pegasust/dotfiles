@@ -178,6 +178,8 @@
                 # NOTE: this actually does not exist
                 base.keepass.path = "/Users/htran/keepass.kdbx";
                 base.alacritty.font.size = 11.0;
+                base.git.name = "Hung";
+                base.git.email = "htran@egihosting.com";
               }
               nerd_font_module
             ];
