@@ -58,7 +58,41 @@
       # this function should take simple exports of homeConfigurations.${profile}, 
       # nixosConfigurations.${profile}, devShells.${profile}, packages.${profile}
       # and correctly produce 
-      cross_platform = config_fn: (config_fn "x86_64-linux");
+      cross_platform = config_fn: let 
+        # nixosConfigurations.${profile} -> nixosConfigurations.${system}.${profile}
+        # pass in: path.to.exports.nixosConfigurations
+        # get out: nixosConfigurations.${system} = {...}
+        strat_sandwich = field_name: config_field: system: {
+          "${field_name}"."${system}" = config_field;
+        };
+        # homeConfigurations.${profile} -> packages.${system}.homeConfigurations.${profile}
+        # pass in: path.to.exports.homeConfigurations
+        # get: packages.${system}.homeConfigurations
+        strat_wrap_packages = field_name: config_field: system: {
+          packages."${system}"."${field_name}" = config_field;
+        };
+        strat_noop = field_name: config_field: system: {"${field_name}" = config_field;};
+        strategyMap = {
+          nixosConfigurations = strat_sandwich;
+          templates =           strat_noop;
+          devShells =           strat_sandwich;
+          devShell =            strat_sandwich;
+          formatter =           strat_sandwich;
+          homeConfigurations =  strat_wrap_packages;
+          lib =                 strat_noop;
+          proj_root =           strat_noop;
+          unit_tests =          strat_noop;
+          secrets =             strat_noop;
+          debug =               strat_noop;
+        };
+        # takes in {homeConfigurations = ...; nixosConfigurations = ...}
+        # -> {packages.$system.homeConfigurations}
+        mapConfig = config: system: (builtins.foldl' 
+          (acc: confName: (strategyMap."${confName}" confName config."${confName}" system))
+          {} (builtins.attrNames config));
+      in builtins.foldl' nixlib.lib.recursiveUpdate {} (
+        builtins.map (system: (mapConfig (config_fn system) system)) flake-utils.lib.defaultSystems
+      );
     in cross_platform (system:
     let
       # Context/global stuffs to be passed down
