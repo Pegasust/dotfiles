@@ -34,25 +34,6 @@
         in
         "${mount_dest} ${confToBackendArg backend_args} :${s3fs-exec}\#${bucket}";
       personalStorage = [
-        # hungtr-hot @ phoenix is broken :)
-        # (autofs-s3fs_entry {
-        #   mount_dest = "hot";
-        #   backend_args = {
-        #     "-fstype" = "fuse";
-        #     use_cache = "/tmp";
-        #     del_cache = null;
-        #     allow_other = null;
-        #     url = ''"https://f5i0.ph.idrivee2-32.com"'';
-        #     # TODO: builtins.readFile requires a Git-controlled file
-        #     passwd_file = config.age.secrets.s3fs.path;
-        #     dbglevel = "debug"; # enable this for better debugging info in journalctl
-        #     uid = "1000"; # default user
-        #     gid = "100";  # users
-        #     umask="003";  # others read only, fully shared for users group
-        #     # _netdev = null; # ignored by s3fs (https://github.com/s3fs-fuse/s3fs-fuse/blob/master/src/s3fs.cpp#L4910)
-        #   };
-        #   bucket = "hungtr-hot";
-        # })
         (autofs-s3fs_entry {
           mount_dest = "garden";
           backend_args = {
