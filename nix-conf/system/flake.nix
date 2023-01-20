@@ -16,16 +16,16 @@
         agenix.nixosModule
         {
           age.secrets.s3fs = {
-            file = ./secrets/s3fs.age;
+            file = ../../secrets/s3fs.age;
             # mode = "600";  # owner + group only
             # owner = "hungtr";
             # group = "users";
           };
           age.secrets."s3fs.digital-garden" = {
-            file = ./secrets/s3fs.digital-garden.age;
+            file = ../../secrets/s3fs.digital-garden.age;
           };
           age.secrets._nhitrl_cred = {
-            file = ./secrets/_nhitrl.age;
+            file = ../../secrets/_nhitrl.age;
           };
           environment.systemPackages = [ agenix.defaultPackage.x86_64-linux ];
         }
