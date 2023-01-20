@@ -217,7 +217,7 @@
               address = "10.100.200.1";
               # interface = "ens32";
             };
-            networking.interface.ens32.ipv4.addresses = [
+            networking.interfaces.ens32.ipv4.addresses = [
               {address = "10.100.200.230"; prefixLength = 24;}
             ];
           }
