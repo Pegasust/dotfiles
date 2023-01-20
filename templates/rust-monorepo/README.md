@@ -35,7 +35,7 @@ for logging needs
 
 ### Library development
 
-- [proptest](https://lib.rs/crates/proptest) for hyppothesis testing
+- [proptest](https://lib.rs/crates/proptest) for hypothesis testing
   - Data-driven testing starts with proptest
 
 
