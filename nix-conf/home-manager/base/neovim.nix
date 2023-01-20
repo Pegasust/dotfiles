@@ -55,6 +55,9 @@ let
     pkgs.nodePackages.pyright
     pkgs.python3Packages.pylint
     pkgs.python3Packages.flake8
+    # pkgs.ansible-lint
+    pkgs.python38Packages.ansible
+    pkgs.ansible-language-server
     # TODO: the devShell should provide rust-analyzer so that 
     # cargo test builds binaries compatible with rust-analyzer 
 
