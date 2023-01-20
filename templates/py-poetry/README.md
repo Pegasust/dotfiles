@@ -4,6 +4,8 @@
 
 - Bootstrapped with [pegasust/dotfiles](https://git.pegasust.com/pegasust/dotfiles)
 
+`nix flake new --template git+https://git.pegasust.com/pegasust/dotfiles.git#py-poetry ./`
+
 - Provides [devShell (`nix develop`)](https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-develop.html),
 [shell.nix (`nix-shell -p ./`)](https://nixos.org/manual/nix/stable/command-ref/nix-shell.html)
 

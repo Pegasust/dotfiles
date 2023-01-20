@@ -46,5 +46,5 @@ cat "${SSH_PUB}" >> "${SSH_DIR}/authorized_keys"
 sort -u "${SSH_DIR}/authorized_keys" -o "${SSH_DIR}/authorized_keys"
 
 echo "Apply nixos-rebuild"
-sudo nixos-rebuild switch --flake "${SYSNIX_DIR}#${HOSTNAME}"
+sudo nixos-rebuild switch --flake "${SYSNIX_DIR}/nix-conf/system#${HOSTNAME}"
 

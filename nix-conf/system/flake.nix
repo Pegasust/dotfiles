@@ -56,6 +56,7 @@
           ./configuration.nix
           {
             system.stateVersion = "22.05";
+            mod.tailscale.enable = true;
           }
         ];
         specialArgs = {
@@ -205,6 +206,37 @@
           hostname = "nixos";
         };
       };
+      nixosConfigurations.htran-dev = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = base_modules ++ [
+          ./configuration.nix
+          {
+            system.stateVersion = "22.11";
+            mod.tailscale.enable = false;
+            networking.defaultGateway = {
+              address = "10.100.200.1";
+              # interface = "ens32";
+            };
+            networking.interfaces.ens32.ipv4.addresses = [
+              {address = "10.100.200.230"; prefixLength = 24;}
+            ];
+          }
+        ];
+        specialArgs = {
+          hostname = "htran-dev";
+          _networking = {
+            firewall.enable = true;
+            useDHCP = false;
+            interfaces.eth0.useDHCP = true;
+          };
+          _boot.loader.grub.enable = true;
+          _boot.loader.grub.version = 2;
+          _services.openssh = {
+            permitRootLogin = "no";
+            enable = true;
+          };
+        };
+      };
       nixosConfigurations.bao = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs.hostname = "bao";
@@ -260,14 +292,15 @@
               services.xserver.displayManager.sddm.enable = true;
               services.xserver.desktopManager.plasma5 = {
                 enable = true;
-                excludePackages = let plasma5 = pkgs.libsForQt5; in [
-                  plasma5.elisa # audio viewer
-                  plasma5.konsole # I use alacritty instaed
-                  plasma5.plasma-browser-integration
-                  plasma5.print-manager # will enable if I need
-                  plasma5.khelpcenter # why not just write manpages instead :(
-                  # plasma5.ksshaskpass   # pls just put prompts on my dear terminal
-                ];
+                excludePackages = let plasma5 = pkgs.libsForQt5; in
+                  [
+                    plasma5.elisa # audio viewer
+                    plasma5.konsole # I use alacritty instaed
+                    plasma5.plasma-browser-integration
+                    plasma5.print-manager # will enable if I need
+                    plasma5.khelpcenter # why not just write manpages instead :(
+                    # plasma5.ksshaskpass   # pls just put prompts on my dear terminal
+                  ];
               };
 
               # disables KDE's setting of askpassword
@@ -292,6 +325,7 @@
               hardware.pulseaudio.support32Bit = true;
               nixpkgs.config.pulseaudio = true;
               hardware.pulseaudio.extraConfig = "load-module module-combine-sink";
+              mod.tailscale.enable = true;
 
               # Sound: pipewire
               # sound.enable = false;
