@@ -47,3 +47,8 @@ Host mokoi
     User ubuntu_admin
     Port 22
 
+Host noami
+    HostName 10.100.200.230
+    User htran
+    Port 22
+
