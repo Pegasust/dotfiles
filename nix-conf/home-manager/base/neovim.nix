@@ -43,7 +43,7 @@ let
     pkgs.fzf # file name fuzzy search
     pkgs.ripgrep # content fuzzy search
     pkgs.zk # Zettelkasten (limited support)
-    pkgs.fd # Required by a Telescope plugin (?)
+    pkgs.fd # Required by a Telescope plugin - fzf
     pkgs.stdenv.cc.cc.lib
     pkgs.rnix-lsp  # doesn't work, Mason just installs it using cargo
     pkgs.rust4cargo
@@ -56,8 +56,8 @@ let
     pkgs.python3Packages.pylint
     pkgs.python3Packages.flake8
     # pkgs.ansible-lint
-    pkgs.python38Packages.ansible
-    pkgs.ansible-language-server
+    # pkgs.python38Packages.ansible
+    # pkgs.ansible-language-server
     # TODO: the devShell should provide rust-analyzer so that 
     # cargo test builds binaries compatible with rust-analyzer 
 

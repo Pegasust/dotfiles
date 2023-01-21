@@ -131,8 +131,8 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
 })
 
 
-vim.g.gruvbox_contrast_dark="soft";
-vim.g.gruvbox_contrast_light="soft";
+vim.g.gruvbox_contrast_dark = "soft";
+vim.g.gruvbox_contrast_light = "soft";
 vim.opt.ignorecase = true;
 vim.opt.smartcase = true;
 vim.opt.incsearch = true;
@@ -159,7 +159,7 @@ vim.api.nvim_create_user_command('Dark', function(opts)
     vim.g.gruvbox_contrast_dark = contrast;
     vim.opt.background = "dark";
 end,
-    {nargs = "?";})
+    { nargs = "?"; })
 
 vim.api.nvim_create_user_command('Light', function(opts)
     -- opts: {name, args: str, fargs: Splited<str>, range, ...}
@@ -168,7 +168,7 @@ vim.api.nvim_create_user_command('Light', function(opts)
     vim.g.gruvbox_contrast_light = contrast;
     vim.opt.background = "light";
 end,
-    {nargs = "?";})
+    { nargs = "?"; })
 
 vim.opt.lazyredraw = true
 vim.opt.termguicolors = true
@@ -176,7 +176,7 @@ vim.opt.cursorline = true
 -- some plugins misbehave when we do swap files
 vim.opt.swapfile = false
 vim.opt.backup = false
-vim.opt.undodir = vim.fn.stdpath('state')..'/.vim/undodir'
+vim.opt.undodir = vim.fn.stdpath('state') .. '/.vim/undodir'
 vim.opt.undofile = true
 vim.opt.completeopt = 'menuone,noselect'
 -- vim.opt.clipboard = "unnamedplus"
@@ -246,6 +246,60 @@ vim.api.nvim_create_user_command(
     end,
     { nargs = 0 }
 )
+
+-- `BufLoadFd {fd-args}`
+-- WHAT:
+-- Batch load the result of `fd <args>` into the buffer.
+--
+-- WHY;
+-- This is especially helpful if you want to collect LSP diagnostics in the
+-- current repository:
+--
+-- EXAMPLES:
+-- `BufLoadFd -e ts -e tsx`: Loads all of tsserver-compatible in the current
+-- root. Note that `fd` takes account of .gitignore (but not your Git's ignore config)
+vim.api.nvim_create_user_command(
+    'BufLoadFd',
+    function(opts)
+        local results = vim.fn.systemlist('fd ' .. opts["args"])
+        for _k, v in pairs(results) do
+            vim.cmd("badd " .. v)
+        end
+    end,
+    { nargs = "*" }
+)
+
+-- `CollectLspDiag {fd-args}`
+-- WHAT:
+-- Opens files matching fd-args search, and go back to your initial buffer
+-- This effectively loads files onto your LSP so that you collect Lsp diagnostics.
+-- To list diagnostics, maybe use `:Trouble` or similar commands
+--
+-- WHY:
+-- LSPs don't perform diagnostics to every file in the workspace, they are
+-- lazily loaded. Sometimes, it's hard to reproduce the LSP diagnostics with
+-- the compiler alone, this user command helps collecting all errors and
+-- potentially filter the files that you want to ignore with an `fd` query.
+--
+-- EXAMPLES:
+-- `CollectLspDiag -e ts -e tsx`: Loads all Typescript files in the current root,
+-- with account of `.gitignore` into "active buffer" for the LSP to diagnose.
+vim.api.nvim_create_user_command(
+    'CollectLspDiag',
+    function(opts)
+        --- @type string
+        local original_buf_path = vim.api.nvim_buf_get_name(0);
+
+        local files = vim.fn.systemlist('fd ' .. opts["args"])
+        for _k, file in pairs(files) do
+            vim.cmd("e " .. file)
+        end
+
+        vim.cmd('e ' .. original_buf_path);
+    end,
+    { nargs = "*" }
+)
+
 vim.api.nvim_create_user_command(
     'DoubleSpaces',
     function(opts)
@@ -976,7 +1030,21 @@ require('lualine').setup {
     },
     sections = {
         lualine_a = { 'mode' },
-        lualine_b = { 'branch', 'diff', 'diagnostics' },
+        lualine_b = {
+            'branch', {
+                'diff', source = function ()
+                    local gitsigns = vim.b.gitsigns_status_dict
+                    if gitsigns then
+                        return {
+                            added = gitsigns.added,
+                            modified = gitsigns.changed,
+                            removed = gitsigns.removed
+                        }
+                    end
+                end
+            },
+            'diagnostics'
+        },
         lualine_c = {
             { 'filename',
                 file_status = true,

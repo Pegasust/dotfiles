@@ -1,8 +1,12 @@
 {
   nixConfig = {
     accept-flake-config = true;
-    experimental-features = "nix-command flakes";
+    extra-experimental-features = "nix-command flakes";
     extra-substituters = [
+      "https://nix-community.cachix.org"
+      "https://cache.nixos.org"
+    ];
+    trusted-substituters = [
       "https://nix-community.cachix.org"
       "https://cache.nixos.org"
     ];
@@ -149,7 +153,7 @@
                 # don't want to deal with GL stuffs on mac yet :/
                 base.graphics.useNixGL.defaultPackage = null;
                 # NOTE: this actually does not exist
-                base.keepass.path = "/Users/hungtran/keepass.kdbx";
+                base.keepass.path = "/Volumes/PersistentHotStorage/keepass.kdbx";
                 base.alacritty.font.size = 11.0;
               }
               nerd_font_module
