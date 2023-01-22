@@ -269,21 +269,21 @@ vim.api.nvim_create_user_command(
     { nargs = "*" }
 )
 
--- `CollectLspDiag {fd-args}`
--- WHAT:
--- Opens files matching fd-args search, and go back to your initial buffer
--- This effectively loads files onto your LSP so that you collect Lsp diagnostics.
--- To list diagnostics, maybe use `:Trouble` or similar commands
---
--- WHY:
--- LSPs don't perform diagnostics to every file in the workspace, they are
--- lazily loaded. Sometimes, it's hard to reproduce the LSP diagnostics with
--- the compiler alone, this user command helps collecting all errors and
--- potentially filter the files that you want to ignore with an `fd` query.
---
--- EXAMPLES:
--- `CollectLspDiag -e ts -e tsx`: Loads all Typescript files in the current root,
--- with account of `.gitignore` into "active buffer" for the LSP to diagnose.
+--- `CollectLspDiag {fd-args}`
+--- WHAT:
+--- Opens files matching fd-args search, and go back to your initial buffer
+--- This effectively loads files onto your LSP so that you collect Lsp diagnostics.
+--- To list diagnostics, maybe use `:Trouble` or similar commands
+---
+--- WHY:
+--- LSPs don't perform diagnostics to every file in the workspace, they are
+--- lazily loaded. Sometimes, it's hard to reproduce the LSP diagnostics with
+--- the compiler alone, this user command helps collecting all errors and
+--- potentially filter the files that you want to ignore with an `fd` query.
+---
+--- EXAMPLES:
+--- `CollectLspDiag -e ts -e tsx`: Loads all Typescript files in the current root,
+--- with account of `.gitignore` into "active buffer" for the LSP to diagnose.
 vim.api.nvim_create_user_command(
     'CollectLspDiag',
     function(opts)
@@ -291,10 +291,11 @@ vim.api.nvim_create_user_command(
         local original_buf_path = vim.api.nvim_buf_get_name(0);
 
         local files = vim.fn.systemlist('fd ' .. opts["args"])
+        print("Opening "..#(files).." files. Please wait for \"Ok\"")
         for _k, file in pairs(files) do
             vim.cmd("e " .. file)
         end
-
+        print("Ok")
         vim.cmd('e ' .. original_buf_path);
     end,
     { nargs = "*" }
