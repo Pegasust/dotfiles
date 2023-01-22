@@ -1,0 +1,3 @@
+# Ignore locks by default, so that recommended dependencies install latest versions
+# Add `!path/to/lock/file/to/unignore.lock` to intentionally pin dependency versions
+templates/**/*.lock
