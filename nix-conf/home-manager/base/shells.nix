@@ -88,7 +88,8 @@ in
           "command-not-found" # suggests which package to install; does not support nixos (we have solution already)
           "gitignore" # `gi list` -> `gi java >>.gitignore`
           "ripgrep" # adds completion for `rg`
-          "rust" # compe for rustc/cargo
+          "rust"    # compe for rustc/cargo
+          "poetry"  # compe for poetry - Python's cargo
           # "vi-mode"   # edit promps with vi motions :)
         ];
       };

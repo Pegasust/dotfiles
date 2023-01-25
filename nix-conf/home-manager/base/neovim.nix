@@ -48,6 +48,8 @@ let
     pkgs.rnix-lsp  # doesn't work, Mason just installs it using cargo
     pkgs.rust4cargo
 
+    pkgs.go
+
 
     # Language-specific stuffs
     pkgs.sumneko-lua-language-server
@@ -56,8 +58,8 @@ let
     pkgs.python3Packages.pylint
     pkgs.python3Packages.flake8
     # pkgs.ansible-lint
-    pkgs.python38Packages.ansible
-    pkgs.ansible-language-server
+    # pkgs.python38Packages.ansible
+    # pkgs.ansible-language-server
     # TODO: the devShell should provide rust-analyzer so that 
     # cargo test builds binaries compatible with rust-analyzer 
 
