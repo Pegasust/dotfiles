@@ -52,3 +52,19 @@ Host noami
     User htran
     Port 22
 
+Host sr1
+    HostName 10.30.76.46
+    User htran
+    Port 22
+    HostKeyAlgorithms=+ssh-dss,ssh-rsa
+    KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1
+
+Host d1-30
+    HostName 10.111.103.60
+    User htran
+    Port 22
+
+Host dev0
+    HostName 10.100.200.230
+    User root
+    Port 22
