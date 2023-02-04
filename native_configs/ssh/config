@@ -68,3 +68,8 @@ Host dev0
     HostName 10.100.200.230
     User root
     Port 22
+
+Host dev1
+    HostName 10.100.200.220
+    User htran
+    Port 22

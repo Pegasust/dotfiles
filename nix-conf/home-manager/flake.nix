@@ -171,6 +171,10 @@
             inherit pkgs;
             modules = base.modules ++ [
               ./home.nix
+              ./base/productive_desktop.nix
+              {
+                base.private_chromium.enable = false;
+              }
               {
                 base.graphics.enable = false;
                 # don't want to deal with GL stuffs on mac yet :/
