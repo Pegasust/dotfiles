@@ -218,7 +218,7 @@
               # interface = "ens32";
             };
             networking.interfaces.ens32.ipv4.addresses = [
-              {address = "10.100.200.230"; prefixLength = 24;}
+              { address = "10.100.200.230"; prefixLength = 24; }
             ];
           }
         ];
@@ -243,41 +243,14 @@
         modules = base_modules ++ [
           ./configuration.nix
           ./../../modules/storage.perso.sys.nix
+          ./../../modules/kde.sys.nix
           # GPU, sound, networking stuffs
+          ./../../modules/pulseaudio.sys.nix
+          ./../../modules/opengl.sys.nix
+          ./../../modules/nvgpu.sys.nix
           ({ config, pkgs, lib, ... }:
-            let
-              gpu_pkgs = [ pkgs.clinfo pkgs.lshw pkgs.glxinfo pkgs.pciutils pkgs.vulkan-tools ];
-              gpu_conf = {
-                # openCL
-                hardware.opengl = {
-                  enable = true;
-                  extraPackages =
-                    let
-                      inherit (pkgs) rocm-opencl-icd rocm-opencl-runtime;
-                    in
-                    [ rocm-opencl-icd rocm-opencl-runtime ];
-                  # Vulkan
-                  driSupport = true;
-                  driSupport32Bit = true;
-                  package = pkgs.mesa.drivers;
-                  package32 = pkgs.pkgsi686Linux.mesa.drivers;
-                };
-              };
-              amd_rx470 = {
-                # early amd gpu usage
-                boot.initrd.kernelModules = [ "amdgpu" ];
-                services.xserver.enable = true;
-                services.xserver.videoDrivers = [ "amdgpu" ];
-              };
-              nv_rtx3060 = {
-                nixpkgs.config.allowUnfree = true;
-                services.xserver.enable = true;
-                services.xserver.videoDrivers = [ "nvidia" ];
-                hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
-              };
-              systemPackages = [ ] ++ gpu_pkgs;
-            in
-            lib.recursiveUpdate gpu_conf (lib.recursiveUpdate nv_rtx3060 {
+            {
+              mod.tailscale.enable = true;
               # Use UEFI
               boot.loader.systemd-boot.enable = true;
 
@@ -285,27 +258,6 @@
               # Pick only one of the below networking options.
               # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
               networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
-
-              # Enable the X11 windowing system.
-              services.xserver.enable = true;
-              # KDE & Plasma 5
-              services.xserver.displayManager.sddm.enable = true;
-              services.xserver.desktopManager.plasma5 = {
-                enable = true;
-                excludePackages = let plasma5 = pkgs.libsForQt5; in
-                  [
-                    plasma5.elisa # audio viewer
-                    plasma5.konsole # I use alacritty instaed
-                    plasma5.plasma-browser-integration
-                    plasma5.print-manager # will enable if I need
-                    plasma5.khelpcenter # why not just write manpages instead :(
-                    # plasma5.ksshaskpass   # pls just put prompts on my dear terminal
-                  ];
-              };
-
-              # disables KDE's setting of askpassword
-              programs.ssh.askPassword = "";
-              programs.ssh.enableAskPassword = false;
 
               time.timeZone = "America/Phoenix";
               # Configure keymap in X11
@@ -318,55 +270,14 @@
               # Enable CUPS to print documents.
               # services.printing.enable = true;
 
-              # Enable sound. (pulse audio)
-              sound.enable = true;
-              programs.dconf.enable = true;
-              hardware.pulseaudio.enable = true;
-              hardware.pulseaudio.support32Bit = true;
-              nixpkgs.config.pulseaudio = true;
-              hardware.pulseaudio.extraConfig = "load-module module-combine-sink";
-              mod.tailscale.enable = true;
-
-              # Sound: pipewire
-              # sound.enable = false;
-              # hardware.pulseaudio.enable = false;
-              # services.pipewire = {
-              #   enable = true;
-              #   alsa.enable = true;
-              #   alsa.support32Bit = true;
-              #   pulse.enable = true;
-              #   # Might want to use JACK in the future
-              #   jack.enable = true;
-              # };
-              #
-              # security.rtkit.enable = true;
-
-
               # Enable touchpad support (enabled default in most desktopManager).
               # services.xserver.libinput.enable = true;
-
-              # Define a user account. Don't forget to set a password with ‘passwd’.
-              # users.users.alice = {
-              #   isNormalUser = true;
-              #   extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-              #   packages = with pkgs; [
-              #     firefox
-              #     thunderbird
-              #   ];
-              # };
               # Just an initial user to get this started lol
               users.users.user = {
                 initialPassword = "pw123";
                 extraGroups = [ "wheel" "networkmanager" "audio" ];
                 isNormalUser = true;
               };
-
-              # List packages installed in system profile. To search, run:
-              # $ nix search wget
-              environment.systemPackages = with pkgs; [
-                neovim
-                wget
-              ] ++ systemPackages;
 
               # Some programs need SUID wrappers, can be configured further or are
               # started in user sessions.
@@ -381,17 +292,6 @@
               # Enable the OpenSSH daemon.
               services.openssh.enable = true;
 
-              # Open ports in the firewall.
-              # networking.firewall.allowedTCPPorts = [ ... ];
-              # networking.firewall.allowedUDPPorts = [ ... ];
-              # Or disable the firewall altogether.
-              # networking.firewall.enable = false;
-
-              # Copy the NixOS configuration file and link it from the resulting system
-              # (/run/current-system/configuration.nix). This is useful in case you
-              # accidentally delete configuration.nix.
-              # system.copySystemConfiguration = true;
-
               # This value determines the NixOS release from which the default
               # settings for stateful data, like file locations and database versions
               # on your system were taken. It‘s perfectly fine and recommended to leave
@@ -399,7 +299,7 @@
               # Before changing this value read the documentation for this option
               # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
               system.stateVersion = "22.11"; # Did you read the comment?
-            }))
+            })
         ];
       };
     };

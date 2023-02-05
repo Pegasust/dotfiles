@@ -16,6 +16,6 @@ let
       package = pkgs.mesa.drivers;
       package32 = pkgs.pkgsi686Linux.mesa.drivers;
     };
+    environment.systemPackages = gpu_pkgs;
   };
-in
-  ;
+in gpu_conf
