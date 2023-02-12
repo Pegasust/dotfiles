@@ -33,7 +33,7 @@ in
     pkgs.zip # compression
 
     # cool utilities
-    pkgs.yq # Yaml adaptor for jq (only pretty print, little query)
+    pkgs.yq-go # Yaml adaptor for jq (only pretty print, little query)
     # pkgs.xorg.xclock # TODO: only include if have gui # For testing GL installation
     # pkgs.logseq # TODO: only include if have GL # Obsidian alt
     pkgs.mosh # Parsec for SSH

@@ -1,5 +1,6 @@
 Host *
-    IdentityFile ~/.ssh/id_rsa ~/.ssh/id_ed25519
+    IdentityFile ~/.ssh/id_rsa 
+    IdentityFile ~/.ssh/id_ed25519
 
 # felia mirror on windows
 Host felia-win
@@ -74,3 +75,13 @@ Host dev1
     User htran
     Port 22
 
+
+Host ztp-egi
+    HostName 10.23.27.201
+    User root
+    Port 22
+    
+Host d3l-3
+    HostName 10.111.103.65
+    User htran
+    Port 22
