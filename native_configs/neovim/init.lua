@@ -58,6 +58,7 @@ Plug('hrsh7th/cmp-cmdline')
 Plug('hrsh7th/nvim-cmp')
 Plug('onsails/lspkind-nvim')
 Plug('yioneko/nvim-yati', { tag = '*' }) -- copium: fix Python indent auto-correct from smart-indent
+Plug('nathanalderson/yang.vim')
 -- Plug('tzachar/cmp-tabnine', { ['do'] = './install.sh' })
 
 -- DevExp
