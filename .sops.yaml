@@ -1,0 +1,10 @@
+keys:
+  - &htran-mbp age1jpm9mtxz6n8vncrk6pk7dppj3r7qxfj5hsgvcdulmp3lxvxez94qvxlgay
+  - &htran     age1jw958shpwu7st8sc4z0fufuswmfpxfc9wl3df9g3f3y57m45j92syr0mng
+creation_rules:
+  - path_regex: .*
+    key_groups:
+    - age: 
+      - *htran
+      - *htran-mbp
+
