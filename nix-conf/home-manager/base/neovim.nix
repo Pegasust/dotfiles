@@ -6,23 +6,6 @@
 # might be different from `home-manager`'s
 { pkgs, lib, config, proj_root, ... }:
 let
-  # NOTE: Failure 1: buildInputs is pretty much ignored
-  #   my_neovim = pkgs.neovim-unwrapped.overrideDerivation (old: {
-  # # TODO: is there a more beautiful way to override propagatedBuildInputs?
-  #     name = "hungtr-" + old.name;
-  #     buildInputs = (old.buildInputs or []) ++ [
-  #       pkgs.tree-sitter # highlighting
-  #       rust_pkgs        # for potentially rust-analyzer
-  #       pkgs.fzf
-  #       pkgs.ripgrep
-  #       pkgs.zk
-  #       pkgs.fd
-  #     ];
-  # NOTE: Failure 2: propagatedBuildInputs probably only concerns dyn libs
-  #   });
-  # NOTE: Failure 3: must be unwrapped neovim because home-manager does the wrapping
-  # my_neovim = pkgs.neovim;
-
   # NOTE: Add packages to nvim_pkgs instead, so that it's available at userspace
   # and is added to the path after wrapping.
   # check: nix repl `homeConfigurations.hungtr.config.programs.neovim.finalPackage.buildCommand`
@@ -47,6 +30,8 @@ let
     pkgs.stdenv.cc.cc.lib
     pkgs.rnix-lsp  # doesn't work, Mason just installs it using cargo
     pkgs.rust4cargo
+    pkgs.nickel
+    pkgs.lsp-nls
 
     pkgs.go
 

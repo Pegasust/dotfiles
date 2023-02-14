@@ -366,7 +366,7 @@ require('nvim-treesitter.configs').setup {
     ensure_installed = {
         'tsx', 'toml', 'lua', 'typescript', 'rust', 'go', 'yaml', 'json', 'php', 'css',
         'python', 'prisma', 'html', "dockerfile", "c", "cpp", "hcl", "svelte", "astro",
-        "clojure", "fennel", "bash", "nix", "query",
+        "clojure", "fennel", "bash", "nix", "query", "nickel"
     },
     sync_install = false,
     highlight = {
@@ -609,7 +609,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local servers = {
     'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'cmake', 'tailwindcss', 'prismals',
     'rnix', 'eslint', 'terraformls', 'tflint', 'svelte', 'astro', 'clojure_lsp', "bashls", 'yamlls', "ansiblels",
-    "jsonls", "denols", "gopls"
+    "jsonls", "denols", "gopls", "nickel_ls"
 }
 require("mason").setup({
     ui = {

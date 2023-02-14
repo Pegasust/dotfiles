@@ -39,6 +39,7 @@
       url = "github:mic92/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nickel.url = "github:tweag/nickel";
   };
 
   outputs =
@@ -49,6 +50,7 @@
     , flake-utils
     , kpcli-py
     , neovim-nightly-overlay
+    , nickel
     , ...
     }:
     let
