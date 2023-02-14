@@ -5,7 +5,7 @@
   (
     let 
       lock = builtins.fromJSON (builtins.readFile ./flake.lock); 
-    in (import ./c_.nix {src = ./.;}).fetchTree lock.nodes.flake-compat.locked
+    in (import ./c_.nix).fetchTree lock.nodes.flake-compat.locked
   )
   { src = ./.; }
 ).shellNix
