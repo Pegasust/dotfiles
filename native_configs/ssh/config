@@ -85,3 +85,9 @@ Host d3l-3
     HostName 10.111.103.65
     User htran
     Port 22
+
+Host goat
+    HostName 10.133.32.100
+    User "EGN NOC"
+    Port 22
+

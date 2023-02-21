@@ -23,6 +23,11 @@ poetry init
 
 ### Libraries worth integrating
 
+- [pytest](https://github.com/pytest-dev/pytest) Testing framework for Python
+
+```sh
+poetry add --group dev pytest
+```
 - [tophat/syrupy](https://github.com/tophat/syrupy) Snapshot testing plugin for (builtin) pytest
 
 ```sh

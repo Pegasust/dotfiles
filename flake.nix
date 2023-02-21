@@ -60,6 +60,7 @@
       # this function should take simple exports of homeConfigurations.${profile}, 
       # nixosConfigurations.${profile}, devShells.${profile}, packages.${profile}
       # and correctly produce 
+      supported_systems = flake-utils.lib.defaultSystems;
       cross_platform = config_fn: let 
         # nixosConfigurations.${profile} -> nixosConfigurations.${system}.${profile}
         # pass in: path.to.exports.nixosConfigurations
@@ -93,7 +94,7 @@
           (acc: confName: (strategyMap."${confName}" confName config."${confName}" system))
           {} (builtins.attrNames config));
       in builtins.foldl' nixlib.lib.recursiveUpdate {} (
-        builtins.map (system: (mapConfig (config_fn system) system)) flake-utils.lib.defaultSystems
+        builtins.map (system: (mapConfig (config_fn system) system)) supported_systems
       );
     in cross_platform (system:
     let
@@ -175,6 +176,6 @@
       debug = {
         inherit final_inputs hosts users modules lib inputs_w_lib unit_tests pkgs nixpkgs nixlib;
       };
-      formatter."${system}" = pkgs.nixpkgs-fmt;
+      # formatter."${system}" = pkgs.nixpkgs-fmt;
     });
 }
