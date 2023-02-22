@@ -12,13 +12,14 @@
   # buildInputs, or packages
   buildInputs = [
     # shell scripts
-    (lib.shellAsDrv { script = ''echo "hello world"''; pname = "hello"; })
-    # TODO: decompose hm-switch.sh with a base version (where HOME_MANAGER_BIN is injected)
-    # (lib.shellAsDrv {script = builtins.readFile ./scripts/hm-switch.sh; pname = "hm-switch";})
     pkgs.rust4cargo
     pkgs.sops
   ];
 
+  shellHook = ''
+  # Since we need late dispatch of ~, we have to put this in shellHook.
+  export SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt
+  '';
   # env vars
   lol = "hello world";
 }

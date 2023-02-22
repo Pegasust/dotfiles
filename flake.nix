@@ -61,46 +61,9 @@
       # nixosConfigurations.${profile}, devShells.${profile}, packages.${profile}
       # and correctly produce 
       supported_systems = flake-utils.lib.defaultSystems;
-      cross_platform = config_fn: let 
-        # nixosConfigurations.${profile} -> nixosConfigurations.${system}.${profile}
-        # pass in: path.to.exports.nixosConfigurations
-        # get out: nixosConfigurations.${system} = {...}
-        strat_sandwich = field_name: config_field: system: {
-          "${field_name}"."${system}" = config_field;
-        };
-        # homeConfigurations.${profile} -> packages.${system}.homeConfigurations.${profile}
-        # pass in: path.to.exports.homeConfigurations
-        # get: packages.${system}.homeConfigurations
-        strat_wrap_packages = field_name: config_field: system: {
-          packages."${system}"."${field_name}" = config_field;
-        };
-        strat_noop = field_name: config_field: system: {"${field_name}" = config_field;};
-        strategyMap = {
-          nixosConfigurations = strat_sandwich;
-          templates =           strat_noop;
-          devShells =           strat_sandwich;
-          devShell =            strat_sandwich;
-          formatter =           strat_sandwich;
-          homeConfigurations =  strat_wrap_packages;
-          lib =                 strat_noop;
-          proj_root =           strat_noop;
-          unit_tests =          strat_noop;
-          secrets =             strat_noop;
-          debug =               strat_noop;
-        };
-        # takes in {homeConfigurations = ...; nixosConfigurations = ...}
-        # -> {packages.$system.homeConfigurations}
-        mapConfig = config: system: (builtins.foldl' 
-          (acc: confName: (strategyMap."${confName}" confName config."${confName}" system))
-          {} (builtins.attrNames config));
-      in builtins.foldl' nixlib.lib.recursiveUpdate {} (
-        builtins.map (system: (mapConfig (config_fn system) system)) supported_systems
-      );
-    in cross_platform (system:
+      forEachSystem = nixpkgs.lib.genAttrs supported_systems;
+    in
     let
-      # Context/global stuffs to be passed down
-      # NOTE: this will only read files that are within git tree
-      # all secrets should go into secrets.nix and secrets/*.age
       proj_root =
         let
           path = builtins.toString ./.;
@@ -115,26 +78,24 @@
           hosts.path = "${path}/hosts";
           users.path = "${path}/users";
         };
-      overlays = import ./overlays.nix (_inputs // {inherit system;});
-      pkgs = import nixpkgs {
-        inherit system overlays;
+      overlays = forEachSystem (system: import ./overlays.nix (_inputs // { inherit system; }));
+      pkgs = forEachSystem (system: (import nixpkgs {
+        inherit system;
+        overlays = overlays.${system};
         config = {
           allowUnfree = true;
         };
-      };
-      # now, this lib is extremely powerful as it also engulfs nixpkgs.lib
-      # lib = nixpkgs.lib // pkgs.lib;
+      }));
       lib = (builtins.foldl' (lhs: rhs: (nixpkgs.lib.recursiveUpdate lhs rhs)) { } [
         nixpkgs.lib
-        pkgs.lib
-        (import ./lib {
-          inherit proj_root pkgs overlays system;
-          inherit (pkgs) lib;
-        })
+        nixlib.lib
       ]);
-      inputs_w_lib = (pkgs.lib.recursiveUpdate _inputs {
-        inherit system proj_root pkgs lib;
-      });
+      inputs_w_lib = forEachSystem (
+        system: lib.recursiveUpdate _inputs {
+          inherit system lib;
+          pkgs = pkgs.${system};
+        }
+      );
 
       modules = (import ./modules inputs_w_lib);
       hosts = (import ./hosts inputs_w_lib);
@@ -143,28 +104,15 @@
       # {nixpkgs, agenix, home-manager, flake-utils, nixgl, rust-overlay, flake-compat
       # ,pkgs, lib (extended), proj_root}
       final_inputs = inputs_w_lib;
-
-      # Tests: unit + integration
-      unit_tests = (import ./lib/test.nix final_inputs) //
-        {
-          test_example = {
-            expr = "names must start with 'test'";
-            expected = "or won't show up";
-          };
-          not_show = {
-            expr = "this will be ignored by lib.runTests";
-            expected = "for sure";
-          };
-        };
-      secrets = import ./secrets final_inputs;
-
     in
     {
       inherit (hosts) nixosConfigurations;
       inherit (users) homeConfigurations;
       inherit lib proj_root;
-      devShells = import ./dev-shell.nix final_inputs;
-      templates = import ./templates final_inputs;
+      devShells = forEachSystem (system:
+        {default = (import ./dev-shell.nix final_inputs.${system});}
+      );
+      templates = forEachSystem (system: import ./templates final_inputs.${system});
       secrets = {
         pubKeys = {
           hosts = hosts.pubKeys;
@@ -172,10 +120,9 @@
         };
       };
 
-      # unit_tests = lib.runTests unit_tests;
       debug = {
-        inherit final_inputs hosts users modules lib inputs_w_lib unit_tests pkgs nixpkgs nixlib;
+        inherit final_inputs hosts users modules lib inputs_w_lib pkgs nixpkgs nixlib;
       };
       # formatter."${system}" = pkgs.nixpkgs-fmt;
-    });
+    };
 }
