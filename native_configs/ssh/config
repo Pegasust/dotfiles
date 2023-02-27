@@ -91,3 +91,13 @@ Host goat
     User "EGN NOC"
     Port 22
 
+Host portal2
+    HostName portal2.egihosting.com
+    User root
+    Port 22
+
+Host egn-rest-api
+    HostName egn-rest-api.egihosting.com
+    User root
+    Port 22
+
