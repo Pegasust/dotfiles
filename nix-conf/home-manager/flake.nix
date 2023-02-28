@@ -187,6 +187,11 @@
                 base.git.name = "Hung";
                 base.git.email = "htran@egihosting.com";
               }
+              {
+                home.packages = [
+                  pkgs.postman
+                ];
+              }
               nerd_font_module
             ];
             extraSpecialArgs = mkModuleArgs {

@@ -33,7 +33,7 @@ let
     pkgs.nickel
     pkgs.lsp-nls
 
-    pkgs.go
+    pkgs.go # doesn't work, Mason installs from runtime path
 
 
     # Language-specific stuffs
