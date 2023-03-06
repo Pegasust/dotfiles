@@ -101,3 +101,9 @@ Host egn-rest-api
     User root
     Port 22
 
+Host gl-egi
+    HostName gitlab.egihosting.com
+    User git
+    Port 22
+    IdentityFile ~/.ssh/id_ed25519
+
