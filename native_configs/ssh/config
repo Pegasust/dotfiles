@@ -1,6 +1,6 @@
 Host *
-    IdentityFile ~/.ssh/id_rsa 
     IdentityFile ~/.ssh/id_ed25519
+    IdentityFile ~/.ssh/id_rsa 
 
 # felia mirror on windows
 Host felia-win
