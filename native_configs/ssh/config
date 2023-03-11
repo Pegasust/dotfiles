@@ -2,6 +2,10 @@ Host *
     IdentityFile ~/.ssh/id_ed25519
     IdentityFile ~/.ssh/id_rsa 
 
+Host 10.111.103.*
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+
 # felia mirror on windows
 Host felia-win
     HostName felia.coati-celsius.ts.net
@@ -60,6 +64,20 @@ Host sr1
     HostKeyAlgorithms=+ssh-dss,ssh-rsa
     KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1
 
+Host bgp1
+    HostName 10.111.100.113
+    User htran
+    Port 22
+    HostKeyAlgorithms=+ssh-dss,ssh-rsa
+    KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1
+
+Host bgp2
+    HostName 10.111.100.114
+    User htran
+    Port 22
+    HostKeyAlgorithms=+ssh-dss,ssh-rsa
+    KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1
+
 Host d1-30
     HostName 10.111.103.60
     User htran
@@ -67,7 +85,7 @@ Host d1-30
 
 Host dev0
     HostName 10.100.200.230
-    User root
+    User htran
     Port 22
 
 Host dev1
@@ -106,4 +124,5 @@ Host gl-egi
     User git
     Port 22
     IdentityFile ~/.ssh/id_ed25519
+
 
