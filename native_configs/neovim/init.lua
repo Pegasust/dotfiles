@@ -19,10 +19,6 @@ if empty(glob(plug_path))
 endif
 ]])
 
-local function truthy(v) return v ~= nil end
-
-local function cfg(cfg_var, do_fn) if truthy(cfg_var) then do_fn() end end
-
 -- vim-plug
 local Plug = vim.fn['plug#']
 
