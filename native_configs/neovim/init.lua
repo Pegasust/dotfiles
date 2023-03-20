@@ -28,9 +28,9 @@ vim.call('plug#begin')
 Plug('nvim-lua/plenary.nvim') -- The base of all plugins
 
 -- plugins
-Plug('tjdevries/nlua.nvim') -- adds symbols of vim stuffs in init.lua
-Plug('nvim-treesitter/nvim-treesitter') -- language parser engine for highlighting
-Plug('nvim-treesitter/nvim-treesitter-textobjects') -- more text objects
+Plug('tjdevries/nlua.nvim')                                 -- adds symbols of vim stuffs in init.lua
+Plug('nvim-treesitter/nvim-treesitter')                     -- language parser engine for highlighting
+Plug('nvim-treesitter/nvim-treesitter-textobjects')         -- more text objects
 Plug('nvim-telescope/telescope.nvim', { branch = '0.1.x' }) -- file browser
 -- TODO: this might need to be taken extra care in our Nix config
 -- What this Plug declaration means is this repo needs to be built on our running environment
@@ -58,41 +58,41 @@ Plug('nathanalderson/yang.vim')
 -- Plug('tzachar/cmp-tabnine', { ['do'] = './install.sh' })
 
 -- DevExp
-Plug('windwp/nvim-autopairs') -- matches pairs like [] (),...
-Plug('windwp/nvim-ts-autotag') -- matches tags <body>hello</body>
-Plug('NMAC427/guess-indent.nvim') -- guesses the indentation of an opened buffer
-Plug('numToStr/Comment.nvim') -- "gc" to comment visual regions/lines
-Plug('lewis6991/gitsigns.nvim') -- add git info to sign columns
-Plug('tpope/vim-fugitive') -- git commands in nvim
-Plug('williamboman/mason.nvim') -- LSP, debuggers,... package manager
+Plug('windwp/nvim-autopairs')             -- matches pairs like [] (),...
+Plug('windwp/nvim-ts-autotag')            -- matches tags <body>hello</body>
+Plug('NMAC427/guess-indent.nvim')         -- guesses the indentation of an opened buffer
+Plug('numToStr/Comment.nvim')             -- "gc" to comment visual regions/lines
+Plug('lewis6991/gitsigns.nvim')           -- add git info to sign columns
+Plug('tpope/vim-fugitive')                -- git commands in nvim
+Plug('williamboman/mason.nvim')           -- LSP, debuggers,... package manager
 Plug('williamboman/mason-lspconfig.nvim') -- lsp config for mason
-Plug('ThePrimeagen/harpoon') -- 1-click through marked files per project
-Plug('TimUntersberger/neogit') -- Easy-to-see git status
-Plug('folke/trouble.nvim') -- File-grouped workspace diagnostics
-Plug('tpope/vim-dispatch') -- Allows quick build/compile/test vim commands
-Plug('clojure-vim/vim-jack-in') -- Clojure: ":Boot", ":Clj", ":Lein"
-Plug('radenling/vim-dispatch-neovim') -- Add support for neovim's terminal emulator
-Plug('Olical/conjure') -- REPL on the source for Clojure (and other LISPs)
-Plug('gennaro-tedesco/nvim-jqx') -- JSON formatter (use :Jqx*)
-Plug('kylechui/nvim-surround') -- surrounds with tags/parenthesis
-Plug('simrat39/rust-tools.nvim') -- config rust-analyzer and nvim integration
+Plug('ThePrimeagen/harpoon')              -- 1-click through marked files per project
+Plug('TimUntersberger/neogit')            -- Easy-to-see git status
+Plug('folke/trouble.nvim')                -- File-grouped workspace diagnostics
+Plug('tpope/vim-dispatch')                -- Allows quick build/compile/test vim commands
+Plug('clojure-vim/vim-jack-in')           -- Clojure: ":Boot", ":Clj", ":Lein"
+Plug('radenling/vim-dispatch-neovim')     -- Add support for neovim's terminal emulator
+Plug('Olical/conjure')                    -- REPL on the source for Clojure (and other LISPs)
+Plug('gennaro-tedesco/nvim-jqx')          -- JSON formatter (use :Jqx*)
+Plug('kylechui/nvim-surround')            -- surrounds with tags/parenthesis
+Plug('simrat39/rust-tools.nvim')          -- config rust-analyzer and nvim integration
 
 -- UI & colorscheme
-Plug('simrat39/inlay-hints.nvim') -- type-hints with pseudo-virtual texts
-Plug('gruvbox-community/gruvbox') -- theme provider
-Plug('nvim-lualine/lualine.nvim') -- fancy status line
+Plug('simrat39/inlay-hints.nvim')           -- type-hints with pseudo-virtual texts
+Plug('gruvbox-community/gruvbox')           -- theme provider
+Plug('nvim-lualine/lualine.nvim')           -- fancy status line
 Plug('lukas-reineke/indent-blankline.nvim') -- identation lines on blank lines
-Plug('kyazdani42/nvim-web-devicons') -- icons for folder and filetypes
-Plug('m-demare/hlargs.nvim') -- highlights arguments; great for func prog
-Plug('folke/todo-comments.nvim') -- Highlights TODO
+Plug('kyazdani42/nvim-web-devicons')        -- icons for folder and filetypes
+Plug('m-demare/hlargs.nvim')                -- highlights arguments; great for func prog
+Plug('folke/todo-comments.nvim')            -- Highlights TODO
 
 -- other utilities
 Plug('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
 Plug('nvim-treesitter/nvim-treesitter-context') -- Top one-liner context of func/class scope
-Plug('nvim-treesitter/playground') -- Sees Treesitter AST - less hair pulling, more PRs
-Plug('saadparwaiz1/cmp_luasnip') -- snippet engine
-Plug('L3MON4D3/LuaSnip') -- snippet engine
-Plug('mickael-menu/zk-nvim') -- Zettelkasten
+Plug('nvim-treesitter/playground')              -- Sees Treesitter AST - less hair pulling, more PRs
+Plug('saadparwaiz1/cmp_luasnip')                -- snippet engine
+Plug('L3MON4D3/LuaSnip')                        -- snippet engine
+Plug('mickael-menu/zk-nvim')                    -- Zettelkasten
 -- Switch cases:
 -- `gsp` -> PascalCase (classes), `gsc` -> camelCase (Java), `gs_` -> snake_case (C/C++/Rust)
 -- `gsu` -> UPPER_CASE (CONSTs), `gsk` -> kebab-case (Clojure), `gsK` -> Title-Kebab-Case
@@ -128,8 +128,8 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
 })
 
 
-vim.g.gruvbox_contrast_dark="soft";
-vim.g.gruvbox_contrast_light="soft";
+vim.g.gruvbox_contrast_dark = "soft";
+vim.g.gruvbox_contrast_light = "soft";
 vim.opt.ignorecase = true;
 vim.opt.smartcase = true;
 vim.opt.incsearch = true;
@@ -150,22 +150,22 @@ vim.opt.colorcolumn = "80";
 vim.opt.background = "light";
 
 vim.api.nvim_create_user_command('Dark', function(opts)
-    -- opts: {name, args: str, fargs: Splited<str>, range, ...}
-    ---@type string
-    local contrast = (opts.args and string.len(opts.args) > 0) and opts.args or vim.g.gruvbox_contrast_dark;
-    vim.g.gruvbox_contrast_dark = contrast;
-    vim.opt.background = "dark";
-end,
-    {nargs = "?";})
+        -- opts: {name, args: str, fargs: Splited<str>, range, ...}
+        ---@type string
+        local contrast = (opts.args and string.len(opts.args) > 0) and opts.args or vim.g.gruvbox_contrast_dark;
+        vim.g.gruvbox_contrast_dark = contrast;
+        vim.opt.background = "dark";
+    end,
+    { nargs = "?", })
 
 vim.api.nvim_create_user_command('Light', function(opts)
-    -- opts: {name, args: str, fargs: Splited<str>, range, ...}
-    ---@type string
-    local contrast = (opts.args and string.len(opts.args) > 0) and opts.args or vim.g.gruvbox_contrast_dark;
-    vim.g.gruvbox_contrast_light = contrast;
-    vim.opt.background = "light";
-end,
-    {nargs = "?";})
+        -- opts: {name, args: str, fargs: Splited<str>, range, ...}
+        ---@type string
+        local contrast = (opts.args and string.len(opts.args) > 0) and opts.args or vim.g.gruvbox_contrast_dark;
+        vim.g.gruvbox_contrast_light = contrast;
+        vim.opt.background = "light";
+    end,
+    { nargs = "?", })
 
 vim.opt.lazyredraw = true
 vim.opt.termguicolors = true
@@ -173,7 +173,7 @@ vim.opt.cursorline = true
 -- some plugins misbehave when we do swap files
 vim.opt.swapfile = false
 vim.opt.backup = false
-vim.opt.undodir = vim.fn.stdpath('state')..'/.vim/undodir'
+vim.opt.undodir = vim.fn.stdpath('state') .. '/.vim/undodir'
 vim.opt.undofile = true
 vim.opt.completeopt = 'menuone,noselect'
 -- vim.opt.clipboard = "unnamedplus"
@@ -203,7 +203,7 @@ vim.keymap.set('n', '<leader>q', '<cmd>TroubleToggle loclist<cr>')
 vim.keymap.set('n', '<leader>wq', '<cmd>TroubleToggle workspace_diagnostics<cr>')
 
 -- color, highlighting, UI stuffs
-vim.cmd([[ 
+vim.cmd([[
 colorscheme gruvbox
 ]])
 require('hlargs').setup()
@@ -279,7 +279,7 @@ require('telescope').setup {
             theme = require('telescope.themes').get_ivy().theme,
             hiject_netrw = true, -- disables netrw and use file-browser instead
             mappings = {
-                ["i"] = {}, -- disable any shortcut in insert mode for now
+                ["i"] = {},      -- disable any shortcut in insert mode for now
                 ["n"] = {
                     ["c"] = fb_actions.create,
                     ["r"] = fb_actions.rename,
@@ -355,7 +355,9 @@ end, { desc = '[Z]ettelkasten [G]rep' })
 require 'treesitter-context'
 require('nvim-treesitter.configs').setup {
     yati = {
-        enable = true, default_lazy = true, default_fallback = "auto",
+        enable = true,
+        default_lazy = true,
+        default_fallback = "auto",
         disable = { "nix" }
     },
     indent = { enable = false },
@@ -410,7 +412,7 @@ parser_config.astro.filetype_to_parsername = { "javascript", "typescript.tsx", "
 
 
 require('guess-indent').setup {
-    auto_cmd = true, -- Set to false to disable automatic execution
+    auto_cmd = true,     -- Set to false to disable automatic execution
     filetype_exclude = { -- A list of filetypes for which the auto command gets disabled
         "netrw",
         "tutor",
@@ -502,12 +504,10 @@ local on_attach = function(client, bufnr)
     nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
     nmap('<leader>wl', function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-
     end, '[W]orkspace [L]ist Folders')
 
     -- enable inlay hints if available
     require('inlay-hints').on_attach(client, bufnr)
-
 end
 -- nvim-cmp
 local cmp = require 'cmp'
@@ -620,7 +620,7 @@ require("mason").setup({
     -- Which means Mason's installed path is prioritized against our local install
     -- see: https://git.pegasust.com/pegasust/aoc/commit/b45dc32c74d84c9f787ebce7a174c9aa1d411fc2
     -- This introduces some pitfalls, so we'll take the approach of trusting user's local installation
-    PATH = "append";
+    PATH = "append",
 })
 require('mason-lspconfig').setup({
     ensure_installed = servers,
@@ -697,6 +697,17 @@ require('mason-lspconfig').setup_handlers({
             root_dir = require('lspconfig.util').root_pattern("deno.json", "deno.jsonc"),
         }
     end,
+    ["yamlls"] = function()
+        require('lspconfig').yamlls.setup {
+            on_attach = on_attach,
+            capabilities = capabilities,
+            settings = {
+                yaml = {
+                    keyOrdering = false,
+                }
+            },
+        }
+    end,
     -- ["rust_analyzer"] = function()
     --   require('lspconfig').rust_analyzer.setup {
     --       on_attach = on_attach,
@@ -723,61 +734,48 @@ require('mason-lspconfig').setup_handlers({
     -- end
 })
 require("rust-tools").setup {
-    tools = { -- rust-tools options
+    tools = {
+              -- rust-tools options
 
         -- how to execute terminal commands
         -- options right now: termopen / quickfix
         executor = require("rust-tools/executors").termopen,
-
         -- callback to execute once rust-analyzer is done initializing the workspace
         -- The callback receives one parameter indicating the `health` of the server: "ok" | "warning" | "error"
         on_initialized = function()
             require('inlay-hints').set_all()
         end,
-
         -- automatically call RustReloadWorkspace when writing to a Cargo.toml file.
         reload_workspace_from_cargo_toml = true,
-
         -- These apply to the default RustSetInlayHints command
         inlay_hints = {
             -- automatically set inlay hints (type hints)
             -- default: true
             auto = false,
-
             -- Only show inlay hints for the current line
             only_current_line = false,
-
             -- whether to show parameter hints with the inlay hints or not
             -- default: true
             show_parameter_hints = true,
-
             -- prefix for parameter hints
             -- default: "<-"
             parameter_hints_prefix = "<- ",
-
             -- prefix for all the other hints (type, chaining)
             -- default: "=>"
             other_hints_prefix = "=> ",
-
             -- whether to align to the length of the longest line in the file
             max_len_align = false,
-
             -- padding from the left if max_len_align is true
             max_len_align_padding = 1,
-
             -- whether to align to the extreme right or not
             right_align = false,
-
             -- padding from the right if right_align is true
             right_align_padding = 7,
-
             -- The color of the hints
             highlight = "Comment",
         },
-
         -- options same as lsp hover / vim.lsp.util.open_floating_preview()
         hover_actions = {
-
             -- the border that is used for the hover window
             -- see vim.api.nvim_open_win()
             border = {
@@ -790,12 +788,10 @@ require("rust-tools").setup {
                 { "╰", "FloatBorder" },
                 { "│", "FloatBorder" },
             },
-
             -- whether the hover action window gets automatically focused
             -- default: false
             auto_focus = false,
         },
-
         -- settings for showing the crate graph based on graphviz and the dot
         -- command
         crate_graph = {
@@ -811,7 +807,6 @@ require("rust-tools").setup {
             -- crates
             -- default: true
             full = true,
-
             -- List of backends found on: https://graphviz.org/docs/outputs/
             -- Is used for input validation and autocompletion
             -- Last updated: 2021-08-26
@@ -892,7 +887,6 @@ require("rust-tools").setup {
             on_attach(client, bufnr)
             require('inlay-hints').on_attach(client, bufnr)
             nmap('K', require 'rust-tools'.hover_actions.hover_actions, 'Hover Documentation')
-
         end,
         capabilities = capabilities,
         settings = {
@@ -900,7 +894,6 @@ require("rust-tools").setup {
                 command = "clippy",
             }
         }
-
     }, -- rust-analyzer options
 
     -- debugging stuff
@@ -975,7 +968,8 @@ require('lualine').setup {
         lualine_a = { 'mode' },
         lualine_b = { 'branch', 'diff', 'diagnostics' },
         lualine_c = {
-            { 'filename',
+            {
+                'filename',
                 file_status = true,
                 newfile_status = false,
                 path = 1,

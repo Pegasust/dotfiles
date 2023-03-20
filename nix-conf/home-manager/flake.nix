@@ -66,7 +66,7 @@
     in
     cross_platform (system:
     let
-      overlays = import ./../../overlays.nix (flake_inputs // {inherit system;});
+      overlays = import ./../../overlays.nix (flake_inputs // { inherit system; });
       # pkgs = nixpkgs.legacyPackages.${system}.appendOverlays overlays;
       pkgs = import nixpkgs {
         inherit system overlays;
@@ -142,7 +142,7 @@
             };
           };
           # Personal darwin, effectively serves as the Darwin edge channel
-          "hungtran" = home-manager.lib.homeManagerConfiguration { 
+          "hungtran" = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
             modules = base.modules ++ [
               ./home.nix
@@ -159,6 +159,11 @@
               {
                 base.private_chromium.enable = false;
               }
+              {
+                home.packages = [
+                  pkgs.postman
+                ];
+              }
             ];
             extraSpecialArgs = mkModuleArgs {
               inherit pkgs;
@@ -169,7 +174,7 @@
             };
           };
           # Work darwin
-          "htran" = home-manager.lib.homeManagerConfiguration { 
+          "htran" = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
             modules = base.modules ++ [
               ./home.nix
@@ -181,7 +186,7 @@
                 base.graphics.enable = false;
                 # don't want to deal with GL stuffs on mac yet :/
                 base.graphics.useNixGL.defaultPackage = null;
-                # NOTE: this actually does not exist
+                # FIXME: this actually does not exist
                 base.keepass.path = "/Users/htran/keepass.kdbx";
                 base.alacritty.font.size = 11.0;
                 base.git.name = "Hung";
