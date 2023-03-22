@@ -53,6 +53,9 @@ in
     programs.tmux = {
       enable = true;
       extraConfig = builtins.readFile "${proj_root.config.path}/tmux/tmux.conf";
+      plugins =
+        let inherit (pkgs.tmuxPlugins) cpu net-speed;
+        in [ cpu net-speed ];
     };
     programs.exa = {
       enable = true;
@@ -88,8 +91,8 @@ in
           "command-not-found" # suggests which package to install; does not support nixos (we have solution already)
           "gitignore" # `gi list` -> `gi java >>.gitignore`
           "ripgrep" # adds completion for `rg`
-          "rust"    # compe for rustc/cargo
-          "poetry"  # compe for poetry - Python's cargo
+          "rust" # compe for rustc/cargo
+          "poetry" # compe for poetry - Python's cargo
           # "vi-mode"   # edit promps with vi motions :)
         ];
       };

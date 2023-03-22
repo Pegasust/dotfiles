@@ -31,3 +31,6 @@ else
 fi
 
 
+# Attempt to reload running instances
+tmux source-file ~/.config/tmux/tmux.conf
+

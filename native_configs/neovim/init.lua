@@ -674,6 +674,37 @@ require('mason-lspconfig').setup_handlers({
             }
         }
     end,
+    ["pyright"] = function()
+        require('lspconfig').pyright.setup {
+            on_attach = on_attach,
+            capabilities = capabilities,
+            settings = {
+                pyright = {
+                    disableLanguageServices = false,
+                    disableOrganizeImports = false,
+                },
+                python = {
+                    analysis = {
+                        autoImportCompletions = true,
+                        autoSearchPaths = true,
+                        diagnosticMode = "openFilesOnly",
+                        -- diagnosticSeverityOverrides =
+                        extraPaths = {},
+                        logLevel = "Information",
+                        stubPath = "typings",
+                        typeCheckingMode = "basic",
+                        typeshedPaths = {},
+                        useLibraryCodeForTypes = false,
+                        pythonPath = "python",
+                        venvPath = "",
+                    },
+                    linting = {
+                        mypyEnabled = true,
+                    }
+                },
+            },
+        }
+    end,
     ["tsserver"] = function()
         require('lspconfig').tsserver.setup {
             on_attach = on_attach,
@@ -735,7 +766,7 @@ require('mason-lspconfig').setup_handlers({
 })
 require("rust-tools").setup {
     tools = {
-              -- rust-tools options
+        -- rust-tools options
 
         -- how to execute terminal commands
         -- options right now: termopen / quickfix
