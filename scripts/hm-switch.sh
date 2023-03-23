@@ -22,6 +22,9 @@ fi
 # that injects binary for Mason to use.
 rm -rf ~/.local/share/nvim/mason
 
+# NOTE: https://discourse.nixos.org/t/relative-path-support-for-nix-flakes/18795
+# nix flake update is required for relative paths to work
+nix flake update
 # test if we have home-manager, if not, attempt to use nix to put home-manager to
 # our environment
 if ! command -v home-manager ; then

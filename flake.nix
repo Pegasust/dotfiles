@@ -4,6 +4,7 @@
     experimental-features = "nix-command flakes";
     # for darwin's browser
     allowUnsupportedSystem = true;
+    max-jobs = 4;
   };
   description = "My personal configuration in Nix (and some native configurations)";
   inputs = {
