@@ -14,6 +14,7 @@
     # shell scripts
     pkgs.rust4cargo
     pkgs.sops
+    pkgs.ssh-to-age
   ];
 
   shellHook = ''

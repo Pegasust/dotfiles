@@ -3,6 +3,7 @@ keys:
   - &htran     age1jw958shpwu7st8sc4z0fufuswmfpxfc9wl3df9g3f3y57m45j92syr0mng
   - &bao       age1umzkd4k0xt6uv5de85fpc4uztrph86nsd79h5f8cpuvtpy8n6adss7q2fv
   - &root_bao  age1vx7e6vz9zptwqd0cakjj8erqv58cstddama8zcrppc36rqqmlvjs53x9u0
+  - &htran1    age1vkd39dmrft3uk5wnfqppharn38dhrh78ev6pl85u005jhcge5e9qz4lt79
 creation_rules:
   - path_regex: .*
     key_groups:
@@ -11,4 +12,5 @@ creation_rules:
       - *htran-mbp
       - *bao
       - *root_bao
+      - *htran1
 
