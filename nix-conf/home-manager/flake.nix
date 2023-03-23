@@ -179,6 +179,7 @@
             modules = base.modules ++ [
               ./home.nix
               ./base/productive_desktop.nix
+              ./base/darwin-spotlight.nix
               {
                 base.private_chromium.enable = false;
               }
