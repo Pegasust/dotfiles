@@ -8,14 +8,15 @@ echo "SCRIPT_DIR: ${SCRIPT_DIR}"
 HOME_MANAGER_DIR="${SCRIPT_DIR}/../nix-conf/home-manager"
 
 # Manage nix.conf. Ideally, this should be done with snapshot-based version
-# and with preview on-the-spot, with some timeout
+# and with preview on-the-spot, with some timeout (like deploy-rs)
 if [ -f /etc/nix/nix.conf ]; then
     # managed nix.conf
     BACKUP_FILE="/etc/nix/nix.conf.backup"
     echo "overwriting /etc/nix/nix.conf. Please find latest backup in ${BACKUP_FILE}"
     sudo cp /etc/nix/nix.conf ${BACKUP_FILE}
-    sudo cp "${HOME_MANAGER_DIR}/hwtr/nix.conf" /etc/nix/
 fi
+sudo cp "${HOME_MANAGER_DIR}/hwtr/nix.conf" /etc/nix/
+sudo cp "${SCRIPT_DIR}/upload-to-cache.sh" /etc/nix/
 
 # Mason is bad: it puts binaries onto xdg.data
 # let's make mason starts fresh, just in case we introduce RPATH hacks 
