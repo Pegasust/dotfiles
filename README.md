@@ -57,4 +57,19 @@ text-editor agnostically.
 - Templates: `zk/templates/`
 - Command: `ln -s $PWD/zk/templates ~/.config/zk/templates`
 
+## Troubleshoots
+
+### My MacOS just updated, `nix` is no-longer here
+
+- An easy fix is to add the following  to the **bottom** of `/etc/zshrc`
+
+```sh
+# Nix
+if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+  . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+fi
+# End Nix
+```
+
+- Otherwise, consult [`gh-gist:meeech/a_help-osx-borked-my-nix.md`](https://gist.github.com/meeech/0b97a86f235d10bc4e2a1116eec38e7e)
 
