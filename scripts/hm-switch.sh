@@ -17,6 +17,10 @@ if [ -f /etc/nix/nix.conf ]; then
 fi
 sudo cp "${HOME_MANAGER_DIR}/hwtr/nix.conf" /etc/nix/
 sudo cp "${SCRIPT_DIR}/upload-to-cache.sh" /etc/nix/
+sudo chmod +x /etc/nix/*.sh
+# Reload nix daemon so that new changes are applied.
+sudo launchctl stop org.nixos.nix-daemon
+sudo launchctl start org.nixos.nix-daemon
 
 # Mason is bad: it puts binaries onto xdg.data
 # let's make mason starts fresh, just in case we introduce RPATH hacks 
