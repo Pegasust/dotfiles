@@ -4,6 +4,7 @@ flake_input@{ kpcli-py
 , neovim-nightly-overlay
 , system
 , nickel
+, nix-boost
 , ... 
 }: let
   kpcli-py = (final: prev: {
@@ -15,9 +16,29 @@ flake_input@{ kpcli-py
         # tableformatter requires setuptools
         tableformatter = super.tableformatter.overridePythonAttrs (
           old: {
-            buildInputs = (old.buildInputs or [ ]) ++ [ super.setuptools super.cython_3 ];
+            buildInputs = (old.buildInputs or [ ]) ++ [ self.setuptools self.cython_3 ];
+            src = old.src;
           }
         );
+        kpcli = super.kpcli.overridePythonAttrs (old: {
+          buildInputs = (old.buildInputs or [ ]) ++ [self.setuptools];
+          src = old.src;
+        });
+
+        # ubersmith = super.ubersmith.overridePythonAttrs (old: {
+        #   buildInputs = builtins.filter (x: ! builtins.elem x [ ]) ((old.buildInputs or [ ]) ++ [
+        #     py-final.setuptools
+        #     py-final.pip
+        #   ]);
+        #
+        #   src = final.fetchFromGitHub {
+        #     owner = "jasonkeene";
+        #     repo = "python-ubersmith";
+        #     rev = "0c594e2eb41066d1fe7860e3a6f04b14c14f6e6a";
+        #     sha256 = "sha256-Dystt7CBtjpLkgzCsAif8WkkYYeLyh7VMehAtwoDGuM=";
+        #   };
+        # });
+
       });
     };
   });
@@ -43,6 +64,7 @@ flake_input@{ kpcli-py
       lsp-nls nickel nickelWasm;
   });
 in [
+  nix-boost.overlays.default
   nixgl.overlays.default
   rust-overlay.overlays.default
   neovim-nightly-overlay.overlay

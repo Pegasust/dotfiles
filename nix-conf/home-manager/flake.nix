@@ -10,13 +10,13 @@
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
     ];
-    max-jobs = 4;
+    max-jobs = 12;
   };
   description = "simple home-manager config";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:Pegasust/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
@@ -27,6 +27,7 @@
       url = "path:../../out-of-tree/flake-compat";
       flake = false;
     };
+    nix-boost.url = "git+https://git.pegasust.com/pegasust/nix-boost.git";
     kpcli-py = {
       url = "github:rebkwok/kpcli";
       flake = false;
@@ -52,6 +53,7 @@
     , kpcli-py
     , neovim-nightly-overlay
     , nickel
+    , nix-boost
     , ...
     }:
     let

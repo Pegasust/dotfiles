@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 # NOTE: Untested on case of no home-manager
-set -xv
+set -xveu
 # Where this script located
 SCRIPT_DIR=$(readlink -f $(dirname $0))
 echo "SCRIPT_DIR: ${SCRIPT_DIR}"
@@ -25,11 +25,12 @@ sudo launchctl start org.nixos.nix-daemon
 # Mason is bad: it puts binaries onto xdg.data
 # let's make mason starts fresh, just in case we introduce RPATH hacks 
 # that injects binary for Mason to use.
-rm -rf ~/.local/share/nvim/mason
+sudo rm -rf ~/.local/share/nvim/mason
 
 # NOTE: https://discourse.nixos.org/t/relative-path-support-for-nix-flakes/18795
 # nix flake update is required for relative paths to work
 nix flake update
+nix flake update "${SCRIPT_DIR}/../nix-conf/home-manager"
 # test if we have home-manager, if not, attempt to use nix to put home-manager to
 # our environment
 if ! command -v home-manager ; then

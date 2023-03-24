@@ -52,7 +52,7 @@ in
     };
     programs.tmux = {
       enable = true;
-      extraConfig = builtins.readFile "${proj_root.config.path}/tmux/tmux.conf";
+      configBeforePlugin = builtins.readFile "${proj_root.config.path}/tmux/tmux.conf";
       plugins =
         let inherit (pkgs.tmuxPlugins) cpu net-speed;
         in [ cpu net-speed ];

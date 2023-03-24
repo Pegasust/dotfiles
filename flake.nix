@@ -2,7 +2,7 @@
   nixConfig = {
     accept-flake-config = true;
     experimental-features = "nix-command flakes";
-    max-jobs = 4;
+    max-jobs = 12;
   };
   description = "My personal configuration in Nix (and some native configurations)";
   inputs = {
@@ -38,6 +38,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nickel.url = "github:tweag/nickel";
+    nix-boost.url = "git+https://git.pegasust.com/pegasust/nix-boost.git";
   };
 
   outputs =
