@@ -15,6 +15,8 @@
     pkgs.rust4cargo
     pkgs.sops
     pkgs.ssh-to-age
+    pkgs.go
+    pkgs.gopls
   ];
 
   shellHook = ''

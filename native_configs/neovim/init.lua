@@ -147,12 +147,12 @@ vim.opt.scrolloff = 30;
 vim.opt.signcolumn = "yes";
 vim.opt.colorcolumn = "80";
 
-vim.opt.background = "light";
+vim.opt.background = "dark";
 
 vim.api.nvim_create_user_command('Dark', function(opts)
         -- opts: {name, args: str, fargs: Splited<str>, range, ...}
         ---@type string
-        local contrast = (opts.args and string.len(opts.args) > 0) and opts.args or vim.g.gruvbox_contrast_dark;
+        local contrast = (opts.arg;
         vim.g.gruvbox_contrast_dark = contrast;
         vim.opt.background = "dark";
     end,

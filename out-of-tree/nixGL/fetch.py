@@ -5,8 +5,6 @@ import json
 http = urllib3.PoolManager()
 dl_dir = http.request("GET", "https://download.nvidia.com/XFree86/Linux-x86_64/")
 
-# print(f"{dl_dir.status=}\n{dl_dir.data=}")
-
 assert (dl_dir.status < 400), "Error probably occurred"
 
 def find_versions(dir_html: bytes) -> list[str]:
@@ -30,7 +28,6 @@ def find_versions(dir_html: bytes) -> list[str]:
     return _rec(dir_html, 0, [])
     
 versions = find_versions(dl_dir.data)
-# print("\n".join(versions))
 
 download_urls = lambda ver: [f"https://download.nvidia.com/XFree86/Linux-x86_64/{ver}/NVIDIA-Linux-x86_64-{ver}.run"]
 sha256_urls = lambda ver: [f"{url}{dl_ext}" for dl_ext in [".sha256sum", ".sha256"] for url in download_urls(ver)]
@@ -46,14 +43,12 @@ none_id = lambda _: None
 def get_sha256(version: str) -> str | None:
     for url in sha256_urls(version):
         res = http.request("GET", url)
-        # print(f"attempting: {url}")
         if res.status < 400:
             return res.data.decode().split()[0]
     return None
 fetch_data = [(v, download_urls(v)[0], get_sha256(v)) for v in versions]
 fetch_data.append(("latest", *fetch_data[-1][1:]))
 
-# print(fetch_data)
 
 # now print the JSON object
 print(json.dumps({

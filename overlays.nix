@@ -5,8 +5,9 @@ flake_input@{ kpcli-py
 , system
 , nickel
 , nix-boost
-, ... 
-}: let
+, ...
+}:
+let
   kpcli-py = (final: prev: {
     # use python3.9, which works because of cython somehow?
     kpcli-py = final.poetry2nix.mkPoetryApplication {
@@ -21,8 +22,7 @@ flake_input@{ kpcli-py
           }
         );
         kpcli = super.kpcli.overridePythonAttrs (old: {
-          buildInputs = (old.buildInputs or [ ]) ++ [self.setuptools];
-          src = old.src;
+          buildInputs = (old.buildInputs or [ ]) ++ [ self.setuptools ];
         });
 
         # ubersmith = super.ubersmith.overridePythonAttrs (old: {
@@ -43,7 +43,7 @@ flake_input@{ kpcli-py
     };
   });
 
-  rust = (final: prev: 
+  rust = (final: prev:
     let
       nightlyRustWithExts = exts: final.rust-bin.selectLatestNightlyWith (
         toolchain: (toolchain.minimal.override {
@@ -53,17 +53,19 @@ flake_input@{ kpcli-py
       # https://rust-lang.github.io/rustup/concepts/profiles.html
       rust-default-components = [ "rust-docs" "rustfmt" "clippy" ];
       rust-dev-components = rust-default-components ++ [ "rust-src" "rust-analyzer" "miri" ];
-    in {
+    in
+    {
       rust4devs = nightlyRustWithExts rust-dev-components;
       rust4cargo = nightlyRustWithExts [ ];
       rust4normi = nightlyRustWithExts rust-default-components;
-  });
+    });
 
   nickel = (final: prev: {
     inherit (flake_input.nickel.packages.${system})
       lsp-nls nickel nickelWasm;
   });
-in [
+in
+[
   nix-boost.overlays.default
   nixgl.overlays.default
   rust-overlay.overlays.default

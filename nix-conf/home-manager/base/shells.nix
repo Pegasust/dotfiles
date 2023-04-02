@@ -52,11 +52,10 @@ in
     };
     programs.tmux = {
       enable = true;
-      configBeforePlugin = builtins.readFile "${proj_root.config.path}/tmux/tmux.conf";
-      plugins =
-        let inherit (pkgs.tmuxPlugins) cpu net-speed;
-        in [ cpu net-speed ];
+      # extraConfigBeforePlugin = builtins.readFile "${proj_root.config.path}/tmux/tmux.conf";
+      plugins = let inherit (pkgs.tmuxPlugins) cpu net-speed; in [ cpu net-speed ];
     };
+    xdg.configFile."tmux/tmux.conf".text = myLib.mkOrder 600 (builtins.readFile "${proj_root.config.path}/tmux/tmux.conf");
     programs.exa = {
       enable = true;
       enableAliases = true;
