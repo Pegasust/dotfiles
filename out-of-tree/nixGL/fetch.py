@@ -1,5 +1,6 @@
 import http.client
 import json
+import sys
 
 NV_FREE_X86_URL = "download.nvidia.com"
 POTENTIAL_SHA256_EXTS = [".sha256sum", ".sha256"]
@@ -10,7 +11,7 @@ dir_html = response.read()
 
 assert (response.status < 400), "Error occurred fetching for source from"
 
-def scrape_driver_versions(dir_html: bytes) -> list[str]:
+def scrape_driver_versions(dir_html: bytes):
     # The idea is to recursively follows all interesting `src` from `<a href={src}>`
     def _rec(dir_html: bytes, href_url_start: int = 0, so_far: list[str] = []) -> list[str]:
         MATCH_START = b"<span class=\'dir\'><a href=\'"
@@ -28,8 +29,15 @@ def scrape_driver_versions(dir_html: bytes) -> list[str]:
         assert version_end != -1, "Should have end-signaling /"
         so_far.append(dir_html[potential_version_start:version_end].decode())
         return _rec(dir_html, version_end, so_far)
-    return _rec(dir_html, 0, [])
-    
+
+    versions = _rec(dir_html, 0, [])
+    num_versions = len(versions)
+    right_pad = " " * 50
+    for i, version in enumerate(versions):
+        print(f"[{i+1}/{num_versions}] Processing version {version}{right_pad}", end="\r", file=sys.stderr)
+        yield version
+    print()
+
 versions = scrape_driver_versions(dir_html)
 
 download_urls_of = lambda ver: [f"/XFree86/Linux-x86_64/{ver}/NVIDIA-Linux-x86_64-{ver}.run"]
@@ -58,4 +66,3 @@ print(json.dumps({
         "sha256": sha256
     } for (version, dl_url, sha256) in fetch_data if sha256 is not None}, indent=4))
 # execution: fetch.py >nvidia_versions.json
-

@@ -28,7 +28,6 @@
           nixVulkanNvidia = pkgs.auto.nixVulkanNvidia;
           nixVulkanIntel = pkgs.nixVulkanIntel;
 
-          nvida-fetch
         };
 
         # deprecated attributes for retro compatibility
