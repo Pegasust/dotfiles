@@ -37,7 +37,7 @@ in
     # pkgs.xorg.xclock # TODO: only include if have gui # For testing GL installation
     # pkgs.logseq # TODO: only include if have GL # Obsidian alt
     pkgs.mosh # Parsec for SSH
-    pkgs.nixops_unstable # nixops v2 # insecure for now
+    # pkgs.nixops_unstable # nixops v2 # insecure for now
     pkgs.lynx # Web browser at your local terminal
     pkgs.zk
 

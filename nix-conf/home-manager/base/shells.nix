@@ -54,8 +54,11 @@ in
       enable = true;
       # extraConfigBeforePlugin = builtins.readFile "${proj_root.config.path}/tmux/tmux.conf";
       plugins = let inherit (pkgs.tmuxPlugins) cpu net-speed; in [ cpu net-speed ];
+      extraConfig = (builtins.readFile "${proj_root.config.path}/tmux/tmux.conf");
     };
-    xdg.configFile."tmux/tmux.conf".text = myLib.mkOrder 600 (builtins.readFile "${proj_root.config.path}/tmux/tmux.conf");
+    xdg.configFile."tmux/tmux.conf".text = myLib.mkOrder 600 ''
+      set -g status-right '#{cpu_bg_color} CPU: #{cpu_icon} #{cpu_percentage} | %a %h-%d %H:%M '
+    '';
     programs.exa = {
       enable = true;
       enableAliases = true;

@@ -88,6 +88,11 @@ Host dev0
     User htran
     Port 22
 
+Host dev2
+    HostName 10.100.200.210
+    User htran
+    Port 22
+
 Host dev1
     HostName 10.100.200.220
     User htran

@@ -152,8 +152,8 @@ vim.opt.background = "dark";
 vim.api.nvim_create_user_command('Dark', function(opts)
         -- opts: {name, args: str, fargs: Splited<str>, range, ...}
         ---@type string
-        local contrast = (opts.arg;
-        vim.g.gruvbox_contrast_dark = contrast;
+        local contrast = (opts.args and string.len(opts.args) > 0) and opts.args or vim.g.gruvbox_contrast_light;
+         = contrast;
         vim.opt.background = "dark";
     end,
     { nargs = "?", })
@@ -616,7 +616,7 @@ require("mason").setup({
         },
         check_outdated_packages_on_open = true,
     },
-    -- The default settings is "prepend" https://github.com/williamboman/mason.nvim#default-configuration
+    -- NOTE: The default settings is "prepend" https://github.com/williamboman/mason.nvim#default-configuration
     -- Which means Mason's installed path is prioritized against our local install
     -- see: https://git.pegasust.com/pegasust/aoc/commit/b45dc32c74d84c9f787ebce7a174c9aa1d411fc2
     -- This introduces some pitfalls, so we'll take the approach of trusting user's local installation

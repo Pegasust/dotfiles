@@ -42,6 +42,7 @@ let
     pkgs.nodePackages.pyright
     pkgs.python3Packages.pylint
     pkgs.python3Packages.flake8
+    # FIXME: installing ansible from here just doesn't work :/
     # pkgs.ansible-lint
     # pkgs.python38Packages.ansible
     # pkgs.ansible-language-server
@@ -51,7 +52,10 @@ let
     # pkgs.rust-analyzer
     # rust_pkgs
     # pkgs.evcxr # Rust REPL for Conjure!
-  ];
+  ] ++ lib.optionals (pkgs.stdenv.isDarwin) (let 
+    inherit (pkgs.darwin.apple_sdk.frameworks) System CoreFoundation; in [
+    System CoreFoundation pkgs.cc
+  ]);
 in
 {
   options.base.neovim = {
