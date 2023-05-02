@@ -72,7 +72,7 @@ Plug('folke/trouble.nvim')                -- File-grouped workspace diagnostics
 Plug('tpope/vim-dispatch')                -- Allows quick build/compile/test vim commands
 Plug('clojure-vim/vim-jack-in')           -- Clojure: ":Boot", ":Clj", ":Lein"
 Plug('radenling/vim-dispatch-neovim')     -- Add support for neovim's terminal emulator
-Plug('Olical/conjure')                    -- REPL on the source for Clojure (and other LISPs)
+-- Plug('Olical/conjure')                    -- REPL on the source for Clojure (and other LISPs)
 Plug('gennaro-tedesco/nvim-jqx')          -- JSON formatter (use :Jqx*)
 Plug('kylechui/nvim-surround')            -- surrounds with tags/parenthesis
 Plug('simrat39/rust-tools.nvim')          -- config rust-analyzer and nvim integration
@@ -127,7 +127,6 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
     end
 })
 
-
 vim.g.gruvbox_contrast_dark = "soft";
 vim.g.gruvbox_contrast_light = "soft";
 vim.opt.ignorecase = true;
@@ -152,8 +151,8 @@ vim.opt.background = "dark";
 vim.api.nvim_create_user_command('Dark', function(opts)
         -- opts: {name, args: str, fargs: Splited<str>, range, ...}
         ---@type string
-        local contrast = (opts.args and string.len(opts.args) > 0) and opts.args or vim.g.gruvbox_contrast_light;
-         = contrast;
+        local contrast = (opts.args and string.len(opts.args) > 0) and opts.args or vim.g.gruvbox_contrast_dark;
+        vim.g.gruvbox_contrast_dark = contrast;
         vim.opt.background = "dark";
     end,
     { nargs = "?", })
@@ -161,7 +160,7 @@ vim.api.nvim_create_user_command('Dark', function(opts)
 vim.api.nvim_create_user_command('Light', function(opts)
         -- opts: {name, args: str, fargs: Splited<str>, range, ...}
         ---@type string
-        local contrast = (opts.args and string.len(opts.args) > 0) and opts.args or vim.g.gruvbox_contrast_dark;
+        local contrast = (opts.args and string.len(opts.args) > 0) and opts.args or vim.g.gruvbox_contrast_light;
         vim.g.gruvbox_contrast_light = contrast;
         vim.opt.background = "light";
     end,
@@ -201,6 +200,7 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float) -- opens diag in box
 -- vim.keymap.set('n', '<leader>wq', vim.diagnostic.setqflist) -- workspace diags
 vim.keymap.set('n', '<leader>q', '<cmd>TroubleToggle loclist<cr>')
 vim.keymap.set('n', '<leader>wq', '<cmd>TroubleToggle workspace_diagnostics<cr>')
+vim.keymap.set('n', '<leader>g', '<cmd>GuessIndent<cr>')
 
 -- color, highlighting, UI stuffs
 vim.cmd([[
@@ -412,18 +412,18 @@ parser_config.astro.filetype_to_parsername = { "javascript", "typescript.tsx", "
 
 
 require('guess-indent').setup {
-    auto_cmd = true,     -- Set to false to disable automatic execution
+    auto_cmd = true,
     filetype_exclude = { -- A list of filetypes for which the auto command gets disabled
         "netrw",
         "tutor",
     },
 
-    buftype_exclude = { -- A list of buffer types for which the auto command gets disabled
-        "help",
-        "nofile",
-        "terminal",
-        -- "prompt",
-    },
+    -- buftype_exclude = { -- A list of buffer types for which the auto command gets disabled
+    --     "help",
+    --     "nofile",
+    --     "terminal",
+    --     -- "prompt",
+    -- },
 }
 
 -- harpoon: O(1) buffer/terminal switching
@@ -585,7 +585,7 @@ cmp.setup {
         { name = 'luasnip' },
         { name = 'buffer' },
         { name = 'path' },
-        { name = "conjure" },
+        -- { name = "conjure" },
         -- { name = 'cmp_tabnine' },
     },
 }
@@ -775,6 +775,7 @@ require("rust-tools").setup {
         -- The callback receives one parameter indicating the `health` of the server: "ok" | "warning" | "error"
         on_initialized = function()
             require('inlay-hints').set_all()
+
         end,
         -- automatically call RustReloadWorkspace when writing to a Cargo.toml file.
         reload_workspace_from_cargo_toml = true,
@@ -916,15 +917,28 @@ require("rust-tools").setup {
                 vim.keymap.set('n', keys, func, { noremap = true, buffer = bufnr, desc = desc })
             end
             on_attach(client, bufnr)
-            require('inlay-hints').on_attach(client, bufnr)
             nmap('K', require 'rust-tools'.hover_actions.hover_actions, 'Hover Documentation')
         end,
         capabilities = capabilities,
+        cmd = {"rust-analyzer"},
         settings = {
-            checkOnSave = {
-                command = "clippy",
-            }
-        }
+            ["rust-analyzer"] = {
+                -- enable clippy on save
+                checkOnSave = {
+                    command = "clippy",
+                    extraArgs = { "--all", "--", "-W", "clippy::all" },
+                },
+                rustfmt = {
+                    extraArgs = { "+nightly" },
+                },
+                cargo = {
+                    loadOutDirsFromCheck = true,
+                },
+                procMacro = {
+                    enable = true,
+                },
+            },
+        },
     }, -- rust-analyzer options
 
     -- debugging stuff
