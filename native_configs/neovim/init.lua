@@ -72,7 +72,7 @@ Plug('folke/trouble.nvim')                -- File-grouped workspace diagnostics
 Plug('tpope/vim-dispatch')                -- Allows quick build/compile/test vim commands
 Plug('clojure-vim/vim-jack-in')           -- Clojure: ":Boot", ":Clj", ":Lein"
 Plug('radenling/vim-dispatch-neovim')     -- Add support for neovim's terminal emulator
--- Plug('Olical/conjure')                    -- REPL on the source for Clojure (and other LISPs)
+Plug('Olical/conjure')                    -- REPL on the source for Clojure (and other LISPs)
 Plug('gennaro-tedesco/nvim-jqx')          -- JSON formatter (use :Jqx*)
 Plug('kylechui/nvim-surround')            -- surrounds with tags/parenthesis
 Plug('simrat39/rust-tools.nvim')          -- config rust-analyzer and nvim integration
@@ -200,7 +200,7 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float) -- opens diag in box
 -- vim.keymap.set('n', '<leader>wq', vim.diagnostic.setqflist) -- workspace diags
 vim.keymap.set('n', '<leader>q', '<cmd>TroubleToggle loclist<cr>')
 vim.keymap.set('n', '<leader>wq', '<cmd>TroubleToggle workspace_diagnostics<cr>')
-vim.keymap.set('n', '<leader>g', '<cmd>GuessIndent<cr>')
+vim.keymap.set('n', '<leader>gg', '<cmd>GuessIndent<cr>')
 
 -- color, highlighting, UI stuffs
 vim.cmd([[
@@ -605,7 +605,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local servers = {
     'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'cmake', 'tailwindcss', 'prismals',
     'rnix', 'eslint', 'terraformls', 'tflint', 'svelte', 'astro', 'clojure_lsp', "bashls", 'yamlls', "ansiblels",
-    "jsonls", "denols", "gopls", "nickel_ls"
+    "jsonls", "denols", "gopls", "nickel_ls", 'pylsp',
 }
 require("mason").setup({
     ui = {

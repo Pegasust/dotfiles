@@ -33,9 +33,7 @@
       flake = false;
     };
     neovim-nightly-overlay = {
-      url = "github:nix-community/neovim-nightly-overlay";
-      # Pin to a nixpkgs revision that doesn't have NixOS/nixpkgs#208103 yet
-      # inputs.nixpkgs.url = "github:nixos/nixpkgs?rev=fad51abd42ca17a60fc1d4cb9382e2d79ae31836";
+      url = "github:nix-community/neovim-nightly-overlay?rev=88a6c749a7d126c49f3374f9f28ca452ea9419b8";
     };
     nix-index-database = {
       url = "github:mic92/nix-index-database";
@@ -69,7 +67,7 @@
     in
     cross_platform (system:
     let
-      overlays = import ./../../overlays.nix (flake_inputs // { inherit system; });
+      overlays = import ./overlays.nix (flake_inputs // { inherit system; });
       # pkgs = nixpkgs.legacyPackages.${system}.appendOverlays overlays;
       pkgs = import nixpkgs {
         inherit system overlays;

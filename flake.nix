@@ -19,23 +19,22 @@
       # All cell blocks are under ./nix/cells/<cell>/<cellblock> as `<cellblock>.nix`
       # or `<cellblock/default.nix`
       cellsFrom = ./nix/cells;
-      modules = ./nix/modules;
+      # modules = ./nix/modules;
 
       cellBlocks =
         let
-          inherit (std.blockTypes) devShells;
-          inherit (hive.blockTypes) nixosConfigurations homeConfigurations;
+          inherit (std.blockTypes) devShells functions;
         in
         [
           (devShells "devshells")
-          (nixosConfigurations "host_profile")
-          (homeConfigurations "home_profile")
+          (functions "host_profile")
+          (functions "home_profile")
 
         ];
     }
     {
       devShells = std.harvest [ [ "dotfiles" "devshells" ] ];
-      nixosConfigurations = std.harvest [ [ "dotfiles" "nixos" ] ];
-      homeConfigurations = std.harvest [ [ "dotfiles" "home" ] ];
+      nixosConfigurations = std.pick [ [ "dotfiles" "nixos" ] ];
+      homeConfigurations = std.pick [ [ "dotfiles" "home" ] ];
     };
 }

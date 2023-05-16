@@ -16,19 +16,18 @@ let
     (
       toolchain:
       toolchain.default.override {
-        extensions = [ "rust-src" ];
+        extensions = [ "rust-src" "rust-analyzer" "rust-docs" "rustfmt" "clippy" "miri" ];
       }
     ));
   nvim_pkgs = [
     # pkgs.gccStdenv
-    pkgs.gcc
     pkgs.tree-sitter
     pkgs.fzf # file name fuzzy search
     pkgs.ripgrep # content fuzzy search
     pkgs.zk # Zettelkasten (limited support)
     pkgs.fd # Required by a Telescope plugin (?)
     pkgs.stdenv.cc.cc.lib
-    pkgs.rnix-lsp  # doesn't work, Mason just installs it using cargo
+    pkgs.rnix-lsp # doesn't work, Mason just installs it using cargo
     pkgs.rust4cargo
     pkgs.nickel
     pkgs.lsp-nls
@@ -52,10 +51,14 @@ let
     # pkgs.rust-analyzer
     # rust_pkgs
     # pkgs.evcxr # Rust REPL for Conjure!
-  ] ++ lib.optionals (pkgs.stdenv.isDarwin) (let 
-    inherit (pkgs.darwin.apple_sdk.frameworks) System CoreFoundation; in [
-    System CoreFoundation pkgs.cc
-  ]);
+  ] ++ lib.optionals (pkgs.stdenv.isDarwin) (
+    let
+      inherit (pkgs.darwin.apple_sdk.frameworks) System CoreFoundation; in
+    [
+      System
+      CoreFoundation
+    ]
+  );
 in
 {
   options.base.neovim = {

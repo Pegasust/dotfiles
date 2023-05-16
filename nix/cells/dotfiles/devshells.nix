@@ -3,6 +3,7 @@
 
 in {
   default = std.lib.dev.mkShell {
-    name = nixpkgs.lib.
+    name = "default";
+    imports = [inputs.std.std.devshellProfiles.default];
   };
 }
