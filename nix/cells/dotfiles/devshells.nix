@@ -1,4 +1,4 @@
-{inputs, cells}: let 
+{inputs, cell}: let 
   inherit (inputs) std nixpkgs;
 
 in {

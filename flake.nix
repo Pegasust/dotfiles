@@ -23,18 +23,19 @@
 
       cellBlocks =
         let
-          inherit (std.blockTypes) devShells functions;
+          inherit (std.blockTypes) devshells functions;
         in
         [
-          (devShells "devshells")
-          (functions "host_profile")
-          (functions "home_profile")
+          (devshells "devshells")
+          (devshells "userShells")
+          # (functions "host_profile")
+          # (functions "home_profile")
 
         ];
     }
     {
       devShells = std.harvest [ [ "dotfiles" "devshells" ] ];
-      nixosConfigurations = std.pick [ [ "dotfiles" "nixos" ] ];
-      homeConfigurations = std.pick [ [ "dotfiles" "home" ] ];
+      # nixosConfigurations = std.pick [ [ "dotfiles" "nixos" ] ];
+      # homeConfigurations = std.pick [ [ "dotfiles" "home" ] ];
     };
 }
