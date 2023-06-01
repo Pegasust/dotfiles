@@ -191,6 +191,7 @@
                 # FIXME: this actually does not exist
                 base.keepass.path = "/Users/htran/keepass.kdbx";
                 base.alacritty.font.size = 11.0;
+                base.alacritty.font.family = "DroidSansM Nerd Font";
                 base.git.name = "Hung";
                 base.git.email = "htran@egihosting.com";
               }
@@ -199,7 +200,6 @@
                   pkgs.postman
                 ];
               }
-              nerd_font_module
               { base.keepass.enable = pkgs.lib.mkForce false; }
             ];
             extraSpecialArgs = mkModuleArgs {

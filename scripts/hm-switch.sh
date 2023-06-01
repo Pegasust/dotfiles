@@ -15,7 +15,8 @@ if [ -f /etc/nix/nix.conf ]; then
     echo "overwriting /etc/nix/nix.conf. Please find latest backup in ${BACKUP_FILE}"
     sudo cp /etc/nix/nix.conf ${BACKUP_FILE}
 fi
-sudo cp "${HOME_MANAGER_DIR}/hwtr/nix.conf" /etc/nix/
+sudo cp "${HOME_MANAGER_DIR}/nix.conf" /etc/nix/
+sudo cp "${HOME_MANAGER_DIR}/${USER}/nix.conf" /etc/nix/ | echo "no nix.conf for ${USER}. Totally OK."
 sudo cp "${SCRIPT_DIR}/upload-to-cache.sh" /etc/nix/
 sudo chmod +x /etc/nix/*.sh
 # Reload nix daemon so that new changes are applied.

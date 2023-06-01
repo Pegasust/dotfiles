@@ -72,7 +72,7 @@ Plug('folke/trouble.nvim')                -- File-grouped workspace diagnostics
 Plug('tpope/vim-dispatch')                -- Allows quick build/compile/test vim commands
 Plug('clojure-vim/vim-jack-in')           -- Clojure: ":Boot", ":Clj", ":Lein"
 Plug('radenling/vim-dispatch-neovim')     -- Add support for neovim's terminal emulator
-Plug('Olical/conjure')                    -- REPL on the source for Clojure (and other LISPs)
+-- Plug('Olical/conjure')                    -- REPL on the source for Clojure (and other LISPs)
 Plug('gennaro-tedesco/nvim-jqx')          -- JSON formatter (use :Jqx*)
 Plug('kylechui/nvim-surround')            -- surrounds with tags/parenthesis
 Plug('simrat39/rust-tools.nvim')          -- config rust-analyzer and nvim integration
@@ -87,7 +87,6 @@ Plug('m-demare/hlargs.nvim')                -- highlights arguments; great for f
 Plug('folke/todo-comments.nvim')            -- Highlights TODO
 
 -- other utilities
-Plug('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
 Plug('nvim-treesitter/nvim-treesitter-context') -- Top one-liner context of func/class scope
 Plug('nvim-treesitter/playground')              -- Sees Treesitter AST - less hair pulling, more PRs
 Plug('saadparwaiz1/cmp_luasnip')                -- snippet engine
@@ -98,6 +97,7 @@ Plug('mickael-menu/zk-nvim')                    -- Zettelkasten
 -- `gsu` -> UPPER_CASE (CONSTs), `gsk` -> kebab-case (Clojure), `gsK` -> Title-Kebab-Case
 -- `gs.` -> dot.case (R)
 Plug('arthurxavierx/vim-caser') -- switch cases
+Plug('pegasust/tsql.nvim')      -- workspace code intelligence
 
 ---------
 vim.call('plug#end')
@@ -775,7 +775,6 @@ require("rust-tools").setup {
         -- The callback receives one parameter indicating the `health` of the server: "ok" | "warning" | "error"
         on_initialized = function()
             require('inlay-hints').set_all()
-
         end,
         -- automatically call RustReloadWorkspace when writing to a Cargo.toml file.
         reload_workspace_from_cargo_toml = true,
@@ -920,7 +919,7 @@ require("rust-tools").setup {
             nmap('K', require 'rust-tools'.hover_actions.hover_actions, 'Hover Documentation')
         end,
         capabilities = capabilities,
-        cmd = {"rust-analyzer"},
+        cmd = { "rust-analyzer" },
         settings = {
             ["rust-analyzer"] = {
                 -- enable clippy on save
