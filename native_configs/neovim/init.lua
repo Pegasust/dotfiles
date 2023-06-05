@@ -328,6 +328,12 @@ remap('n', '<leader>fg', function()
     require('telescope.builtin').live_grep()
 end, { desc = '[F]ind by [G]rep' })
 
+remap('n', '<leader>fug', function()
+    -- This relies on many factors: We use `rg` and that `-g '**/*'` effectively
+    -- drops ignore rules like the default `.gitignore` rule.
+    require('telescope.builtin').live_grep({ glob_pattern = '**/*' })
+end, { desc = '[F]ind by [u]nrestricted [G]rep' })
+
 remap('n', '<leader>fb', function()
     require('telescope.builtin').buffers()
 end, { desc = '[F]ind existing [B]uffers' })
@@ -347,7 +353,7 @@ remap('n', '<leader>zf', function()
 end, { desc = '[Z]ettelkasten [F]iles' })
 
 remap('n', '<leader>zg', function()
-    vim.cmd([[:ZkGrep]])
+    vim.cmd(":ZkGrep")
 end, { desc = '[Z]ettelkasten [G]rep' })
 
 -- treesitter
