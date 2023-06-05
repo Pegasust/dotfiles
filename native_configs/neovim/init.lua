@@ -1,5 +1,4 @@
--- What: Mono-file nvim configuration file Why: Easy to see through everything without needing to navigate thru files
--- Features:
+-- What: Mono-file nvim configuration file Why: Easy to see through everything without needing to navigate thru files Features:
 -- - LSP
 -- - Auto-complete (in insert mode: ctrl-space, navigate w/ Tab+S-Tab, confirm: Enter)
 -- - <leader>df to format document
@@ -174,6 +173,8 @@ vim.opt.backup = false
 vim.opt.undodir = vim.fn.stdpath('state') .. '/.vim/undodir'
 vim.opt.undofile = true
 vim.opt.completeopt = 'menuone,noselect'
+
+
 -- vim.opt.clipboard = "unnamedplus"
 -- more aggressive swap file writing. ThePrimeagen believes higher number
 -- leads to low DX
@@ -356,6 +357,46 @@ remap('n', '<leader>zg', function()
     vim.cmd(":ZkGrep")
 end, { desc = '[Z]ettelkasten [G]rep' })
 
+-- tab management {{{
+
+-- Jump to specific tab with <C-t>[number]
+for i = 1, 9 do
+    vim.api.nvim_set_keymap('n', '<C-t>' .. i, ':tabn ' .. i .. '<CR>', { noremap = true, silent = true })
+end
+
+-- Show tab number in tab display
+vim.o.showtabline = 1
+vim.o.tabline = '%!v:lua.my_tabline()'
+
+function _G.my_tabline()
+    local s = ''
+    for i = 1, vim.fn.tabpagenr('$') do
+        if i == vim.fn.tabpagenr() then
+            s = s .. '%' .. i .. 'T%#TabLineSel#'
+        else
+            s = s .. '%' .. i .. 'T%#TabLine#'
+        end
+        local tab = vim.fn.gettabinfo(i)[1]
+        local tabbuf = tab.variables.buffers
+        local bufname = "<unknown>"
+        if tabbuf then
+            bufname = tabbuf[tab.curwin].name
+        end
+        -- Canonicalize tab/buf name
+        s = s .. ' ' .. i .. ' ' .. vim.fn.fnamemodify(bufname, ':t')
+        if i ~= vim.fn.tabpagenr('$') then
+            s = s .. '%#TabLine#|%#TabLine#'
+        end
+    end
+    return s .. '%T%#TabLineFill#%='
+end
+
+-- Close all tabs except the first one
+vim.api.nvim_set_keymap('n', '<C-t>x', ':tabdo if tabpagenr() > 1 | tabclose | endif<CR>',
+    { noremap = true, silent = true })
+
+-- }}}
+
 -- treesitter
 require 'treesitter-context'
 require('nvim-treesitter.configs').setup {
@@ -496,6 +537,7 @@ local on_attach = function(client, bufnr)
     nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
     -- Lesser used LSP functionality
+
     nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
     nmap('gtd', vim.lsp.buf.type_definition, '[G]oto [T]ype [D]efinition')
     nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
@@ -622,8 +664,8 @@ require("mason").setup({
     PATH = "append",
 })
 require('mason-lspconfig').setup({
-    ensure_installed = servers,
-    automatic_installation = true
+    -- ensure_installed = servers,
+    automatic_installation = false
 })
 
 local inlay_hint_tsjs = {
@@ -661,7 +703,9 @@ require('mason-lspconfig').setup_handlers({
                         library = vim.api.nvim_get_runtime_file('', true)
                     },
                     telemetry = { enable = false },
-                    hint = { enable = true, },
+                    hint = {
+                        enable = true,
+                    },
                     format = {
                         enable = true,
                         defaultConfig = {
@@ -783,7 +827,7 @@ require("rust-tools").setup {
             -- default: true
             auto = false,
             -- Only show inlay hints for the current line
-            only_current_line = false,
+            only_current_line = true,
             -- whether to show parameter hints with the inlay hints or not
             -- default: true
             show_parameter_hints = true,
@@ -801,8 +845,8 @@ require("rust-tools").setup {
             right_align = false,
             -- padding from the right if right_align is true
             right_align_padding = 7,
-            -- The color of the hints
-            highlight = "Comment",
+            -- The color of the hints use `:highlight` for a pick-and-choose menu
+            highlight = "NonText",
         },
         -- options same as lsp hover / vim.lsp.util.open_floating_preview()
         hover_actions = {
