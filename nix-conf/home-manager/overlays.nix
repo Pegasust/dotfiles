@@ -12,7 +12,6 @@ let
     # use python3.9, which works because of cython somehow?
     kpcli-py = final.poetry2nix.mkPoetryApplication {
       projectDir = flake_input.kpcli-py;
-      python = final.python39;
       overrides = final.poetry2nix.defaultPoetryOverrides.extend (self: super: {
         # tableformatter requires setuptools
         tableformatter = super.tableformatter.overridePythonAttrs (

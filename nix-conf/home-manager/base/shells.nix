@@ -1,5 +1,5 @@
 # Configurations for shell stuffs.
-# Should probably be decoupled even more
+# Should probably be decoupled even more for each feature
 { config
 , proj_root
 , myLib
@@ -59,14 +59,17 @@ in
     xdg.configFile."tmux/tmux.conf".text = myLib.mkOrder 600 ''
       set -g status-right '#{cpu_bg_color} CPU: #{cpu_icon} #{cpu_percentage} | %a %h-%d %H:%M '
     '';
+    # Colored ls
     programs.exa = {
       enable = true;
       enableAliases = true;
     };
+    # Make the shell look beautiful
     programs.starship = {
       enable = true;
       enableZshIntegration = true;
     };
+    # Fuzzy finder. `fzf` for TUI, `fzf -f '<fuzzy query>'` for UNIX piping
     programs.fzf.enable = true;
     programs.bash = {
       enable = true;
@@ -99,6 +102,8 @@ in
         ];
       };
       sessionVariables = {
+        # Vim mode on the terminal
+
         # VI_MODE_RESET_PROMPT_ON_MODE_CHANGE = true;
         # VI_MODE_SET_CURSOR = true;
         # ZVM_VI_ESCAPE_BINDKEY = "";

@@ -94,6 +94,60 @@ in
       # https://github.com/nix-community/home-manager/pull/3287
       # extraConfig = builtins.readFile "${proj_root}/neovim/init.lua";
       extraLuaConfig = (builtins.readFile "${proj_root.config.path}//neovim/init.lua");
+      plugins = (let inherit (pkgs.vimPlugins) 
+        plenary-nvim 
+
+        nvim-treesitter 
+        nvim-treesitter-textobjects
+        nvim-treesitter-context
+
+        telescope-fzf-native-nvim
+        telescope-file-browser-nvim
+        telescope-nvim
+
+        nvim-lspconfig
+
+        gruvbox-community
+
+        neodev-nvim
+
+        cmp-nvim-lsp
+        cmp-path
+        cmp-buffer
+        cmp-cmdline
+        nvim-cmp
+
+        lspkind-nvim
+        nvim-autopairs
+        nvim-ts-autotag
+        guess-indent-nvim
+        harpoon
+        zk-nvim
+        luasnip
+      ; in [
+        plenary-nvim
+        nvim-treesitter.withAllGrammars
+        nvim-treesitter-textobjects
+        telescope-fzf-native-nvim
+        telescope-file-browser-nvim
+        telescope-nvim
+        nvim-lspconfig
+        gruvbox-community
+        neodev-nvim
+        cmp-nvim-lsp
+        cmp-path
+        cmp-buffer
+        cmp-cmdline
+        nvim-cmp
+        lspkind-nvim
+        nvim-autopairs
+        nvim-ts-autotag
+        guess-indent-nvim
+        harpoon
+        zk-nvim
+        luasnip
+        nvim-treesitter-context
+      ]);
     };
     # home.packages = nvim_pkgs;
   };

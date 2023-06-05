@@ -1,5 +1,4 @@
--- What: Mono-file nvim configuration file
--- Why: Easy to see through everything without needing to navigate thru files
+-- What: Mono-file nvim configuration file Why: Easy to see through everything without needing to navigate thru files
 -- Features:
 -- - LSP
 -- - Auto-complete (in insert mode: ctrl-space, navigate w/ Tab+S-Tab, confirm: Enter)
@@ -25,13 +24,13 @@ local Plug = vim.fn['plug#']
 vim.call('plug#begin')
 
 -- libs and dependencies
-Plug('nvim-lua/plenary.nvim') -- The base of all plugins
+-- Plug('nvim-lua/plenary.nvim') -- The base of all plugins
 
 -- plugins
-Plug('tjdevries/nlua.nvim')                                 -- adds symbols of vim stuffs in init.lua
-Plug('nvim-treesitter/nvim-treesitter')                     -- language parser engine for highlighting
-Plug('nvim-treesitter/nvim-treesitter-textobjects')         -- more text objects
-Plug('nvim-telescope/telescope.nvim', { branch = '0.1.x' }) -- file browser
+-- Plug('tjdevries/nlua.nvim')                                 -- adds symbols of vim stuffs in init.lua
+-- Plug('nvim-treesitter/nvim-treesitter')                     -- language parser engine for highlighting
+-- Plug('nvim-treesitter/nvim-treesitter-textobjects')         -- more text objects
+-- Plug('nvim-telescope/telescope.nvim', { branch = '0.1.x' }) -- file browser
 -- TODO: this might need to be taken extra care in our Nix config
 -- What this Plug declaration means is this repo needs to be built on our running environment
 -- -----
@@ -41,32 +40,32 @@ Plug('nvim-telescope/telescope.nvim', { branch = '0.1.x' }) -- file browser
 -- - Make sure that if we run `make` at first Plug run, that `make` is idempotent
 -- OR
 --   Make sure that Plug does not run `make` and use the output it needs
-Plug('nvim-telescope/telescope-fzf-native.nvim',
-    { ['do'] = 'make >> /tmp/log 2>&1' })
-Plug('nvim-telescope/telescope-file-browser.nvim')
+-- Plug('nvim-telescope/telescope-fzf-native.nvim',
+--     { ['do'] = 'make >> /tmp/log 2>&1' })
+-- Plug('nvim-telescope/telescope-file-browser.nvim')
 
 -- cmp: auto-complete/suggestions
-Plug('neovim/nvim-lspconfig') -- built-in LSP configurations
-Plug('hrsh7th/cmp-nvim-lsp')
-Plug('hrsh7th/cmp-path')
-Plug('hrsh7th/cmp-buffer')
-Plug('hrsh7th/cmp-cmdline')
-Plug('hrsh7th/nvim-cmp')
-Plug('onsails/lspkind-nvim')
+-- Plug('neovim/nvim-lspconfig') -- built-in LSP configurations
+-- Plug('hrsh7th/cmp-nvim-lsp')
+-- Plug('hrsh7th/cmp-path')
+-- Plug('hrsh7th/cmp-buffer')
+-- Plug('hrsh7th/cmp-cmdline')
+-- Plug('hrsh7th/nvim-cmp')
+-- Plug('onsails/lspkind-nvim')
 Plug('yioneko/nvim-yati', { tag = '*' }) -- copium: fix Python indent auto-correct from smart-indent
 Plug('nathanalderson/yang.vim')
 -- Plug('tzachar/cmp-tabnine', { ['do'] = './install.sh' })
 
 -- DevExp
-Plug('windwp/nvim-autopairs')             -- matches pairs like [] (),...
-Plug('windwp/nvim-ts-autotag')            -- matches tags <body>hello</body>
-Plug('NMAC427/guess-indent.nvim')         -- guesses the indentation of an opened buffer
+-- Plug('windwp/nvim-autopairs')             -- matches pairs like [] (),...
+-- Plug('windwp/nvim-ts-autotag')            -- matches tags <body>hello</body>
+-- Plug('NMAC427/guess-indent.nvim')         -- guesses the indentation of an opened buffer
 Plug('numToStr/Comment.nvim')             -- "gc" to comment visual regions/lines
 Plug('lewis6991/gitsigns.nvim')           -- add git info to sign columns
 Plug('tpope/vim-fugitive')                -- git commands in nvim
 Plug('williamboman/mason.nvim')           -- LSP, debuggers,... package manager
 Plug('williamboman/mason-lspconfig.nvim') -- lsp config for mason
-Plug('ThePrimeagen/harpoon')              -- 1-click through marked files per project
+-- Plug('ThePrimeagen/harpoon')              -- 1-click through marked files per project
 Plug('TimUntersberger/neogit')            -- Easy-to-see git status
 Plug('folke/trouble.nvim')                -- File-grouped workspace diagnostics
 Plug('tpope/vim-dispatch')                -- Allows quick build/compile/test vim commands
@@ -79,7 +78,7 @@ Plug('simrat39/rust-tools.nvim')          -- config rust-analyzer and nvim integ
 
 -- UI & colorscheme
 Plug('simrat39/inlay-hints.nvim')           -- type-hints with pseudo-virtual texts
-Plug('gruvbox-community/gruvbox')           -- theme provider
+-- Plug('gruvbox-community/gruvbox')           -- theme provider
 Plug('nvim-lualine/lualine.nvim')           -- fancy status line
 Plug('lukas-reineke/indent-blankline.nvim') -- identation lines on blank lines
 Plug('kyazdani42/nvim-web-devicons')        -- icons for folder and filetypes
@@ -90,14 +89,14 @@ Plug('folke/todo-comments.nvim')            -- Highlights TODO
 Plug('nvim-treesitter/nvim-treesitter-context') -- Top one-liner context of func/class scope
 Plug('nvim-treesitter/playground')              -- Sees Treesitter AST - less hair pulling, more PRs
 Plug('saadparwaiz1/cmp_luasnip')                -- snippet engine
-Plug('L3MON4D3/LuaSnip')                        -- snippet engine
-Plug('mickael-menu/zk-nvim')                    -- Zettelkasten
+-- Plug('L3MON4D3/LuaSnip')                        -- snippet engine
+-- Plug('mickael-menu/zk-nvim')                    -- Zettelkasten
 -- Switch cases:
 -- `gsp` -> PascalCase (classes), `gsc` -> camelCase (Java), `gs_` -> snake_case (C/C++/Rust)
 -- `gsu` -> UPPER_CASE (CONSTs), `gsk` -> kebab-case (Clojure), `gsK` -> Title-Kebab-Case
 -- `gs.` -> dot.case (R)
 Plug('arthurxavierx/vim-caser') -- switch cases
-Plug('pegasust/tsql.nvim')      -- workspace code intelligence
+Plug('~/local_repos/ts-ql')     -- workspace code intelligence
 
 ---------
 vim.call('plug#end')
@@ -361,12 +360,6 @@ require('nvim-treesitter.configs').setup {
         disable = { "nix" }
     },
     indent = { enable = false },
-    ensure_installed = {
-        'tsx', 'toml', 'lua', 'typescript', 'rust', 'go', 'yaml', 'json', 'php', 'css',
-        'python', 'prisma', 'html', "dockerfile", "c", "cpp", "hcl", "svelte", "astro",
-        "clojure", "fennel", "bash", "nix", "query", "nickel"
-    },
-    sync_install = false,
     highlight = {
         enable = true,
         enable_vim_regex_highlighting = true,
@@ -603,7 +596,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 -- })
 -- default language servers
 local servers = {
-    'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'cmake', 'tailwindcss', 'prismals',
+    'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'lua_ls', 'cmake', 'tailwindcss', 'prismals',
     'rnix', 'eslint', 'terraformls', 'tflint', 'svelte', 'astro', 'clojure_lsp', "bashls", 'yamlls', "ansiblels",
     "jsonls", "denols", "gopls", "nickel_ls", 'pylsp',
 }
@@ -645,8 +638,8 @@ require('mason-lspconfig').setup_handlers({
             capabilities = capabilities,
         }
     end,
-    ["sumneko_lua"] = function()
-        require('lspconfig').sumneko_lua.setup {
+    ["lua_ls"] = function()
+        require('lspconfig').lua_ls.setup {
             on_attach = on_attach,
             capabilities = capabilities,
             settings = {
@@ -1040,3 +1033,4 @@ require('lualine').setup {
 }
 
 require('nvim-surround').setup {}
+require('tsql').setup()
