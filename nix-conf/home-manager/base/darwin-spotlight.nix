@@ -15,7 +15,9 @@
         # Install MacOS applications to the user environment.
         HM_APPS="$HOME/Applications/Home Manager Apps"
         # Reset current state
-        [ -e "$HM_APPS" ] && $DRY_RUN_CMD rm -r "$HM_APPS"
+        if [ -e "$HM_APPS" ]; then
+          $DRY_RUN_CMD rm -r "$HM_APPS"
+        fi
         $DRY_RUN_CMD mkdir -p "$HM_APPS"
         # .app dirs need to be actual directories for Finder to detect them as Apps.
         # In the env of Apps we build, the .apps are symlinks. We pass all of them as

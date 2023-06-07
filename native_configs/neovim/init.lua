@@ -59,7 +59,7 @@ Plug('nathanalderson/yang.vim')
 -- Plug('windwp/nvim-autopairs')             -- matches pairs like [] (),...
 -- Plug('windwp/nvim-ts-autotag')            -- matches tags <body>hello</body>
 -- Plug('NMAC427/guess-indent.nvim')         -- guesses the indentation of an opened buffer
--- Plug('j-hui/fidget.nvim') -- Progress bar for LSP 
+-- Plug('j-hui/fidget.nvim') -- Progress bar for LSP
 Plug('numToStr/Comment.nvim')             -- "gc" to comment visual regions/lines
 Plug('lewis6991/gitsigns.nvim')           -- add git info to sign columns
 Plug('tpope/vim-fugitive')                -- git commands in nvim
@@ -507,12 +507,6 @@ require("inlay-hints").setup {
     }
 }
 local on_attach = function(client, bufnr)
-    -- NOTE: Remember that lua is a real programming language, and as such it is possible
-    -- to define small helper and utility functions so you don't have to repeat yourself
-    -- many times.
-    --
-    -- In this case, we create a function that lets us more easily define mappings specific
-    -- for LSP related items. It sets the mode, buffer and description for us each time.
     local nmap = function(keys, func, desc)
         if desc then
             desc = 'LSP: ' .. desc
@@ -523,6 +517,7 @@ local on_attach = function(client, bufnr)
 
     nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
     nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+    -- NOTE: I have no clue what this does again
     vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
     nmap('<leader>df', function() vim.lsp.buf.format({ async = true }) end, '[D]ocument [F]ormat')
 
@@ -533,15 +528,19 @@ local on_attach = function(client, bufnr)
     nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
     nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
-    -- documentations. See `:help K` for why this keymap
+    -- documentations & helps
+    -- NOTE: When you press K, it shows in-line Documentation
+    -- This is to stay faithful with vim's default keybind for help.
+    -- See `:help K` for even more info on Vim's original keybindings for help
     nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
     nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
-    -- Lesser used LSP functionality
-
+    -- Less likely LSP functionality to be used
     nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
     nmap('gtd', vim.lsp.buf.type_definition, '[G]oto [T]ype [D]efinition')
     nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
+    --
+    -- Very rarely used
     nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
     nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
     nmap('<leader>wl', function()
@@ -1086,52 +1085,53 @@ require('lualine').setup {
 require('nvim-surround').setup {}
 require('tsql').setup()
 require('fidget').setup({
-  text = {
-    spinner = "pipe",         -- animation shown when tasks are ongoing
-    done = "✔",               -- character shown when all tasks are complete
-    commenced = "Started",    -- message shown when task starts
-    completed = "Completed",  -- message shown when task completes
-  },
-  align = {
-    bottom = true,            -- align fidgets along bottom edge of buffer
-    right = true,             -- align fidgets along right edge of buffer
-  },
-  timer = {
-    spinner_rate = 125,       -- frame rate of spinner animation, in ms
-    fidget_decay = 2000,      -- how long to keep around empty fidget, in ms
-    task_decay = 1000,        -- how long to keep around completed task, in ms
-  },
-  window = {
-    relative = "win",         -- where to anchor, either "win" or "editor"
-    blend = 100,              -- &winblend for the window
-    zindex = nil,             -- the zindex value for the window
-    border = "none",          -- style of border for the fidget window
-  },
-  fmt = {
-    leftpad = true,           -- right-justify text in fidget box
-    stack_upwards = true,     -- list of tasks grows upwards
-    max_width = 0,            -- maximum width of the fidget box
-    fidget =                  -- function to format fidget title
-      function(fidget_name, spinner)
-        return string.format("%s %s", spinner, fidget_name)
-      end,
-    task =                    -- function to format each task line
-      function(task_name, message, percentage)
-        return string.format(
-          "%s%s [%s]",
-          message,
-          percentage and string.format(" (%s%%)", percentage) or "",
-          task_name
-        )
-      end,
-  },
-  sources = {                 -- Sources to configure
-    * = {                     -- Name of source
-      ignore = false,         -- Ignore notifications from this source
+    text = {
+        spinner = "moon",        -- animation shown when tasks are ongoing
+        done = "✔",            -- character shown when all tasks are complete
+        commenced = "Started",   -- message shown when task starts
+        completed = "Completed", -- message shown when task completes
     },
-  },
-  debug = {
-    logging = false,          -- whether to enable logging, for debugging
-    strict = false,           -- whether to interpret LSP strictly
-  },
+    align = {
+        bottom = true, -- align fidgets along bottom edge of buffer
+        right = true,  -- align fidgets along right edge of buffer
+    },
+    timer = {
+        spinner_rate = 125,  -- frame rate of spinner animation, in ms
+        fidget_decay = 2000, -- how long to keep around empty fidget, in ms
+        task_decay = 1000,   -- how long to keep around completed task, in ms
+    },
+    window = {
+        relative = "editor", -- where to anchor, either "win" or "editor"
+        blend = 100,      -- &winblend for the window
+        zindex = nil,     -- the zindex value for the window
+        border = "none",  -- style of border for the fidget window
+    },
+    fmt = {
+        leftpad = true,       -- right-justify text in fidget box
+        stack_upwards = true, -- list of tasks grows upwards
+        max_width = 0,        -- maximum width of the fidget box
+        fidget =              -- function to format fidget title
+            function(fidget_name, spinner)
+                return string.format("%s %s", spinner, fidget_name)
+            end,
+        task = -- function to format each task line
+            function(task_name, message, percentage)
+                return string.format(
+                    "%s%s [%s]",
+                    message,
+                    percentage and string.format(" (%s%%)", percentage) or "",
+                    task_name
+                )
+            end,
+    },
+    sources = {
+        -- Sources to configure
+        ['*'] = {           -- Name of source
+            ignore = false, -- Ignore notifications from this source
+        },
+    },
+    debug = {
+        logging = false, -- whether to enable logging, for debugging
+        strict = false,  -- whether to interpret LSP strictly
+    },
 })
