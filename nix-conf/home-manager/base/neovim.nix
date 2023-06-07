@@ -124,6 +124,7 @@ in
         harpoon
         zk-nvim
         luasnip
+        fidget-nvim
       ; in [
         plenary-nvim
         nvim-treesitter.withAllGrammars
@@ -147,6 +148,7 @@ in
         zk-nvim
         luasnip
         nvim-treesitter-context
+        fidget-nvim
       ]);
     };
     # home.packages = nvim_pkgs;
