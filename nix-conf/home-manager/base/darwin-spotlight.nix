@@ -16,7 +16,7 @@
         HM_APPS="$HOME/Applications/Home Manager Apps"
         # Reset current state
         if [ -e "$HM_APPS" ]; then
-          $DRY_RUN_CMD rm -r "$HM_APPS"
+          $DRY_RUN_CMD mv "$HM_APPS" "$HM_APPS.$(date +%Y%m%d%H%M%S)"
         fi
         $DRY_RUN_CMD mkdir -p "$HM_APPS"
         # .app dirs need to be actual directories for Finder to detect them as Apps.
