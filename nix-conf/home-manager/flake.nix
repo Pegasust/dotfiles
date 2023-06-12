@@ -80,11 +80,10 @@
       nerd_font_module = { config, pkgs, ... }: {
         fonts.fontconfig.enable = true;
         home.packages = [
-          (pkgs.nerdfonts.override { fonts = [ "DroidSansMono" ]; })
+          # list of fonts are available at https://github.com/NixOS/nixpkgs/blob/nixos-unstable/pkgs/data/fonts/nerdfonts/shas.nix
+          (pkgs.nerdfonts.override { fonts = [ "Hack" ]; })
         ];
-        # For some reasons, Windows es in the font name as DroidSansMono NF
-        # so we need to override this
-        base.alacritty.font.family = "DroidSansMono Nerd Font";
+        base.alacritty.font.family = "Hack Nerd Font Mono";
       };
     in
     {
@@ -184,14 +183,14 @@
               {
                 base.private_chromium.enable = false;
               }
+              nerd_font_module
               {
                 base.graphics.enable = false;
                 # don't want to deal with GL stuffs on mac yet :/
                 base.graphics.useNixGL.defaultPackage = null;
                 # FIXME: this actually does not exist
-                base.keepass.path = "/Users/htran/keepass.kdbx";
+                # base.keepass.path = "/Users/htran/keepass.kdbx";
                 base.alacritty.font.size = 11.0;
-                base.alacritty.font.family = "DroidSansM Nerd Font";
                 base.git.name = "Hung";
                 base.git.email = "htran@egihosting.com";
               }
@@ -232,23 +231,6 @@
               };
             };
           };
-          # NOTE: This is never actually tested. This is for Ubuntu@Felia
-          # "ubuntu_admin" = home-manager.lib.homeManagerConfiguration {
-          #   inherit pkgs;
-          #   modules = [
-          #     ./home.nix
-          #   ];
-          #   extraSpecialArgs = {
-          #     myLib = lib;
-          #     myHome = {
-          #       username = "ubuntu_admin";
-          #       homeDirectory = "/home/ubuntu_admin";
-          #       shellInitExtra = ''
-          #       '' + x11_wsl;
-          #     };
-          #   };
-          # };
-
           # Personal laptop
           hwtr = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;

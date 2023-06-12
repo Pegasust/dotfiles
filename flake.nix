@@ -37,5 +37,6 @@
       devShells = std.harvest [ [ "dotfiles" "devshells" ] ];
       # nixosConfigurations = std.pick [ [ "dotfiles" "nixos" ] ];
       # homeConfigurations = std.pick [ [ "dotfiles" "home" ] ];
+      homeModules = std.pick [["repo" "home-modules"]];
     };
 }

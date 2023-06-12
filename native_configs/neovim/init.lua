@@ -8,6 +8,7 @@
 -- - zk  @ https://github.com/mickael-menu/zk
 -- - prettierd @ npm install -g @fsouza/prettierd
 
+-- Auto-installs vim-plug
 vim.cmd([[
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 let plug_path = data_dir . '/autoload/plug.vim'
@@ -20,83 +21,102 @@ endif
 -- vim-plug
 local Plug = vim.fn['plug#']
 
+-- prepare a list of installed plugins from rtp
+local installed_plugins = {}
+-- NOTE: nvim_list_runtime_paths will expand wildcard paths for us.
+for _, path in ipairs(vim.api.nvim_list_runtime_paths()) do
+    local last_folder_start = path:find("/[^/]*$")
+    if last_folder_start then
+        local plugin_name = path:sub(last_folder_start + 1)
+        installed_plugins[plugin_name] = true
+    end
+end
+
+-- Do Plug if plugin not yet linked in `rtp`. This takes care of Nix-compatibility
+local function WPlug(plugin_path, ...)
+    local plugin_name = plugin_path:match("/([^/]+)$")
+    if not installed_plugins[plugin_name] then
+        Plug(plugin_path, ...)
+    end
+end
+
 vim.call('plug#begin')
 
 -- libs and dependencies
 -- Plug('nvim-lua/plenary.nvim') -- The base of all plugins
 
 -- plugins
--- Plug('tjdevries/nlua.nvim')                                 -- adds symbols of vim stuffs in init.lua
--- Plug('nvim-treesitter/nvim-treesitter')                     -- language parser engine for highlighting
--- Plug('nvim-treesitter/nvim-treesitter-textobjects')         -- more text objects
--- Plug('nvim-telescope/telescope.nvim', { branch = '0.1.x' }) -- file browser
+WPlug('tjdevries/nlua.nvim')                                 -- adds symbols of vim stuffs in init.lua
+WPlug('nvim-treesitter/nvim-treesitter')                     -- language parser engine for highlighting
+WPlug('nvim-treesitter/nvim-treesitter-textobjects')         -- more text objects
+WPlug('nvim-telescope/telescope.nvim', { branch = '0.1.x' }) -- file browser
 -- TODO: this might need to be taken extra care in our Nix config
--- What this Plug declaration means is this repo needs to be built on our running environment
+-- What this WPlug declaration means is this repo needs to be built on our running environment
 -- -----
 -- What to do:
 -- - Run `make` at anytime before Nix is done on this repository
 --   - Might mean that we fetch this repository, run make, and copy to destination folder
--- - Make sure that if we run `make` at first Plug run, that `make` is idempotent
+-- - Make sure that if we run `make` at first WPlug run, that `make` is idempotent
 -- OR
---   Make sure that Plug does not run `make` and use the output it needs
--- Plug('nvim-telescope/telescope-fzf-native.nvim',
---     { ['do'] = 'make >> /tmp/log 2>&1' })
--- Plug('nvim-telescope/telescope-file-browser.nvim')
+--   Make sure that WPlug does not run `make` and use the output it needs
+WPlug('nvim-telescope/telescope-fzf-native.nvim',
+    { ['do'] = 'make >> /tmp/log 2>&1' })
+WPlug('nvim-telescope/telescope-file-browser.nvim')
 
 -- cmp: auto-complete/suggestions
--- Plug('neovim/nvim-lspconfig') -- built-in LSP configurations
--- Plug('hrsh7th/cmp-nvim-lsp')
--- Plug('hrsh7th/cmp-path')
--- Plug('hrsh7th/cmp-buffer')
--- Plug('hrsh7th/cmp-cmdline')
--- Plug('hrsh7th/nvim-cmp')
--- Plug('onsails/lspkind-nvim')
-Plug('yioneko/nvim-yati', { tag = '*' }) -- copium: fix Python indent auto-correct from smart-indent
-Plug('nathanalderson/yang.vim')
--- Plug('tzachar/cmp-tabnine', { ['do'] = './install.sh' })
+WPlug('neovim/nvim-lspconfig') -- built-in LSP configurations
+WPlug('hrsh7th/cmp-nvim-lsp')
+WPlug('hrsh7th/cmp-path')
+WPlug('hrsh7th/cmp-buffer')
+WPlug('hrsh7th/cmp-cmdline')
+WPlug('hrsh7th/nvim-cmp')
+WPlug('onsails/lspkind-nvim')
+WPlug('yioneko/nvim-yati', { tag = '*' }) -- copium: fix Python indent auto-correct from smart-indent
+WPlug('nathanalderson/yang.vim')
+-- WPlug('tzachar/cmp-tabnine', { ['do'] = './install.sh' })
 
 -- DevExp
--- Plug('windwp/nvim-autopairs')             -- matches pairs like [] (),...
--- Plug('windwp/nvim-ts-autotag')            -- matches tags <body>hello</body>
--- Plug('NMAC427/guess-indent.nvim')         -- guesses the indentation of an opened buffer
--- Plug('j-hui/fidget.nvim') -- Progress bar for LSP
-Plug('numToStr/Comment.nvim')             -- "gc" to comment visual regions/lines
-Plug('lewis6991/gitsigns.nvim')           -- add git info to sign columns
-Plug('tpope/vim-fugitive')                -- git commands in nvim
-Plug('williamboman/mason.nvim')           -- LSP, debuggers,... package manager
-Plug('williamboman/mason-lspconfig.nvim') -- lsp config for mason
--- Plug('ThePrimeagen/harpoon')              -- 1-click through marked files per project
-Plug('TimUntersberger/neogit')            -- Easy-to-see git status
-Plug('folke/trouble.nvim')                -- File-grouped workspace diagnostics
-Plug('tpope/vim-dispatch')                -- Allows quick build/compile/test vim commands
-Plug('clojure-vim/vim-jack-in')           -- Clojure: ":Boot", ":Clj", ":Lein"
-Plug('radenling/vim-dispatch-neovim')     -- Add support for neovim's terminal emulator
--- Plug('Olical/conjure')                    -- REPL on the source for Clojure (and other LISPs)
-Plug('gennaro-tedesco/nvim-jqx')          -- JSON formatter (use :Jqx*)
-Plug('kylechui/nvim-surround')            -- surrounds with tags/parenthesis
-Plug('simrat39/rust-tools.nvim')          -- config rust-analyzer and nvim integration
+WPlug('windwp/nvim-autopairs')             -- matches pairs like [] (),...
+WPlug('windwp/nvim-ts-autotag')            -- matches tags <body>hello</body>
+WPlug('NMAC427/guess-indent.nvim')         -- guesses the indentation of an opened buffer
+WPlug('j-hui/fidget.nvim')                 -- Progress bar for LSP
+WPlug('numToStr/Comment.nvim')             -- "gc" to comment visual regions/lines
+WPlug('lewis6991/gitsigns.nvim')           -- add git info to sign columns
+WPlug('tpope/vim-fugitive')                -- git commands in nvim
+WPlug('williamboman/mason.nvim')           -- LSP, debuggers,... package manager
+WPlug('williamboman/mason-lspconfig.nvim') -- lsp config for mason
+WPlug('ThePrimeagen/harpoon')              -- 1-click through marked files per project
+WPlug('TimUntersberger/neogit')            -- Easy-to-see git status
+WPlug('folke/trouble.nvim')                -- File-grouped workspace diagnostics
+WPlug('tpope/vim-dispatch')                -- Allows quick build/compile/test vim commands
+WPlug('clojure-vim/vim-jack-in')           -- Clojure: ":Boot", ":Clj", ":Lein"
+WPlug('radenling/vim-dispatch-neovim')     -- Add support for neovim's terminal emulator
+-- WPlug('Olical/conjure')                    -- REPL on the source for Clojure (and other LISPs)
+WPlug('gennaro-tedesco/nvim-jqx')          -- JSON formatter (use :Jqx*)
+WPlug('kylechui/nvim-surround')            -- surrounds with tags/parenthesis
+WPlug('simrat39/rust-tools.nvim')          -- config rust-analyzer and nvim integration
 
 -- UI & colorscheme
-Plug('simrat39/inlay-hints.nvim')           -- type-hints with pseudo-virtual texts
--- Plug('gruvbox-community/gruvbox')           -- theme provider
-Plug('nvim-lualine/lualine.nvim')           -- fancy status line
-Plug('lukas-reineke/indent-blankline.nvim') -- identation lines on blank lines
-Plug('kyazdani42/nvim-web-devicons')        -- icons for folder and filetypes
-Plug('m-demare/hlargs.nvim')                -- highlights arguments; great for func prog
-Plug('folke/todo-comments.nvim')            -- Highlights TODO
+WPlug('simrat39/inlay-hints.nvim')           -- type-hints with pseudo-virtual texts
+WPlug('gruvbox-community/gruvbox')           -- theme provider
+WPlug('nvim-lualine/lualine.nvim')           -- fancy status line
+WPlug('lukas-reineke/indent-blankline.nvim') -- identation lines on blank lines
+WPlug('kyazdani42/nvim-web-devicons')        -- icons for folder and filetypes
+WPlug('m-demare/hlargs.nvim')                -- highlights arguments; great for func prog
+WPlug('folke/todo-comments.nvim')            -- Highlights TODO
 
 -- other utilities
-Plug('nvim-treesitter/nvim-treesitter-context') -- Top one-liner context of func/class scope
-Plug('nvim-treesitter/playground')              -- Sees Treesitter AST - less hair pulling, more PRs
-Plug('saadparwaiz1/cmp_luasnip')                -- snippet engine
--- Plug('L3MON4D3/LuaSnip')                        -- snippet engine
--- Plug('mickael-menu/zk-nvim')                    -- Zettelkasten
+WPlug('nvim-treesitter/nvim-treesitter-context') -- Top one-liner context of func/class scope
+WPlug('nvim-treesitter/playground')              -- Sees Treesitter AST - less hair pulling, more PRs
+WPlug('saadparwaiz1/cmp_luasnip')                -- snippet engine
+WPlug('L3MON4D3/LuaSnip')                        -- snippet engine
+WPlug('mickael-menu/zk-nvim')                    -- Zettelkasten
 -- Switch cases:
 -- `gsp` -> PascalCase (classes), `gsc` -> camelCase (Java), `gs_` -> snake_case (C/C++/Rust)
 -- `gsu` -> UPPER_CASE (CONSTs), `gsk` -> kebab-case (Clojure), `gsK` -> Title-Kebab-Case
 -- `gs.` -> dot.case (R)
-Plug('arthurxavierx/vim-caser') -- switch cases
-Plug('~/local_repos/ts-ql')     -- workspace code intelligence
+WPlug('arthurxavierx/vim-caser') -- switch cases
+WPlug('~/local_repos/ts-ql')     -- workspace code intelligence
 
 ---------
 vim.call('plug#end')

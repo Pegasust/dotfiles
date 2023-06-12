@@ -17,7 +17,7 @@ in
   config.programs.ssh = {
     inherit (cfg) enable;
     forwardAgent = true;
-    extraConfig = builtins.readFile "${proj_root.config.path}/ssh/config";
+    includes = ["${proj_root.config.path}/ssh/config"];
   };
 }
 
