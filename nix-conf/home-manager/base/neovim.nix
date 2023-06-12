@@ -1,9 +1,8 @@
-# TODO: vim-plug and Mason supports laziness. Probably worth it to explore
-# incremental dependencies based on the project
+# TODO: vim-plug and Mason supports laziness. Probably worth it to explore incremental dependencies based on the project
 # TODO: just install these things, then symlink to mason's bin directory
 #
 # One thing to consider, though, /nix/store of `nix-shell` or `nix-develop`
-# might be different from `home-manager`'s
+# might be different from `home-manager`'s (~/.nix_profile/bin/jq)
 { pkgs, lib, config, proj_root, ... }:
 let
   # NOTE: Add packages to nvim_pkgs instead, so that it's available at userspace
@@ -33,7 +32,6 @@ let
     pkgs.lsp-nls
 
     pkgs.go # doesn't work, Mason installs from runtime path
-
 
     # Language-specific stuffs
     pkgs.sumneko-lua-language-server
@@ -78,21 +76,7 @@ in
       vimAlias = true;
       withPython3 = true;
       withNodeJs = true;
-      # Attempt 4: Correct way to make neovim aware of packages
-      # homeConfigurations.config.programs.neovim takes UNWRAPPED neovim
-      # and wraps it. 
-      # Ideally, we build our own neovim and add that to config.home.packages
-      # to share it with nixOS. But we don't really need to share
       extraPackages = nvim_pkgs;
-      # only for here for archive-documentation
-      # extraPython3Packages = (pypkgs: [
-      #   # pypkgs.python-lsp-server
-      #   pypkgs.ujson
-      # ]);
-      # I use vim-plug, so I probably don't require packaging
-      # extraConfig actually writes to init-home-manager.vim (not lua)
-      # https://github.com/nix-community/home-manager/pull/3287
-      # extraConfig = builtins.readFile "${proj_root}/neovim/init.lua";
       extraLuaConfig = (builtins.readFile "${proj_root.config.path}//neovim/init.lua");
       plugins = (let inherit (pkgs.vimPlugins) 
         plenary-nvim 
@@ -125,6 +109,27 @@ in
         zk-nvim
         luasnip
         fidget-nvim
+        rust-tools-nvim
+
+        cmp_luasnip
+        gitsigns-nvim
+        indent-blankline-nvim
+        lualine-nvim
+        mason-lspconfig-nvim
+        mason-nvim
+        neogit
+        nlua-nvim
+        nvim-jqx
+        nvim-surround
+        nvim-web-devicons
+        playground
+        todo-comments-nvim
+        trouble-nvim
+        vim-dispatch
+        vim-dispatch-neovim
+        vim-fugitive
+        vim-jack-in 
+
       ; in [
         plenary-nvim
         nvim-treesitter.withAllGrammars
@@ -149,6 +154,26 @@ in
         luasnip
         nvim-treesitter-context
         fidget-nvim
+        rust-tools-nvim
+
+        cmp_luasnip
+        gitsigns-nvim
+        indent-blankline-nvim
+        lualine-nvim
+        mason-lspconfig-nvim
+        mason-nvim
+        neogit
+        nlua-nvim
+        nvim-jqx
+        nvim-surround
+        nvim-web-devicons
+        playground
+        todo-comments-nvim
+        trouble-nvim
+        vim-dispatch
+        vim-dispatch-neovim
+        vim-fugitive
+        vim-jack-in 
       ]);
     };
     # home.packages = nvim_pkgs;

@@ -34,7 +34,7 @@ end
 
 -- Do Plug if plugin not yet linked in `rtp`. This takes care of Nix-compatibility
 local function WPlug(plugin_path, ...)
-    local plugin_name = plugin_path:match("/([^/]+)$")
+    local plugin_name = string.lower(plugin_path:match("/([^/]+)$"))
     if not installed_plugins[plugin_name] then
         Plug(plugin_path, ...)
     end
@@ -802,30 +802,6 @@ require('mason-lspconfig').setup_handlers({
             },
         }
     end,
-    -- ["rust_analyzer"] = function()
-    --   require('lspconfig').rust_analyzer.setup {
-    --       on_attach = on_attach,
-    --       capabilities = capabilities,
-    --       settings = {
-    --           checkOnSave = {
-    --               command = "clippy",
-    --           }
-    --       }
-    --   }
-    -- end,
-    -- ["astro"] = function()
-    --  print('configuring astro')
-    --  require('lspconfig').astro.setup {
-    --   on_attach = on_attach,
-    --   capabilities = capabilities,
-    --   init_options = {
-    --      configuration = {},
-    --      typescript = {
-    --       serverPath = data_dir
-    --      }
-    --   }
-    --  }
-    -- end
 })
 require("rust-tools").setup {
     tools = {
