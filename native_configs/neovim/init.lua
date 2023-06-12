@@ -67,7 +67,7 @@ WPlug('nvim-telescope/telescope-file-browser.nvim')
 WPlug('neovim/nvim-lspconfig') -- built-in LSP configurations
 WPlug('hrsh7th/cmp-nvim-lsp')
 WPlug('hrsh7th/cmp-path')
-WPlug('hrsh7th/cmp-buffer')
+WPlug('hrsh7th/cmp-buffer') -- Recommends words within the buffer
 WPlug('hrsh7th/cmp-cmdline')
 WPlug('hrsh7th/nvim-cmp')
 WPlug('onsails/lspkind-nvim')
@@ -644,10 +644,33 @@ cmp.setup {
     sources = cmp.config.sources {
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
-        { name = 'buffer' },
+        { 
+            name = 'buffer', 
+            option = {
+                -- default is only in the current buffer. This grabs recommendations
+                -- from all visible buffers
+                get_bufnrs = function()
+                    local bufs = {}
+                    for _, win in ipairs(vim.api.nvim_list_wins()) do
+                        local buf = vim.api.nvim_win_get_buf(win)
+                        local byte_size = vim.api.nvim_buf_get_offset(buf, vim.api.nvim_buf_line_count(buf))
+                        if byte_size <= 1024 * 1024 then -- 1 MiB max
+                            bufs[buf] = true
+                        end
+                    end
+                    return vim.tbl_keys(bufs)
+                end,
+            } 
+        },
         { name = 'path' },
         -- { name = "conjure" },
         -- { name = 'cmp_tabnine' },
+    },
+    sorting = {
+        comparators = {
+            -- Optimize searches by recommending things that are closer to the current cursor
+            function(...) require('cmp-buffer'):compare_locality(...) end,
+        }  
     },
 }
 -- nvim-cmp supports additional completion capabilities

@@ -86,19 +86,25 @@ L3MON4D3/LuaSnip
 arthurxavierx/vim-caser
 ~/local_repos/ts-ql
     """.split()
-    need_install_plugins = [plugin.strip() for plugin in plugins]
-    need_install_plugins = [plugin for plugin in plugins if len(plugin) > 0]
-    need_install_plugins_gh = [
-        f"https://github.com/{plugin}/".lower() for plugin in need_install_plugins if plugin[0] not in "~./"]
-    values = vp.query(f"SELECT LOWER(repo), alias from {vp.table_name()}")
-    need_install = []
-    for repo, alias in values:
-        if repo in need_install_plugins_gh:
-            need_install.append(vim_plugin_slug(alias) if len(alias) > 0 else name_from_repo(repo))
-    print("need_install", "\n".join(need_install))
+    need_install_plugins = [plugin.strip() for plugin in need_install_plugins if plugin.strip()]
 
+    # Create the GitHub URL list
+    need_install_plugins_gh = [
+        f"https://github.com/{plugin}/".lower() for plugin in need_install_plugins if not plugin.startswith(("~", "."))]
+
+    # Get the values from the database
+    values = vp.query(f"SELECT LOWER(repo), alias from {vp.table_name()}")
+
+    # Check if the repo is in the list of plugins
+    need_install = [
+        vim_plugin_slug(alias) if alias else name_from_repo(repo) for repo, alias in values if repo in need_install_plugins_gh]
+
+    print("need_install")
+    print("\n".join(need_install))
+
+    # Check if the repo is not in the list
     repos = [repo for repo, _ in values]
     not_in_repo = [name_from_repo(gh) for gh in need_install_plugins_gh if gh not in repos]
     print("not in repo", not_in_repo) # nvim-yati, yang-vim, Comment-nvim, inlay-hints-nvim, hlargs-nvim, vim-caser, gruvbox-community
-
     
+
