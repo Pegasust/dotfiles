@@ -15,6 +15,7 @@
   description = "simple home-manager config";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-latest.url = "github:nixos/nixpkgs";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -52,6 +53,7 @@
     , neovim-nightly-overlay
     , nickel
     , nix-boost
+    , nixpkgs-latest
     , ...
     }:
     let

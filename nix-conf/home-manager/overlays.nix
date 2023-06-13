@@ -5,6 +5,7 @@ flake_input@{ kpcli-py
 , system
 , nickel
 , nix-boost
+, nixpkgs-latest
 , ...
 }:
 let
@@ -62,6 +63,10 @@ let
   nickel = (final: prev: {
     inherit (flake_input.nickel.packages.${system})
       lsp-nls nickel nickelWasm;
+  });
+
+  vimPlugins = (final: prev: {
+    inherit (nixpkgs-latest) vimPlugins;
   });
 in
 [

@@ -1,5 +1,4 @@
-# TODO: vim-plug and Mason supports laziness. Probably worth it to explore incremental dependencies based on the project
-# TODO: just install these things, then symlink to mason's bin directory
+# TODO: vim-plug and Mason supports laziness. Probably worth it to explore incremental dependencies based on the project TODO: just install these things, then symlink to mason's bin directory
 #
 # One thing to consider, though, /nix/store of `nix-shell` or `nix-develop`
 # might be different from `home-manager`'s (~/.nix_profile/bin/jq)
