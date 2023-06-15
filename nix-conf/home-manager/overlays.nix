@@ -66,7 +66,7 @@ let
   });
 
   vimPlugins = (final: prev: {
-    inherit (nixpkgs-latest) vimPlugins;
+    inherit (nixpkgs-latest.legacyPackages.${system}) vimPlugins;
   });
 in
 [
@@ -77,4 +77,5 @@ in
   rust
   kpcli-py
   nickel
+  vimPlugins
 ]

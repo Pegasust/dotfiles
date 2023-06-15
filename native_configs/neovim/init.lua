@@ -1,5 +1,4 @@
--- What: Mono-file nvim configuration file Why: Easy to see through everything without needing to navigate thru files Features:
--- - LSP
+-- What: Mono-file nvim configuration file Why: Easy to see through everything without needing to navigate thru files Features: - LSP
 -- - Auto-complete (in insert mode: ctrl-space, navigate w/ Tab+S-Tab, confirm: Enter)
 -- - <leader>df to format document
 -- - Harpoon marks: Navigate through main files within each project
@@ -29,10 +28,12 @@ for _, path in ipairs(vim.api.nvim_list_runtime_paths()) do
   end
 end
 
+local wplug_log = require('plenary.log').new({ plugin = 'wplug_log', level = 'debug', use_console = false })
 -- Do Plug if plugin not yet linked in `rtp`. This takes care of Nix-compatibility
 local function WPlug(plugin_path, ...)
   local plugin_name = string.lower(plugin_path:match("/([^/]+)$"))
   if not installed_plugins[plugin_name] then
+    wplug_log.info("Plugging " .. plugin_path)
     Plug(plugin_path, ...)
   end
 end
@@ -262,6 +263,7 @@ vim.opt.listchars:append "eol:↴"
 require("indent_blankline").setup {
   show_end_of_line = true,
   space_char_blankline = " ",
+
 }
 -- User command that transform into 2-spaces by translating to tabstop
 vim.api.nvim_create_user_command(
@@ -535,7 +537,7 @@ require("inlay-hints").setup {
   -- renderer to use
   -- possible options are dynamic, eol, virtline and custom
   -- renderer = "inlay-hints/render/dynamic",
-  renderer = "inlay-hints/render/dynamic",
+  renderer = "inlay-hints/render/eol",
 
   hints = {
     parameter = {
@@ -637,6 +639,42 @@ cmp.event:on(
 )
 
 
+---@alias EntryFilter {id: integer, compe: lsp.CompletionItem, return_type: string, return_type2: string, score: number, label: string, source_name: string, bufnr: number?, offset: number?, kind: lsp.CompletionItemKind }
+---@param entry cmp.Entry
+---@return EntryFilter
+local function entry_filter_sync(entry)
+  local compe = entry:get_completion_item()
+  local return_type = compe.data and compe.data.return_type
+  local return_type2 = compe.detail
+  local score = entry.score
+  local label = compe.label
+  local source_name = entry.source.name
+  local bufnr = entry.context.bufnr
+  local offset = entry:get_offset()
+  local kind = entry:get_kind()
+  local id = entry.id
+  return {
+    id = id,
+    compe = compe,
+    return_type = return_type,
+    return_type2 = return_type2,
+    score = score,
+    label = label,
+    source_name = source_name,
+    bufnr = bufnr,
+    offset = offset,
+    kind = kind,
+  }
+end
+
+---@param entry cmp.Entry
+---@param callback fun(entry: EntryFilter): any
+local function entry_filter(entry, callback)
+  entry:resolve(function()
+    callback(entry_filter_sync(entry))
+  end)
+end
+
 ---@type cmp.ConfigSchema
 local cmp_config = {
   snippet = {
@@ -645,7 +683,7 @@ local cmp_config = {
     end,
   },
   mapping = cmp.mapping.preset.insert {
-    ['<C-l'] = cmp.mapping(function(_)
+    ['<C-l'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.refresh()
       else
@@ -706,16 +744,25 @@ local cmp_config = {
         }
       }
       vim_item = kind_fn(entry, vim_item)
+
+      -- copium that this will force resolve for entry
+      entry_filter(entry, function(entry)
+        if entry.source_name == "nvim_lsp" then
+          log.debug('format:entry: ' .. vim.inspect(entry, { depth = 2 }))
+          
+        end
+      end)
+
       return require('tailwindcss-colorizer-cmp').formatter(entry, vim_item)
     end,
   },
   sources = cmp.config.sources( --[[@as cmp.SourceConfig[]] {
-    { name = 'nvim_lsp', },
+    { name = 'nvim_lsp',               max_item_count = 30, },
     { name = 'nvim_lsp_signature_help' },
     -- NOTE: Path is triggered by `.` and `/`, so when it comes up, it's
     -- usually desirable.
-    { name = 'path' },
-    { name = 'luasnip' },
+    { name = 'path',                   max_item_count = 20, },
+    { name = 'luasnip',                max_item_count = 20, },
     {
       name = 'buffer',
       option = {
@@ -733,7 +780,8 @@ local cmp_config = {
           return vim.tbl_keys(bufs)
         end,
       },
-    },
+      max_item_count = 20,
+    }
     -- NOTE: I don't like cmdline that much. Most of the time, it recommends more harm than good
     -- { name = 'cmp_tabnine' },
     -- { name = "conjure" },
@@ -741,11 +789,6 @@ local cmp_config = {
   experimental = { ghost_text = { hl_group = "Comment" }, },
   sorting = {
     comparators = {
-      ---@param lhs_entry cmp.Entry
-      ---@param rhs_entry cmp.Entry
-      function(lhs_entry, rhs_entry)
-        return nil
-      end,
       cmp.config.compare.exact,
       cmp.config.compare.recently_used,
       cmp.config.compare.offset,
@@ -760,6 +803,9 @@ local cmp_config = {
 
 
 cmp.setup(vim.tbl_deep_extend("force", require('cmp.config.default')(), cmp_config))
+-- set max autocomplete height. this prevents huge recommendations to take over the screen
+vim.o.pumheight = 15 -- 15/70 is good enough ratio for me. I generally go with 80-90 max height, though
+vim.o.pumblend = 15  -- semi-transparent for the art, nothing too useful
 
 -- `/` cmdline search.
 cmp.setup.cmdline('/', {
@@ -818,7 +864,7 @@ require("mason").setup({
 })
 require('mason-lspconfig').setup({
   -- ensure_installed = servers,
-  ensure_installed = { "pylsp", "pyright", "tailwindcss", "svelte", "astro", "lua_ls" },
+  ensure_installed = { "pylsp", "pyright", "tailwindcss", "svelte", "astro", "lua_ls", "tsserver" },
   automatic_installation = false,
 })
 
@@ -1277,7 +1323,7 @@ vim.api.nvim_create_user_command('ShowLogs', function(opts)
   local file = io.open(logfile, 'r')
   if not file then
     print(string.format("No logfile found for plugin '%s'", vim.inspect(plugin_name)))
-    print("min_level: " .. vim.inspect(min_level))
+    print("Attempted paths: %s", vim.inspect(logfile))
     return
   end
   file:close()

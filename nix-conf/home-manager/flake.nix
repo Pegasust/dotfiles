@@ -181,7 +181,7 @@
             modules = base.modules ++ [
               ./home.nix
               ./base/productive_desktop.nix
-              # ./base/darwin-spotlight.nix
+              ./base/darwin-spotlight.nix
               {
                 base.private_chromium.enable = false;
               }
@@ -190,8 +190,6 @@
                 base.graphics.enable = false;
                 # don't want to deal with GL stuffs on mac yet :/
                 base.graphics.useNixGL.defaultPackage = null;
-                # FIXME: this actually does not exist
-                # base.keepass.path = "/Users/htran/keepass.kdbx";
                 base.alacritty.font.size = 11.0;
                 base.git.name = "Hung";
                 base.git.email = "htran@egihosting.com";
