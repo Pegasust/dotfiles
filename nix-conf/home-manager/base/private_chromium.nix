@@ -21,6 +21,7 @@ in
       package = pkgs.ungoogled-chromium;
       extensions =
         let
+          # TODO: how about a chrome extension registry?
           mkChromiumExtForVersion = browserVersion: { id, sha256, extVersion, ... }:
             {
               inherit id;

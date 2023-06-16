@@ -2,7 +2,7 @@
 #
 # One thing to consider, though, /nix/store of `nix-shell` or `nix-develop`
 # might be different from `home-manager`'s (~/.nix_profile/bin/jq)
-{ pkgs, lib, config, proj_root, ... }:
+{inputs, cell, namespace}: { pkgs, lib, config,  ... }:
 let
   # NOTE: Add packages to nvim_pkgs instead, so that it's available at userspace
   # and is added to the path after wrapping.
@@ -75,8 +75,9 @@ in
       vimAlias = true;
       withPython3 = true;
       withNodeJs = true;
+      # NOTE: this adds path to the wrapped version of neovim
       extraPackages = nvim_pkgs;
-      extraLuaConfig = (builtins.readFile "${proj_root.config.path}//neovim/init.lua");
+      extraLuaConfig = (builtins.readFile "${inputs.self}/native_configs/neovim/init.lua");
       plugins = (let inherit (pkgs.vimPlugins) 
         plenary-nvim 
 

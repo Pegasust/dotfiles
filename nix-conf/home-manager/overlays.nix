@@ -3,7 +3,6 @@ flake_input@{ kpcli-py
 , rust-overlay
 , neovim-nightly-overlay
 , system
-, nickel
 , nix-boost
 , nixpkgs-latest
 , ...
@@ -60,10 +59,6 @@ let
       rust4normi = nightlyRustWithExts rust-default-components;
     });
 
-  nickel = (final: prev: {
-    inherit (flake_input.nickel.packages.${system})
-      lsp-nls nickel nickelWasm;
-  });
 
   vimPlugins = (final: prev: {
     inherit (nixpkgs-latest.legacyPackages.${system}) vimPlugins;
@@ -76,6 +71,5 @@ in
   neovim-nightly-overlay.overlay
   rust
   kpcli-py
-  nickel
   vimPlugins
 ]

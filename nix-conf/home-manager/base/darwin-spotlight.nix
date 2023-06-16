@@ -1,12 +1,13 @@
-# This patch exists since Darwin's search bar requires solid apps and not
-# symlinked
-# TODO: QA
-# - [x] works for base case
-# - [x] works for repeated case
-# - [ ] works after base case, then removed 
-# - [ ] works for repeated case, then removed
 { lib, pkgs, config, ... }:
 {
+  # This patch exists since Darwin's search bar requires solid apps and not
+  # symlinked
+  # TODO: QA
+  # - [x] works for base case
+  # - [x] works for repeated case
+  # - [ ] works after base case, then removed 
+  # - [ ] works for repeated case, then removed
+
   # Copy GUI apps to "~/Applications/Home Manager Apps"
   # Based on this comment: https://github.com/nix-community/home-manager/issues/1341#issuecomment-778820334
   home.activation.patch-spotlight =

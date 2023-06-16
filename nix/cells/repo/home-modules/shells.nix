@@ -1,24 +1,20 @@
-# Configurations for shell stuffs.
-# Should probably be decoupled even more for each feature
-{ config
-, proj_root
-, myLib
+{inputs, cell, namespace}: { config
+, lib
 , pkgs
 , ...
 }:
-let cfg = config.base.shells;
+let cfg = config."${namespace}".shells;
 in
 {
-  options.base.shells = {
-    enable = myLib.mkOption {
-      type = myLib.types.bool;
+  options."${namespace}".shells = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
       description = "Enable umbrella shell configuration";
       default = true;
       example = false;
     };
-    # TODO: Support shell-specific init
-    shellInitExtra = myLib.mkOption {
-      type = myLib.types.str;
+    shellInitExtra = lib.mkOption {
+      type = lib.types.str;
       description = "Extra shell init. The syntax should be sh-compliant";
       default = "";
       example = ''
@@ -27,8 +23,8 @@ in
         export LIBGL_ALWAYS_INDIRECT=1
       '';
     };
-    shellAliases = myLib.mkOption {
-      type = myLib.types.attrs;
+    shellAliases = lib.mkOption {
+      type = lib.types.attrs;
       description = "Shell command aliases";
       default = { };
       example = {
@@ -36,7 +32,7 @@ in
       };
     };
   };
-  config = myLib.mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     # nix: Propagates the environment with packages and vars when enter (children of)
     # a directory with shell.nix-compatible and .envrc
     programs.direnv = {
@@ -55,7 +51,7 @@ in
       plugins = let inherit (pkgs.tmuxPlugins) cpu net-speed; in [ cpu net-speed ];
       extraConfig = (builtins.readFile "${proj_root.config.path}/tmux/tmux.conf");
     };
-    xdg.configFile."tmux/tmux.conf".text = myLib.mkOrder 600 ''
+    xdg.configFile."tmux/tmux.conf".text = lib.mkOrder 600 ''
       set -g status-right '#{cpu_bg_color} CPU: #{cpu_icon} #{cpu_percentage} | %a %h-%d %H:%M '
     '';
     # Colored ls
@@ -100,18 +96,15 @@ in
         enable = true;
         plugins = [
           "git" # git command aliases: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git#aliases
-          # "sudo"  # double-escape to prepend sudo  # UPDATE: just use vi-mode lol
           "command-not-found" # suggests which package to install; does not support nixos (we have solution already)
           "gitignore" # `gi list` -> `gi java >>.gitignore`
           "ripgrep" # adds completion for `rg`
           "rust" # compe for rustc/cargo
           "poetry" # compe for poetry - Python's cargo
-          # "vi-mode"   # edit promps with vi motions :)
         ];
       };
       sessionVariables = {
         # Vim mode on the terminal
-
         # VI_MODE_RESET_PROMPT_ON_MODE_CHANGE = true;
         # VI_MODE_SET_CURSOR = true;
         # ZVM_VI_ESCAPE_BINDKEY = "";

@@ -26,5 +26,6 @@ in
         (
           builtins.readFile yamlPath)
         "any-output.json"));
-  # TODO: fromToml?
+  fromTOML = builtins.fromTOML;
+  fromJSON = builtins.fromJSON;
 }

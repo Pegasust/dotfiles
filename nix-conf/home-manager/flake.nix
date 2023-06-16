@@ -18,7 +18,8 @@
     nixpkgs-latest.url = "github:nixos/nixpkgs";
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # url = "github:pegasust/home-manager/starship-config-type";
+      follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
     nixgl.url = "path:./../../out-of-tree/nixGL";
@@ -40,7 +41,6 @@
       url = "github:mic92/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nickel.url = "github:tweag/nickel";
   };
 
   outputs =
@@ -51,7 +51,6 @@
     , flake-utils
     , kpcli-py
     , neovim-nightly-overlay
-    , nickel
     , nix-boost
     , nixpkgs-latest
     , ...

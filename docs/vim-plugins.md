@@ -1,4 +1,4 @@
-# Vim Plugins
+# Offset Vim Plugins onto nix packer
 
 The current [`scripts/vim.dsl`](../scripts/vim.dsl) grabs the upstream supported vim plugins
 onto a sqlite database to be stored in memory. We could perform some data exploration via this database 

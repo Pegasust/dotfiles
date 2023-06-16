@@ -293,12 +293,19 @@ vim.api.nvim_create_user_command(
 
 -- telescope
 local fb_actions = require "telescope".extensions.file_browser.actions
+local tel_actions = require("telescope.actions")
+local tel_actionset = require("telescope.actions.set")
+
+local function term_height()
+  return vim.opt.lines:get()
+end
+
 require('telescope').setup {
   defaults = {
     mappings = {
-      i = {
-        ['<C-u>'] = false,
-        ['<C-d>'] = false,
+      n = {
+        ['<C-u>'] = function(prompt_bufnr) tel_actionset.shift_selection(prompt_bufnr, -math.floor(term_height() / 2)) end,
+        ['<C-d>'] = function(prompt_bufnr) tel_actionset.shift_selection(prompt_bufnr, math.floor(term_height() / 2)) end,
       },
     },
   },
@@ -361,13 +368,13 @@ end, { desc = '[F]ind [A]ll files' })
 
 remap('n', '<leader>fg', function()
   require('telescope.builtin').live_grep()
-end, { desc = '[F]ind by [G]rep' })
+end, { desc = '[F]ind thru [G]rep' })
 
 remap('n', '<leader>fug', function()
   -- This relies on many factors: We use `rg` and that `-g '**/*'` effectively
   -- drops ignore rules like the default `.gitignore` rule.
   require('telescope.builtin').live_grep({ glob_pattern = '**/*' })
-end, { desc = '[F]ind by [u]nrestricted [G]rep' })
+end, { desc = '[F]ind thru [u]nrestricted [G]rep' })
 
 remap('n', '<leader>fb', function()
   require('telescope.builtin').buffers()
@@ -427,7 +434,7 @@ end
 
 -- Close all tabs except the first one
 vim.api.nvim_set_keymap('n', '<C-t>x', ':tabdo if tabpagenr() > 1 | tabclose | endif<CR>',
-  { noremap = true, silent = true })
+  { noremap = true, silent = true, desc = "Close all tabs except the first one", })
 
 -- }}}
 
@@ -749,7 +756,6 @@ local cmp_config = {
       entry_filter(entry, function(entry)
         if entry.source_name == "nvim_lsp" then
           log.debug('format:entry: ' .. vim.inspect(entry, { depth = 2 }))
-          
         end
       end)
 
@@ -805,7 +811,7 @@ local cmp_config = {
 cmp.setup(vim.tbl_deep_extend("force", require('cmp.config.default')(), cmp_config))
 -- set max autocomplete height. this prevents huge recommendations to take over the screen
 vim.o.pumheight = 15 -- 15/70 is good enough ratio for me. I generally go with 80-90 max height, though
-vim.o.pumblend = 15  -- semi-transparent for the art, nothing too useful
+vim.o.pumblend = 10  -- semi-transparent for the art, nothing too useful (neovim recommends 0-30)
 
 -- `/` cmdline search.
 cmp.setup.cmdline('/', {
@@ -864,7 +870,10 @@ require("mason").setup({
 })
 require('mason-lspconfig').setup({
   -- ensure_installed = servers,
-  ensure_installed = { "pylsp", "pyright", "tailwindcss", "svelte", "astro", "lua_ls", "tsserver" },
+  ensure_installed = {
+    "pylsp", "pyright", "tailwindcss", "svelte", "astro", "lua_ls", "tsserver",
+    "ansiblels", "yamlls", "docker_compose_language_service", "jsonls",
+  },
   automatic_installation = false,
 })
 
@@ -1206,7 +1215,6 @@ require('zk.commands').add("ZkGrep", function(match_ctor)
   if match_ctor == nil or match_ctor == '' then
     vim.fn.inputsave()
     grep_str = vim.fn.input('Grep string: >')
-    vim.fn.inputrestore()
     match = { match = grep_str }
   elseif type(match_ctor) == 'string' then
     match = { match = grep_str }

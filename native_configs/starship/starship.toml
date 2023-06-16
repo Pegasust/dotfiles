@@ -3,6 +3,11 @@
 [aws]
 symbol = "  "
 
+[c]
+disabled = false
+commmands = [ [ 'cc', '--version' ], [ 'gcc', '--version' ], [ 'clang', '--version' ] ]
+detect_extensions = ["c", "h", "cc", "cpp", "hh", "hpp"]
+
 [conda]
 symbol = " "
 
