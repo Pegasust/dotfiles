@@ -18,7 +18,7 @@
   # see: :/--suffix.*PATH
   # there should be mentions of additional packages
   my_neovim = pkgs.neovim-unwrapped;
-  inherit (inputs) system;
+  inherit (inputs.nixpkgs) system;
   nvim_pkgs =
     [
       # pkgs.gccStdenv

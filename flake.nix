@@ -10,10 +10,6 @@
     nixpkgs-latest.url = "github:nixos/nixpkgs";
     deploy-rs.url = "github:serokell/deploy-rs";
     std.url = "github:divnix/std";
-    poetry2nix = {
-      url = "github:nix-community/poetry2nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -48,12 +44,15 @@
       # modules = ./nix/modules;
 
       cellBlocks = let
-        inherit (std.blockTypes) devshells functions;
+        inherit (std.blockTypes) devshells functions anything installables;
       in [
         (devshells "devshells")
         (devshells "userShells")
         (functions "home-profiles")
         (functions "home-modules")
+        (anything  "home-configs")
+        (installables "packages")
+        (anything "lib")
       ];
     }
     {
@@ -61,9 +60,11 @@
       # nixosConfigurations = std.pick [ [ "dotfiles" "nixos" ] ];
       # homeConfigurations = std.pick [ [ "dotfiles" "home" ] ];
       homeModules = std.pick self [["repo" "home-modules"]];
+      packages = std.harvest self [["repo" "packages"]];
+      legacyPackages = std.harvest self [["repo" "home-configs"]];
+      lib = std.pick self [["repo" "lib"]];
 
       # TODO: Debug only
       homeProfiles = std.pick self [["repo" "home-profiles"]];
-      packages = std.harvest self [["repo" "home-configs"] ["repo" "packages"]];
     };
 }

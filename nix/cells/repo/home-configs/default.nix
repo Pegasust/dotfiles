@@ -23,10 +23,10 @@
     home-profiles.nix-index
   ];
 in {
-  htran = home-config {
+  homeConfigurations.htran = home-config {
     supported_systems = ["aarch64-darwin" "x86_64-darwin"];
     tested_systems = ["aarch64-darwin"];
-    hm = home-manager.lib.homeConfigurations {
+    hm = home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
       modules = base-modules ++ [
         home-profiles.nerd_font_module
@@ -34,11 +34,13 @@ in {
         home-profiles.dev-packages
         home-profiles.zk
         home-modules.darwin-spotlight
+
+        ({
+          home.username = "htran";
+          home.homeDirectory = "/Users/htran";
+          home.stateVersion = "23.11";
+        })
       ];
-      # TODO: might need config prefix. remove this todo after QA
-      home.username = "htran";
-      home.homeDirectory = "/Users/htran";
-      home.stateVersion = "23.11";
     };
   };
 }

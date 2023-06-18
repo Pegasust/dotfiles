@@ -91,7 +91,7 @@ in
       };
     };
 
-  alacritty = { config, lib }:
+  alacritty = { config, lib, ... }:
     let
       inherit (inputs.cells.repo.lib) fromYAML;
       cfg = config."${namespace}".alacritty;
@@ -133,13 +133,12 @@ in
         enable = cfg.enable;
         settings =
           let
-            ;
             actualConfig =
               if cfg.config-path != null then fromYAML (builtins.readFile cfg.config-path) else { };
           in
           lib.recursiveUpdate actualConfig {
-            font.normal.family = lib.mkIf (font.family != null) font.family;
-            font.size = lib.mkIf (font.size != null) font.size;
+            font.normal.family = lib.mkIf (cfg.font.family != null) cfg.font.family;
+            font.size = lib.mkIf (cfg.font.size != null) cfg.font.size;
           };
       };
     };

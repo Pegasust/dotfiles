@@ -15,10 +15,6 @@ in {
     pkgs,
     ...
   }: {
-    imports = [
-      import
-      inputs.cells."${namespace}"
-    ];
     fonts.fontconfig.enable = true;
     home.packages = [
       (pkgs.nerdfonts.override {fonts = ["Hack"];})
@@ -74,12 +70,11 @@ in {
     cfg = config."${namespace}".alacritty;
   in {
     imports = [
-      import
-      "${inputs.cells.repo.home-modules.alacritty}"
+      inputs.cells.repo.home-modules.alacritty
     ];
-    configs."${namespace}".alacritty = {
+    config."${namespace}".alacritty = {
       enable = true;
-      config-path = "${inputs.self}//native-configs/alacritty/alacritty.yml";
+      config-path = "${inputs.self}//native_configs/alacritty/alacritty.yml";
       font.size = 11.0;
       font.family = "Hack Nerd Font Mono";
     };
@@ -144,8 +139,10 @@ in {
 
   git-htran = {
     imports = [inputs.cells.repo.home-profiles.git];
-    config.git."${namespace}".name = "htran";
-    config.git."${namespace}".email = "htran@egihosting.com";
+    config."${namespace}".git = {
+      name = "htran";
+      email = "htran@egihosting.com";
+    };
   };
 
   git-pegasust = {

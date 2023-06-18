@@ -52,7 +52,7 @@ in {
     programs.tmux = {
       enable = true;
       plugins = let inherit (pkgs.tmuxPlugins) cpu net-speed; in [cpu net-speed];
-      extraConfig = builtins.readFile "${innputs.self}/native_configs/tmux/tmux.conf";
+      extraConfig = builtins.readFile "${inputs.self}/native_configs/tmux/tmux.conf";
     };
     xdg.configFile."tmux/tmux.conf".text = lib.mkOrder 600 ''
       set -g status-right '#{cpu_bg_color} CPU: #{cpu_icon} #{cpu_percentage} | %a %h-%d %H:%M '

@@ -2,7 +2,9 @@
   inputs,
   cell,
 }: let
-  inherit (inputs.poetry2nix) mkPoetryApplication defaultPoetryOverrides;
+  inherit (inputs.nixpkgs) system;
+  inherit (inputs.nix-boost.pkgs."${system}".mypkgs) poetry2nix;
+  inherit (poetry2nix) mkPoetryApplication defaultPoetryOverrides;
 in {
   kpcli-py = mkPoetryApplication {
     projectDir = inputs.kpcli-py;
