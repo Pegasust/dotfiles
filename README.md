@@ -53,6 +53,9 @@ via writing and typing.
 I am in the process of moving away from Obsidian so that I can write ZK notes
 text-editor agnostically.
 
+#### mickael-menu/zk
+
+
 - Config file: `zk/config.toml`
 - Command: `ln [-s] $PWD/zk/config.toml ~/.config/zk/config.toml`
 
@@ -61,6 +64,18 @@ text-editor agnostically.
 
 Note (2023-06-07): I'm now using a mix of nvim-zk with Notion. I'm still figuring out
 a centralize place to put my notes and use it to do some knowledge graph magic
+
+NOTE (2023-06-18): I used `mickael-menu/zk` for some time, but have found myself 
+resort to notion due to the need for easier linking (just copy-paste onto 
+selected note) where as I need to:
+
+- `cS]` to encapsulate the selection with `[]`, then do `(<C-v>`. Too many keystrokes.
+
+On retrospect, I could probably remap this workflow to `<LocalLeader>el"`:
+
+Though, I want to just develop my own solution with 
+[`nucliadb`](https://github.com/nuclia/nucliadb) and 
+[`h2ogpt`](https://github.com/h2oai/h2ogpt)
 
 ## Troubleshoots
 
