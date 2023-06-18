@@ -141,4 +141,51 @@ in {
       };
     };
   };
+
+  git-htran = {
+    imports = [inputs.cells.repo.home-profiles.git];
+    config.git."${namespace}".name = "htran";
+    config.git."${namespace}".email = "htran@egihosting.com";
+  };
+
+  git-pegasust = {
+    imports = [inputs.cells.repo.home-profiles.git];
+    config.git."${namespace}".name = "pegasust";
+    config.git."${namespace}".email = "pegasucksgg@gmail.com";
+  };
+
+  dev-packages = let pkgs = inputs.nixpkgs; in {
+    programs.jq.enable = true;
+    home.packages = [
+      pkgs.htop
+      pkgs.ripgrep
+      pkgs.unzip
+      pkgs.zip
+
+      pkgs.yq-go
+      pkgs.mosh
+      pkgs.python310
+    ];
+  };
+
+  # Local nixpkgs search and fallback if command not found to search from nixpkgs
+  nix-index = {
+    imports = [
+      inputs.nix-index-database.hmModules.nix-index
+    ];
+    programs.nix-index = {
+      enable = true;
+      enableBashIntegration = true;
+      enableZshIntegration = true;
+    };
+  };
+
+  # digital garden stack
+  zk = {
+    xdg.configFile."zk/config.toml".source = "${inputs.self}/native_configs/zk/config.toml";
+    # NB: lib.mkMerge
+    home.packages = [
+      inputs.nixpkgs.zk
+    ];
+  };
 }

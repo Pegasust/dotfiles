@@ -18,14 +18,7 @@
   # see: :/--suffix.*PATH
   # there should be mentions of additional packages
   my_neovim = pkgs.neovim-unwrapped;
-  rust_pkgs =
-    pkgs.rust-bin.selectLatestNightlyWith
-    (
-      toolchain:
-        toolchain.default.override {
-          extensions = ["rust-src" "rust-analyzer" "rust-docs" "rustfmt" "clippy" "miri"];
-        }
-    );
+  inherit (inputs) system;
   nvim_pkgs =
     [
       # pkgs.gccStdenv
@@ -35,8 +28,8 @@
       pkgs.zk # Zettelkasten (limited support)
       pkgs.fd # Required by a Telescope plugin (?)
       pkgs.stdenv.cc.cc.lib
-      pkgs.rnix-lsp # doesn't work, Mason just installs it using cargo
-      pkgs.rust4cargo
+      pkgs.nil  # oxalica's better nix language server
+      inputs.nix-boost.packages."${system}".rust4cargo
       pkgs.nickel
       pkgs.nls
 
@@ -90,7 +83,7 @@ in {
       extraLuaConfig = builtins.readFile "${inputs.self}/native_configs/neovim/init.lua";
       plugins = let
         inherit
-          (pkgs.vimPlugins)
+          (inputs.nixpkgs-latest.vimPlugins)
           plenary-nvim
           nvim-treesitter
           nvim-treesitter-textobjects

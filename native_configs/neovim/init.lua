@@ -900,7 +900,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 -- default language servers
 local servers = {
   'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'lua_ls', 'cmake', 'tailwindcss', 'prismals',
-  'rnix', 'eslint', 'terraformls', 'tflint', 'svelte', 'astro', 'clojure_lsp', "bashls", 'yamlls', "ansiblels",
+  'nil_ls', 'eslint', 'terraformls', 'tflint', 'svelte', 'astro', 'clojure_lsp', "bashls", 'yamlls', "ansiblels",
   "jsonls", "denols", "gopls", "nickel_ls", 'pylsp',
 }
 require("mason").setup({

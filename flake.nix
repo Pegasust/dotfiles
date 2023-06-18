@@ -7,12 +7,37 @@
   description = "My personal configuration in Nix (and some native configurations)";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-latest.url = "github:nixos/nixpkgs";
     deploy-rs.url = "github:serokell/deploy-rs";
     std.url = "github:divnix/std";
-    rust-overlay = "github:oxalica/rust-overlay.git";
+    poetry2nix = {
+      url = "github:nix-community/poetry2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    neovim-nightly-overlay = {
+      # need to pin this until darwin build is successful again.
+      url = "github:nix-community/neovim-nightly-overlay?rev=88a6c749a7d126c49f3374f9f28ca452ea9419b8";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-boost = {
+      url = "git+https://git.pegasust.com/pegasust/nix-boost?ref=bleed";
+    };
+    kpcli-py = {
+      url = "github:rebkwok/kpcli";
+      flake = false;
+    };
+    nix-index-database = {
+      url = "github:mic92/nix-index-database";
+      # Should show the latest nixpkgs whenever possible
+      inputs.nixpkgs.follows = "nixpkgs-latest";
+    };
   };
 
-  outputs = {std, ...} @ inputs:
+  outputs = {self, std, ...} @ inputs:
     std.growOn
     {
       # boilerplate
@@ -32,13 +57,13 @@
       ];
     }
     {
-      devShells = std.harvest [["dotfiles" "devshells"]];
+      devShells = std.harvest self [["dotfiles" "devshells"]];
       # nixosConfigurations = std.pick [ [ "dotfiles" "nixos" ] ];
       # homeConfigurations = std.pick [ [ "dotfiles" "home" ] ];
-      homeModules = std.pick [["repo" "home-modules"]];
+      homeModules = std.pick self [["repo" "home-modules"]];
 
       # TODO: Debug only
-      homeProfiles = std.pick [["repo" "home-profiles"]];
-      packages = std.harvest [["repo" "home-configs"]];
+      homeProfiles = std.pick self [["repo" "home-profiles"]];
+      packages = std.harvest self [["repo" "home-configs"] ["repo" "packages"]];
     };
 }
