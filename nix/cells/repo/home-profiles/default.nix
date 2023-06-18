@@ -163,7 +163,9 @@ in {
     };
   };
 
-  dev-packages = let pkgs = inputs.nixpkgs; in {
+  dev-packages = let
+    pkgs = inputs.nixpkgs;
+  in {
     programs.jq.enable = true;
     home.packages = [
       pkgs.htop

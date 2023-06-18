@@ -28,7 +28,7 @@
       pkgs.zk # Zettelkasten (limited support)
       pkgs.fd # Required by a Telescope plugin (?)
       pkgs.stdenv.cc.cc.lib
-      pkgs.nil  # oxalica's better nix language server
+      pkgs.nil # oxalica's better nix language server
       inputs.nix-boost.packages."${system}".rust4cargo
       pkgs.nickel
       pkgs.nls

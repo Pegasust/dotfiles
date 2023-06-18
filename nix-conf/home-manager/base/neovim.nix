@@ -1,4 +1,5 @@
-# TODO: vim-plug and Mason supports laziness. Probably worth it to explore incremental dependencies based on the project TODO: just install these things, then symlink to mason's bin directory
+# TODO: vim-plug and Mason supports laziness. Probably worth it to explore incremental dependencies based on the project
+# TODO: just install these things, then symlink to mason's bin directory
 #
 # One thing to consider, though, /nix/store of `nix-shell` or `nix-develop`
 # might be different from `home-manager`'s (~/.nix_profile/bin/jq)
@@ -15,14 +16,6 @@
   # see: :/--suffix.*PATH
   # there should be mentions of additional packages
   my_neovim = pkgs.neovim-unwrapped;
-  rust_pkgs =
-    pkgs.rust-bin.selectLatestNightlyWith
-    (
-      toolchain:
-        toolchain.default.override {
-          extensions = ["rust-src" "rust-analyzer" "rust-docs" "rustfmt" "clippy" "miri"];
-        }
-    );
   nvim_pkgs =
     [
       # pkgs.gccStdenv

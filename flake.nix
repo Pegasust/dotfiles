@@ -8,7 +8,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-latest.url = "github:nixos/nixpkgs";
-    deploy-rs.url = "github:serokell/deploy-rs";
+    # deploy-rs.url = "github:serokell/deploy-rs";
     std.url = "github:divnix/std";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -33,7 +33,11 @@
     };
   };
 
-  outputs = {self, std, ...} @ inputs:
+  outputs = {
+    self,
+    std,
+    ...
+  } @ inputs:
     std.growOn
     {
       # boilerplate
@@ -50,7 +54,7 @@
         (devshells "userShells")
         (functions "home-profiles")
         (functions "home-modules")
-        (anything  "home-configs")
+        (anything "home-configs")
         (installables "packages")
         (anything "lib")
       ];

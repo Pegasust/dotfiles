@@ -69,7 +69,7 @@ in {
       settings = let
         native = builtins.fromTOML (builtins.readFile "${inputs.self}/native_configs/starship/starship.toml");
         patch-nix = pkgs.lib.recursiveUpdate native {
-          # WARNING: home-manager fails on here for some reason. Likely not at the 
+          # WARNING: home-manager fails on here for some reason. Likely not at the
           # validation phase (type-checking), but at evaluation phaase (stringify)
           # I'm thinking when `settings` are evaluated, it has some sort of
           # recursive processing before it gets turned into a toml
