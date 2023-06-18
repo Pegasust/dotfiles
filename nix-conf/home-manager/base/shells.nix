@@ -70,10 +70,13 @@ in {
       settings = let
         native = builtins.fromTOML (builtins.readFile "${proj_root.config.path}/starship/starship.toml");
         patch-nix = pkgs.lib.recursiveUpdate native {
-          c.commands = [
-            ["nix" "run" "nixpkgs#clang" "--" "--version"]
-            ["nix" "run" "nixpkgs#gcc" "--" "--version"]
-          ];
+          # WARNING: home-manager fails on here for some reason. Likely not at the 
+          # validation phase (type-checking), but at evaluation phaase (stringify)
+          # c.commands = [
+          #   ["nix" "run" "nixpkgs#clang" "--" "--version"]
+          #   ["nix" "run" "nixpkgs#gcc" "--" "--version"]
+          # ];
+          c.commands = "fuk";
         };
       in
         patch-nix;

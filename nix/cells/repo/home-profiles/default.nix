@@ -8,6 +8,7 @@ _imports @ {
   # TODO: I don't think abstracting namespace away is a good idea in this case
   namespace = "repo";
   imports = _imports // {inherit namespace;};
+  inherit (cell) home-modules;
 in {
   neovim = import ./neovim.nix imports;
   nerd_font_module = {
@@ -15,11 +16,11 @@ in {
     pkgs,
     ...
   }: {
-    fonts.fontconfig.enable = true;
-    home.packages = [
+    config.fonts.fontconfig.enable = true;
+    config.home.packages = [
       (pkgs.nerdfonts.override {fonts = ["Hack"];})
     ];
-    "${namespace}".alacritty.font.family = "Hack Nerd Font Mono";
+    config."${namespace}".alacritty.font.family = "Hack Nerd Font Mono";
   };
 
   secrets = {
@@ -99,8 +100,12 @@ in {
       co = "checkout";
       b = "branch";
     };
+    cfg = config."${namespace}".profile.git;
   in {
-    options."${namespace}".git = {
+    imports = [
+      home-modules.git
+    ];
+    options."${namespace}".profile.git = {
       aliases = lib.mkOption {
         type = lib.types.attrs;
         default = {};
@@ -135,11 +140,16 @@ in {
         example = [".direnv" "node_modules"];
       };
     };
+    # WARNING: This should be completed wtf
+    config."${namespace}".git = {
+      inherit (cfg) name email ignores aliases;
+      enable = true;
+    };
   };
 
   git-htran = {
     imports = [inputs.cells.repo.home-profiles.git];
-    config."${namespace}".git = {
+    config."${namespace}".profile.git = {
       name = "htran";
       email = "htran@egihosting.com";
     };
@@ -147,8 +157,10 @@ in {
 
   git-pegasust = {
     imports = [inputs.cells.repo.home-profiles.git];
-    config.git."${namespace}".name = "pegasust";
-    config.git."${namespace}".email = "pegasucksgg@gmail.com";
+    config."${namespace}".profile.git = {
+      email = "pegasucksgg@gmail.com";
+      name = "pegasust";
+    };
   };
 
   dev-packages = let pkgs = inputs.nixpkgs; in {
@@ -170,7 +182,7 @@ in {
     imports = [
       inputs.nix-index-database.hmModules.nix-index
     ];
-    programs.nix-index = {
+    config.programs.nix-index = {
       enable = true;
       enableBashIntegration = true;
       enableZshIntegration = true;
@@ -179,9 +191,9 @@ in {
 
   # digital garden stack
   zk = {
-    xdg.configFile."zk/config.toml".source = "${inputs.self}/native_configs/zk/config.toml";
-    # NB: lib.mkMerge
-    home.packages = [
+    config.xdg.configFile."zk/config.toml".source = "${inputs.self}/native_configs/zk/config.toml";
+    # NB: this is done with lib.mkMerge
+    config.home.packages = [
       inputs.nixpkgs.zk
     ];
   };

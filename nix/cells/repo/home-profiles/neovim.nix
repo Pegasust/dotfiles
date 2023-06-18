@@ -83,7 +83,7 @@ in {
       extraLuaConfig = builtins.readFile "${inputs.self}/native_configs/neovim/init.lua";
       plugins = let
         inherit
-          (inputs.nixpkgs-latest.vimPlugins)
+          (inputs.nixpkgs-latest.legacyPackages.${system}.vimPlugins)
           plenary-nvim
           nvim-treesitter
           nvim-treesitter-textobjects
