@@ -4,7 +4,8 @@
   config,
   ...
 }:
-with builtins; with lib; {
+with builtins;
+with lib; {
   options.wsl = with types; let
     coercedToStr = coercedTo (oneOf [bool path int]) toString str;
   in {

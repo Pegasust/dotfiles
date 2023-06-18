@@ -3,7 +3,8 @@
 {
   pkgs,
   lib,
-  naersk, # rust packages
+  naersk,
+  # rust packages
   ...
 } @ pkgs_input: {
   # dot-hwtr = import "./dot-hwtr" pkgs_input;

@@ -64,8 +64,7 @@
           rev = info.rev;
           shortRev = builtins.substring 0 7 info.rev;
         }
-        else {
-        }
+        else {}
       )
     else if info.type == "path"
     then {
@@ -112,11 +111,13 @@
   callFlake4 = flakeSrc: locks: let
     flake = import (flakeSrc + "/flake.nix");
 
-    inputs = builtins.mapAttrs (n: v:
-      if v.flake or true
-      then callFlake4 (fetchTree (v.locked // v.info)) v.inputs
-      else fetchTree (v.locked // v.info))
-    locks;
+    inputs =
+      builtins.mapAttrs
+      (n: v:
+        if v.flake or true
+        then callFlake4 (fetchTree (v.locked // v.info)) v.inputs
+        else fetchTree (v.locked // v.info))
+      locks;
 
     outputs = flakeSrc // (flake.outputs (inputs // {self = outputs;}));
   in

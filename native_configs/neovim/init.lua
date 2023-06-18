@@ -104,7 +104,7 @@ WPlug('kyazdani42/nvim-web-devicons')           -- icons for folder and filetype
 WPlug('m-demare/hlargs.nvim')                   -- highlights arguments; great for func prog
 WPlug('folke/todo-comments.nvim')               -- Highlights TODO
 WPlug('NvChad/nvim-colorizer.lua')              -- color highlighter with tailwind support
-WPlug('roobert/tailwindcss-colorizer-cmp.nvim') -- color highlighter with tailwind support
+WPlug('roobert/tailwindcss-colorizer-cmp.nvim') -- color for tailiwnd for compe
 
 -- other utilities
 WPlug('nvim-treesitter/nvim-treesitter-context') -- Top one-liner context of func/class scope
@@ -112,6 +112,7 @@ WPlug('nvim-treesitter/playground')              -- Sees Treesitter AST - less h
 WPlug('saadparwaiz1/cmp_luasnip')                -- snippet engine
 WPlug('L3MON4D3/LuaSnip')                        -- snippet engine
 WPlug('mickael-menu/zk-nvim')                    -- Zettelkasten
+WPlug('folke/neodev.nvim')                       -- Neovim + lua development setup
 -- Switch cases:
 -- `gsp` -> PascalCase (classes), `gsc` -> camelCase (Java), `gs_` -> snake_case (C/C++/Rust)
 -- `gsu` -> UPPER_CASE (CONSTs), `gsk` -> kebab-case (Clojure), `gsK` -> Title-Kebab-Case
@@ -241,7 +242,57 @@ colorscheme gruvbox
 ]])
 require('hlargs').setup()
 require('nvim-web-devicons').setup()
-require('trouble').setup()
+require('trouble').setup {
+  position = "bottom",              -- position of the list can be: bottom, top, left, right
+  height = 10,                      -- height of the trouble list when position is top or bottom
+  width = 50,                       -- width of the list when position is left or right
+  icons = true,                     -- use devicons for filenames
+  mode = "workspace_diagnostics",   -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
+  severity = nil,                   -- nil (ALL) or vim.diagnostic.severity.ERROR | WARN | INFO | HINT
+  fold_open = "",                -- icon used for open folds
+  fold_closed = "",              -- icon used for closed folds
+  group = true,                     -- group results by file
+  padding = true,                   -- add an extra new line on top of the list
+  action_keys = {
+                                    -- key mappings for actions in the trouble list
+    -- map to {} to remove a mapping, for example:
+    -- close = {},
+    close = "q",                     -- close the list
+    cancel = "<esc>",                -- cancel the preview and get back to your last window / buffer / cursor
+    refresh = "r",                   -- manually refresh
+    jump = { "<cr>", "<tab>" },      -- jump to the diagnostic or open / close folds
+    open_split = { "<c-x>" },        -- open buffer in new split
+    open_vsplit = { "<c-v>" },       -- open buffer in new vsplit
+    open_tab = { "<c-t>" },          -- open buffer in new tab
+    jump_close = { "o" },            -- jump to the diagnostic and close the list
+    toggle_mode = "m",               -- toggle between "workspace" and "document" diagnostics mode
+    switch_severity = "s",           -- switch "diagnostics" severity filter level to HINT / INFO / WARN / ERROR
+    toggle_preview = "P",            -- toggle auto_preview
+    hover = "K",                     -- opens a small popup with the full multiline message
+    preview = "p",                   -- preview the diagnostic location
+    close_folds = { "zM", "zm" },    -- close all folds
+    open_folds = { "zR", "zr" },     -- open all folds
+    toggle_fold = { "zA", "za" },    -- toggle fold of current file
+    previous = "k",                  -- previous item
+    next = "j"                       -- next item
+  },
+  indent_lines = true,               -- add an indent guide below the fold icons
+  auto_open = false,                 -- automatically open the list when you have diagnostics
+  auto_close = false,                -- automatically close the list when you have no diagnostics
+  auto_preview = true,               -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
+  auto_fold = false,                 -- automatically fold a file trouble list at creation
+  auto_jump = { "lsp_definitions" }, -- for the given modes, automatically jump if there is only a single result
+  signs = {
+    -- icons / text used for a diagnostic
+    error = "",
+    warning = "",
+    hint = "",
+    information = "",
+    other = "",
+  },
+  use_diagnostic_signs = false   -- enabling this will use the signs defined in your lsp client
+}
+
 
 -- TODO: Any way to collect all the TODOs and its variants?
 require('todo-comments').setup()
@@ -922,10 +973,10 @@ require('mason-lspconfig').setup_handlers({
             defaultConfig = {
               indent_style = "space",
               indent_size = 4,
-            }
-          }
-        }
-      }
+            },
+          },
+        },
+      },
     }
   end,
   ["pyright"] = function()
@@ -1002,7 +1053,7 @@ require('mason-lspconfig').setup_handlers({
       settings = {
         ["nil"] = {
           formatting = {
-            command = {"nix", "run", "nixpkgs#alejandra"},
+            command = { "nix", "run", "nixpkgs#alejandra" },
           },
           nix = {
             flake = {

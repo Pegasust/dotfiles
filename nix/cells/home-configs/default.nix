@@ -2,5 +2,4 @@
   inputs,
   cell,
 }: let
-in {
-}
+in {}

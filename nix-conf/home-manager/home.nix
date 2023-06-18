@@ -4,11 +4,14 @@
 # Additional configurations goes to profiles/<user>
 # or inlined in flake.nix
 {
-  config, # Represents the realized final configuration
-  pkgs, # This is by default just ``= import <nixpkgs>{}`
+  config,
+  # Represents the realized final configuration
+  pkgs,
+  # This is by default just ``= import <nixpkgs>{}`
   myHome,
   myLib,
-  option, # The options we're given, this might be useful for typesafety?
+  option,
+  # The options we're given, this might be useful for typesafety?
   proj_root,
   ...
 }: let

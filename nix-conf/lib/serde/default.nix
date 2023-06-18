@@ -9,7 +9,8 @@
     pkgs.callPackage
     ({runCommand}:
       # runCommand source: https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/trivial-builders.nix#L33
-        runCommand outputPath {
+        runCommand outputPath
+        {
           inherit yamlContent;
           nativeBuildInputs = [pkgs.yq];
         }
