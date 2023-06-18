@@ -118,7 +118,6 @@ WPlug('folke/neodev.nvim')                       -- Neovim + lua development set
 -- `gsu` -> UPPER_CASE (CONSTs), `gsk` -> kebab-case (Clojure), `gsK` -> Title-Kebab-Case
 -- `gs.` -> dot.case (R)
 WPlug('arthurxavierx/vim-caser') -- switch cases
-WPlug('~/local_repos/ts-ql')     -- workspace code intelligence
 
 ---------
 vim.call('plug#end')
