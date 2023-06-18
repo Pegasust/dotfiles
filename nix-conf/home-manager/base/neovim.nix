@@ -22,9 +22,7 @@
       pkgs.tree-sitter
       pkgs.fzf # file name fuzzy search
       pkgs.ripgrep # content fuzzy search
-      pkgs.zk # Zettelkasten (limited support)
       pkgs.fd # Required by a Telescope plugin (?)
-      pkgs.stdenv.cc.cc.lib
       pkgs.rnix-lsp # doesn't work, Mason just installs it using cargo
       pkgs.rust4cargo
       pkgs.nickel

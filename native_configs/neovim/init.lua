@@ -111,7 +111,6 @@ WPlug('nvim-treesitter/nvim-treesitter-context') -- Top one-liner context of fun
 WPlug('nvim-treesitter/playground')              -- Sees Treesitter AST - less hair pulling, more PRs
 WPlug('saadparwaiz1/cmp_luasnip')                -- snippet engine
 WPlug('L3MON4D3/LuaSnip')                        -- snippet engine
-WPlug('mickael-menu/zk-nvim')                    -- Zettelkasten
 WPlug('folke/neodev.nvim')                       -- Neovim + lua development setup
 -- Switch cases:
 -- `gsp` -> PascalCase (classes), `gsc` -> camelCase (Java), `gs_` -> snake_case (C/C++/Rust)
@@ -209,8 +208,8 @@ vim.opt.completeopt = { "menu", "menuone", "noselect", "noinsert" }
 
 
 -- vim.opt.clipboard = "unnamedplus"
--- more aggressive swap file writing. ThePrimeagen believes higher number
--- leads to low DX
+
+-- more aggressive swap file writing. ThePrimeagen believes higher number leads to low DX
 vim.opt.updatetime = 50
 
 vim.g.mapleader = ' '
@@ -437,16 +436,6 @@ end, { desc = '[F]ind [H]elp' })
 remap('n', '<leader>fd', function()
   require('telescope.builtin').diagnostics()
 end, { desc = '[F]ind [D]iagnostics' })
-
--- ZK remap stuffs
-remap('n', '<leader>zf', function()
-  -- vim.cmd([[:ZkNotes]])
-  require('zk').edit({}, { multi_select = false })
-end, { desc = '[Z]ettelkasten [F]iles' })
-
-remap('n', '<leader>zg', function()
-  vim.cmd(":ZkGrep")
-end, { desc = '[Z]ettelkasten [G]rep' })
 
 -- tab management {{{
 
@@ -1252,49 +1241,6 @@ require("rust-tools").setup {
     },
   },
 }
-
-require('zk').setup({
-  picker = "telescope",
-  lsp = {
-    config = {
-      cmd = { "zk", "lsp" },
-      name = "zk",
-      on_attach = on_attach,
-    },
-    auto_attach = {
-      enable = true,
-      filetypes = { "markdown" }
-    },
-  },
-})
-
--- Custom ZkOrphans that determines unlinked notes
--- `:ZkOrphans {tags = {"work"}}`
-require('zk.commands').add("ZkOrphans", function(options)
-  options = vim.tbl_extend("force", { orphan = true }, options or {})
-  -- zk.edit opens notes picker
-  require('zk').edit(options, { title = "Zk Orphans (unlinked notes)" })
-end)
---
--- ZkGrep: opens file picker
--- In the case where `match_ctor` is falsy, create a prompt.
--- This is so that we distinguish between ZkGrep and ZkNotes
--- Params:
--- match_ctor: string | {match= :string,...} | "" | nil
-require('zk.commands').add("ZkGrep", function(match_ctor)
-  -- handle polymorphic `match_ctor`
-  local grep_str = match_ctor
-  local match
-  if match_ctor == nil or match_ctor == '' then
-    vim.fn.inputsave()
-    grep_str = vim.fn.input('Grep string: >')
-    match = { match = grep_str }
-  elseif type(match_ctor) == 'string' then
-    match = { match = grep_str }
-  end
-  require('zk').edit(match, { title = "Grep: '" .. grep_str .. "'", mutli_select = false })
-end)
-
 
 -- Gitsigns
 require('gitsigns').setup {
