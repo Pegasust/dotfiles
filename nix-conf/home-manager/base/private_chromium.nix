@@ -1,9 +1,13 @@
 # TODO: maybe throw if base.graphics is not enabled?
 # Though, headless chromium might be possible
-{ config, pkgs, lib, ... }:
-let cfg = config.base.private_chromium;
-in
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
+  cfg = config.base.private_chromium;
+in {
   options.base.private_chromium = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -19,33 +23,36 @@ in
     programs.chromium = {
       enable = true;
       package = pkgs.ungoogled-chromium;
-      extensions =
-        let
-          # TODO: how about a chrome extension registry?
-          mkChromiumExtForVersion = browserVersion: { id, sha256, extVersion, ... }:
-            {
-              inherit id;
-              crxPath = builtins.fetchurl {
-                url = "https://clients2.google.com/service/update2/crx" +
-                  "?response=redirect" +
-                  "&acceptformat=crx2,crx3" +
-                  "&prodversion=${browserVersion}" +
-                  "&x=id%3D${id}%26installsource%3Dondemand%26uc";
-                name = "${id}.crx";
-                inherit sha256;
-              };
-              version = extVersion;
-            };
-          mkChromiumExt = mkChromiumExtForVersion (lib.versions.major pkgs.ungoogled-chromium.version);
-        in
-        [
-          # vimium
-          (mkChromiumExt {
-            id = "dbepggeogbaibhgnhhndojpepiihcmeb";
-            sha256 = "00qhbs41gx71q026xaflgwzzridfw1sx3i9yah45cyawv8q7ziic";
-            extVersion = "1.67.4";
-          })
-        ];
+      extensions = let
+        # TODO: how about a chrome extension registry?
+        mkChromiumExtForVersion = browserVersion: {
+          id,
+          sha256,
+          extVersion,
+          ...
+        }: {
+          inherit id;
+          crxPath = builtins.fetchurl {
+            url =
+              "https://clients2.google.com/service/update2/crx"
+              + "?response=redirect"
+              + "&acceptformat=crx2,crx3"
+              + "&prodversion=${browserVersion}"
+              + "&x=id%3D${id}%26installsource%3Dondemand%26uc";
+            name = "${id}.crx";
+            inherit sha256;
+          };
+          version = extVersion;
+        };
+        mkChromiumExt = mkChromiumExtForVersion (lib.versions.major pkgs.ungoogled-chromium.version);
+      in [
+        # vimium
+        (mkChromiumExt {
+          id = "dbepggeogbaibhgnhhndojpepiihcmeb";
+          sha256 = "00qhbs41gx71q026xaflgwzzridfw1sx3i9yah45cyawv8q7ziic";
+          extVersion = "1.67.4";
+        })
+      ];
     };
   };
 }

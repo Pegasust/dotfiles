@@ -1,18 +1,18 @@
-{ nixpkgs
-, agenix
-, home-manager
-, flake-utils
-, nixgl
-, rust-overlay
-, flake-compat
-, pkgs
-, lib
-, proj_root
-, nixosDefaultVersion ? "22.05"
-, defaultSystem ? "x86_64-linux"
-, ...
-}@finalInputs:
-let
+{
+  nixpkgs,
+  agenix,
+  home-manager,
+  flake-utils,
+  nixgl,
+  rust-overlay,
+  flake-compat,
+  pkgs,
+  lib,
+  proj_root,
+  nixosDefaultVersion ? "22.05",
+  defaultSystem ? "x86_64-linux",
+  ...
+} @ finalInputs: let
   config = {
     bao.metadata = {
       # req
@@ -33,54 +33,58 @@ let
       ];
     };
   };
-  propagate = hostConfig@{ metadata, nixosConfig }:
-    let
-      # req
-      inherit (metadata) hostName;
-      # opts
-      ssh_pubkey = lib.attrByPath [ "ssh_pubkey" ] null metadata; # metadata.ssh_pubkey??undefined
-      users = lib.attrByPath [ "users" ] { } metadata;
-      nixosVersion = lib.attrByPath [ "nixosVersion" ] nixosDefaultVersion metadata;
-      system = lib.attrByPath [ "system" ] defaultSystem metadata;
-      preset = lib.attrByPath [ "preset" ] "base" metadata;
-      # infer
-      hardwareConfig = import "${proj_root.hosts.path}/${hostName}/hardware-configuration.nix";
-      # alias to prevent infinite recursion
-      _nixosConfig = nixosConfig;
-    in
-    {
-      inherit hostName ssh_pubkey users nixosVersion system preset hardwareConfig;
-      nixosConfig = _nixosConfig // {
+  propagate = hostConfig @ {
+    metadata,
+    nixosConfig,
+  }: let
+    # req
+    inherit (metadata) hostName;
+    # opts
+    ssh_pubkey = lib.attrByPath ["ssh_pubkey"] null metadata; # metadata.ssh_pubkey??undefined
+    users = lib.attrByPath ["users"] {} metadata;
+    nixosVersion = lib.attrByPath ["nixosVersion"] nixosDefaultVersion metadata;
+    system = lib.attrByPath ["system"] defaultSystem metadata;
+    preset = lib.attrByPath ["preset"] "base" metadata;
+    # infer
+    hardwareConfig = import "${proj_root.hosts.path}/${hostName}/hardware-configuration.nix";
+    # alias to prevent infinite recursion
+    _nixosConfig = nixosConfig;
+  in {
+    inherit hostName ssh_pubkey users nixosVersion system preset hardwareConfig;
+    nixosConfig =
+      _nixosConfig
+      // {
         inherit system;
-        modules = [
-          {
-            config._module.args = {
-              inherit proj_root;
-              my-lib = finalInputs.lib;
-            };
-          }
-          hardwareConfig
-          {
-            system.stateVersion = nixosVersion;
-            networking.hostName = hostName;
-            users.users = users;
-          }
-          {
-            imports = [ agenix.nixosModule ];
-            environment.systemPackages = [ agenix.defaultPackage.x86_64-linux ];
-          }
-          (import "${proj_root.modules.path}/secrets.nix")
-          (import "${proj_root.modules.path}/${preset}.sys.nix")
-        ] ++ _nixosConfig.modules;
+        modules =
+          [
+            {
+              config._module.args = {
+                inherit proj_root;
+                my-lib = finalInputs.lib;
+              };
+            }
+            hardwareConfig
+            {
+              system.stateVersion = nixosVersion;
+              networking.hostName = hostName;
+              users.users = users;
+            }
+            {
+              imports = [agenix.nixosModule];
+              environment.systemPackages = [agenix.defaultPackage.x86_64-linux];
+            }
+            (import "${proj_root.modules.path}/secrets.nix")
+            (import "${proj_root.modules.path}/${preset}.sys.nix")
+          ]
+          ++ _nixosConfig.modules;
       };
-    };
+  };
   # we are blessed by the fact that we engulfed nixpkgs.lib.* at top level
-  mkHostFromPropagated = propagatedHostConfig@{ nixosConfig, ... }: nixpkgs.lib.nixosSystem nixosConfig;
-  mkHost = hostConfig: (lib.pipe [ propagate mkHostFromPropagated ] hostConfig);
+  mkHostFromPropagated = propagatedHostConfig @ {nixosConfig, ...}: nixpkgs.lib.nixosSystem nixosConfig;
+  mkHost = hostConfig: (lib.pipe [propagate mkHostFromPropagated] hostConfig);
   trimNull = lib.filterAttrsRecursive (name: value: value != null);
   flattenPubkey = lib.mapAttrs (hostName: meta_config: meta_config.metadata.ssh_pubkey);
-in
-{
+in {
   nixosConfigurations = lib.mapAttrs (name: hostConfig: mkHost hostConfig) config;
   # {bao = "ssh-ed25519 ..."; another_host = "ssh-rsa ...";}
   pubKeys = lib.getPubkey config;

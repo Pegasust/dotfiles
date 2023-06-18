@@ -1,10 +1,14 @@
-{ config, proj_root, pkgs, lib, ... }:
-let
+{
+  config,
+  proj_root,
+  pkgs,
+  lib,
+  ...
+}: let
   cfg = config.base.keepass;
   trimNull = lib.filterAttrsRecursive (name: value: value != null);
-in
-{
-  imports = [ ./graphics.nix ];
+in {
+  imports = [./graphics.nix];
   options.base.keepass = {
     enable = lib.mkEnableOption "keepass";
     use_gui = lib.mkOption {
@@ -42,12 +46,18 @@ in
     };
   };
   config = lib.mkIf cfg.enable {
-    home.packages = [
-      pkgs.kpcli-py # kp but is in cli
-    ] ++ (if cfg.use_gui or config.base.graphics._enable then [
-      pkgs.keepass # Personal secret management
-    ] else [ ]);
-    home.file.".kp/config.ini".text = lib.generators.toINI { } (trimNull {
+    home.packages =
+      [
+        pkgs.kpcli-py # kp but is in cli
+      ]
+      ++ (
+        if cfg.use_gui or config.base.graphics._enable
+        then [
+          pkgs.keepass # Personal secret management
+        ]
+        else []
+      );
+    home.file.".kp/config.ini".text = lib.generators.toINI {} (trimNull {
       default = {
         KEEPASSDB = cfg.path;
         KEEPASSDB_KEYFILE = cfg.keyfile_path;

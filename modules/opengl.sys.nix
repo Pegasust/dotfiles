@@ -1,15 +1,16 @@
-{ config, pkgs, lib }:
-let
-  gpu_pkgs = [ pkgs.clinfo pkgs.lshw pkgs.glxinfo pkgs.pciutils pkgs.vulkan-tools ];
+{
+  config,
+  pkgs,
+  lib,
+}: let
+  gpu_pkgs = [pkgs.clinfo pkgs.lshw pkgs.glxinfo pkgs.pciutils pkgs.vulkan-tools];
   gpu_conf = {
     # openCL
     hardware.opengl = {
       enable = true;
-      extraPackages =
-        let
-          inherit (pkgs) rocm-opencl-icd rocm-opencl-runtime;
-        in
-        [ rocm-opencl-icd rocm-opencl-runtime ];
+      extraPackages = let
+        inherit (pkgs) rocm-opencl-icd rocm-opencl-runtime;
+      in [rocm-opencl-icd rocm-opencl-runtime];
       # Vulkan
       driSupport = true;
       driSupport32Bit = true;
@@ -18,4 +19,5 @@ let
     };
     environment.systemPackages = gpu_pkgs;
   };
-in gpu_conf
+in
+  gpu_conf

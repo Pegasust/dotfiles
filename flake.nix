@@ -9,10 +9,11 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     deploy-rs.url = "github:serokell/deploy-rs";
     std.url = "github:divnix/std";
-    hive.url = "github:divnix/hive";
+    rust-overlay = "github:oxalica/rust-overlay.git";
   };
 
-  outputs = { std, hive, ... }@inputs: std.growOn
+  outputs = {std, ...} @ inputs:
+    std.growOn
     {
       # boilerplate
       inherit inputs;
@@ -21,22 +22,23 @@
       cellsFrom = ./nix/cells;
       # modules = ./nix/modules;
 
-      cellBlocks =
-        let
-          inherit (std.blockTypes) devshells functions;
-        in
-        [
-          (devshells "devshells")
-          (devshells "userShells")
-          # (functions "host_profile")
-          # (functions "home_profile")
-
-        ];
+      cellBlocks = let
+        inherit (std.blockTypes) devshells functions;
+      in [
+        (devshells "devshells")
+        (devshells "userShells")
+        (functions "home-profiles")
+        (functions "home-modules")
+      ];
     }
     {
-      devShells = std.harvest [ [ "dotfiles" "devshells" ] ];
+      devShells = std.harvest [["dotfiles" "devshells"]];
       # nixosConfigurations = std.pick [ [ "dotfiles" "nixos" ] ];
       # homeConfigurations = std.pick [ [ "dotfiles" "home" ] ];
       homeModules = std.pick [["repo" "home-modules"]];
+
+      # TODO: Debug only
+      homeProfiles = std.pick [["repo" "home-profiles"]];
+      packages = std.harvest [["repo" "home-configs"]];
     };
 }

@@ -1,10 +1,7 @@
-{ lib, ... }:
-
-with lib;
-let
+{lib, ...}:
+with lib; let
   nixos-wsl = import ./nixos-wsl;
-in
-{
+in {
   imports = [
     ./configuration.nix
     nixos-wsl.nixosModules.wsl
@@ -21,9 +18,7 @@ in
 
     # Enable integration with Docker Desktop (needs to be installed)
     docker-desktop.enable = true;
-
   };
   # users.users.<defaultUser>.uid = 1000;
   # networking.hostName = "nixos";
-
 }

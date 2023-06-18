@@ -3,18 +3,17 @@
 # This file represents the base settings for each machine
 # Additional configurations goes to profiles/<user>
 # or inlined in flake.nix
-{ config # Represents the realized final configuration
-, pkgs # This is by default just ``= import <nixpkgs>{}`
-, myHome
-, myLib
-, option # The options we're given, this might be useful for typesafety?
-, proj_root
-, ...
-}:
-let
-  inherit (myLib) fromYaml;
-in
 {
+  config, # Represents the realized final configuration
+  pkgs, # This is by default just ``= import <nixpkgs>{}`
+  myHome,
+  myLib,
+  option, # The options we're given, this might be useful for typesafety?
+  proj_root,
+  ...
+}: let
+  inherit (myLib) fromYaml;
+in {
   imports = [
     ./base/neovim.nix
     ./base/keepass.nix
@@ -24,34 +23,41 @@ in
     homeDirectory = myHome.homeDirectory;
     stateVersion = myHome.stateVersion or "22.05";
   };
-  home.packages = pkgs.lib.unique ([
-    # pkgs.ncdu
-    pkgs.rclone # cloud file operations
-    pkgs.htop # system diagnostics in CLI
-    pkgs.ripgrep # content fuzzy search
-    pkgs.unzip # compression
-    pkgs.zip # compression
+  home.packages = pkgs.lib.unique (
+    [
+      # pkgs.ncdu
+      pkgs.rclone # cloud file operations
+      pkgs.htop # system diagnostics in CLI
+      pkgs.ripgrep # content fuzzy search
+      pkgs.unzip # compression
+      pkgs.zip # compression
 
-    # cool utilities
-    pkgs.yq-go # Yaml adaptor for jq (only pretty print, little query)
-    # pkgs.xorg.xclock # TODO: only include if have gui # For testing GL installation
-    # pkgs.logseq # TODO: only include if have GL # Obsidian alt
-    pkgs.mosh # Parsec for SSH
-    # pkgs.nixops_unstable # nixops v2 # insecure for now
-    pkgs.lynx # Web browser at your local terminal
-    pkgs.zk
+      # cool utilities
+      pkgs.yq-go # Yaml adaptor for jq (only pretty print, little query)
+      # pkgs.xorg.xclock # TODO: only include if have gui # For testing GL installation
+      # pkgs.logseq # TODO: only include if have GL # Obsidian alt
+      pkgs.mosh # Parsec for SSH
+      # pkgs.nixops_unstable # nixops v2 # insecure for now
+      pkgs.lynx # Web browser at your local terminal
+      pkgs.zk
 
-    # pkgs.tailscale # VPC;; This should be installed in system-nix
-    pkgs.python310 # dev packages should be in project
-    # pkgs.python310.numpy
-    # pkgs.python310Packages.tensorflow
-    # pkgs.python310Packages.scikit-learn
-  ] ++ (myHome.packages or [ ]) ++ (if pkgs.system == "x86_64-linux" then [
-    pkgs.logseq
-  ] else [ ])
+      # pkgs.tailscale # VPC;; This should be installed in system-nix
+      pkgs.python310 # dev packages should be in project
+      # pkgs.python310.numpy
+      # pkgs.python310Packages.tensorflow
+      # pkgs.python310Packages.scikit-learn
+    ]
+    ++ (myHome.packages or [])
+    ++ (
+      if pkgs.system == "x86_64-linux"
+      then [
+        pkgs.logseq
+      ]
+      else []
+    )
   );
 
-  ## Configs ## 
+  ## Configs ##
   xdg.configFile."zk/config.toml".source = "${proj_root.config.path}//zk/config.toml";
 
   ## Programs ##

@@ -993,6 +993,29 @@ require('mason-lspconfig').setup_handlers({
       },
     }
   end,
+  ["nil_ls"] = function()
+    require('lspconfig').nil_ls.setup {
+      on_attach = on_attach,
+      capabilities = capabilities,
+      --- refer to https://github.com/oxalica/nil/blob/main/docs/configuration.md
+      --- for the list of configurations available for `nil_ls`
+      settings = {
+        ["nil"] = {
+          formatting = {
+            command = {"nix", "run", "nixpkgs#alejandra"},
+          },
+          nix = {
+            flake = {
+              -- calls `nix flake archive` to put a flake and its output to store
+              autoArchive = true,
+              -- auto eval flake inputs for improved completion
+              autoEvalInputs = true,
+            },
+          },
+        },
+      },
+    }
+  end,
 })
 require("rust-tools").setup {
   tools = {

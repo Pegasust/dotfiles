@@ -1,14 +1,14 @@
 # Configurations for shell stuffs.
 # Should probably be decoupled even more for each feature
-{ config
-, proj_root
-, myLib
-, pkgs
-, ...
-}:
-let cfg = config.base.shells;
-in
 {
+  config,
+  proj_root,
+  myLib,
+  pkgs,
+  ...
+}: let
+  cfg = config.base.shells;
+in {
   options.base.shells = {
     enable = myLib.mkOption {
       type = myLib.types.bool;
@@ -30,7 +30,7 @@ in
     shellAliases = myLib.mkOption {
       type = myLib.types.attrs;
       description = "Shell command aliases";
-      default = { };
+      default = {};
       example = {
         nixGL = "nixGLIntel";
       };
@@ -52,8 +52,8 @@ in
     programs.tmux = {
       enable = true;
       # extraConfigBeforePlugin = builtins.readFile "${proj_root.config.path}/tmux/tmux.conf";
-      plugins = let inherit (pkgs.tmuxPlugins) cpu net-speed; in [ cpu net-speed ];
-      extraConfig = (builtins.readFile "${proj_root.config.path}/tmux/tmux.conf");
+      plugins = let inherit (pkgs.tmuxPlugins) cpu net-speed; in [cpu net-speed];
+      extraConfig = builtins.readFile "${proj_root.config.path}/tmux/tmux.conf";
     };
     xdg.configFile."tmux/tmux.conf".text = myLib.mkOrder 600 ''
       set -g status-right '#{cpu_bg_color} CPU: #{cpu_icon} #{cpu_percentage} | %a %h-%d %H:%M '
@@ -67,15 +67,16 @@ in
     programs.starship = {
       enable = true;
       enableZshIntegration = true;
-      settings = let 
+      settings = let
         native = builtins.fromTOML (builtins.readFile "${proj_root.config.path}/starship/starship.toml");
-        patch-nix = pkgs.lib.recursiveUpdate native ({
+        patch-nix = pkgs.lib.recursiveUpdate native {
           c.commands = [
             ["nix" "run" "nixpkgs#clang" "--" "--version"]
             ["nix" "run" "nixpkgs#gcc" "--" "--version"]
           ];
-        });
-      in patch-nix;
+        };
+      in
+        patch-nix;
     };
     # Fuzzy finder. `fzf` for TUI, `fzf -f '<fuzzy query>'` for UNIX piping
     programs.fzf.enable = true;
@@ -88,10 +89,12 @@ in
       enable = true;
       enableCompletion = true;
       enableAutosuggestions = true;
-      shellAliases = {
-        nix-rebuild = "sudo nixos-rebuild switch";
-        hm-switch = "home-manager switch --flake";
-      } // (cfg.shellAliases or { });
+      shellAliases =
+        {
+          nix-rebuild = "sudo nixos-rebuild switch";
+          hm-switch = "home-manager switch --flake";
+        }
+        // (cfg.shellAliases or {});
       history = {
         size = 10000;
         path = "${config.xdg.dataHome}/zsh/history";
@@ -119,10 +122,11 @@ in
         ZVM_KEYTIMEOUT = 0.004; # 40ms, or subtly around 25 FPS. I'm a gamer :)
         ZVM_ESCAPE_KEYTIMEOUT = 0.004; # 40ms, or subtly around 25 FPS. I'm a gamer :)
       };
-      initExtra = (cfg.shellInitExtra or "") + ''
-        source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-      '';
-
+      initExtra =
+        (cfg.shellInitExtra or "")
+        + ''
+          source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+        '';
     };
   };
 }

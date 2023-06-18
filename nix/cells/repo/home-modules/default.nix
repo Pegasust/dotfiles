@@ -102,7 +102,7 @@ in {
       };
       font.size = lib.mkOption {
         type = lib.types.nullOr lib.types.number;
-        default = null;
+        default = 11.0;
         description = ''
           The default font size for Alacritty. This is probably measured in px.
         '';
@@ -116,7 +116,7 @@ in {
         '';
         example = true;
       };
-      config-file = lib.mkOption {
+      config-path = lib.mkOption {
         type = lib.types.path;
         description = "Path to alacritty yaml";
         default = null;
@@ -126,12 +126,10 @@ in {
     config.programs.alacritty = {
       enable = cfg.enable;
       settings = let ; 
-        actualConfig = if cfg.config-file != null then fromYAML (builtins.readFile cfg.config-file) else {};
+        actualConfig = if cfg.config-path != null then fromYAML (builtins.readFile cfg.config-path) else {};
       in lib.recursiveUpdate actualConfig {
-        font.normal.family = opt-toNullable(opt-leftmostSome (builtins.map opt-fromNullable [
-          cfg.font.family actualConfig.font.family actualConfig.font.normal.family
-        ]));
-        font.size = cfg.font.size or actualConfig.font.size or 7.0;
+        font.normal.family = lib.mkIf (font.family != null) font.family;
+        font.size = lib.mkIf (font.size != null) font.size;
       };
     };
   };

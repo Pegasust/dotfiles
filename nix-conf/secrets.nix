@@ -10,10 +10,8 @@ let
   all = users // systems;
   # stands for calculus
   c_ = builtins;
-in
-{
-  "system/secrets/s3fs.age".publicKeys = c_.attrValues (all);
-  "system/secrets/s3fs.digital-garden.age".publicKeys = c_.attrValues (all);
-  "system/secrets/_nhitrl.age".publicKeys = c_.attrValues (all);
-
+in {
+  "system/secrets/s3fs.age".publicKeys = c_.attrValues all;
+  "system/secrets/s3fs.digital-garden.age".publicKeys = c_.attrValues all;
+  "system/secrets/_nhitrl.age".publicKeys = c_.attrValues all;
 }

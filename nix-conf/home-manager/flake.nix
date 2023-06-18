@@ -43,82 +43,88 @@
     };
   };
 
-  outputs =
-    flake_inputs@{ nixpkgs
-    , home-manager
-    , nixgl
-    , rust-overlay
-    , flake-utils
-    , kpcli-py
-    , neovim-nightly-overlay
-    , nix-boost
-    , nixpkgs-latest
-    , ...
-    }:
-    let
-      # config_fn:: system -> config
-      cross_platform = config_fn: ({
-        packages = builtins.foldl'
-          (prev: system: prev // {
+  outputs = flake_inputs @ {
+    nixpkgs,
+    home-manager,
+    nixgl,
+    rust-overlay,
+    flake-utils,
+    kpcli-py,
+    neovim-nightly-overlay,
+    nix-boost,
+    nixpkgs-latest,
+    ...
+  }: let
+    # config_fn:: system -> config
+    cross_platform = config_fn: {
+      packages =
+        builtins.foldl'
+        (prev: system:
+          prev
+          // {
             "${system}" = config_fn system;
           })
-          { }
-          flake-utils.lib.defaultSystems;
-      });
-    in
-    cross_platform (system:
-    let
-      overlays = import ./overlays.nix (flake_inputs // { inherit system; });
+        {}
+        flake-utils.lib.defaultSystems;
+    };
+  in
+    cross_platform (system: let
+      overlays = import ./overlays.nix (flake_inputs // {inherit system;});
       # pkgs = nixpkgs.legacyPackages.${system}.appendOverlays overlays;
       pkgs = import nixpkgs {
         inherit system overlays;
-        config = { allowUnfree = true; };
+        config = {allowUnfree = true;};
       };
       # lib = (import ../lib { inherit pkgs; lib = pkgs.lib; });
       base = import ./base flake_inputs;
       inherit (base) mkModuleArgs;
 
-      nerd_font_module = { config, pkgs, ... }: {
+      nerd_font_module = {
+        config,
+        pkgs,
+        ...
+      }: {
         fonts.fontconfig.enable = true;
         home.packages = [
           # list of fonts are available at https://github.com/NixOS/nixpkgs/blob/nixos-unstable/pkgs/data/fonts/nerdfonts/shas.nix
-          (pkgs.nerdfonts.override { fonts = [ "Hack" ]; })
+          (pkgs.nerdfonts.override {fonts = ["Hack"];})
         ];
         base.alacritty.font.family = "Hack Nerd Font Mono";
       };
-    in
-    {
+    in {
       debug = {
         inherit overlays pkgs base;
       };
-      homeConfigurations =
-        let
-          x11_wsl = ''
-            # x11 output for WSL
-            export DISPLAY=$(ip route list default | awk '{print $3}'):0
-            export LIBGL_ALWAYS_INDIRECT=1
-          '';
-        in
-        {
-          "hungtr" = home-manager.lib.homeManagerConfiguration {
-            inherit pkgs;
-            modules = base.modules ++ [
+      homeConfigurations = let
+        x11_wsl = ''
+          # x11 output for WSL
+          export DISPLAY=$(ip route list default | awk '{print $3}'):0
+          export LIBGL_ALWAYS_INDIRECT=1
+        '';
+      in {
+        "hungtr" = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules =
+            base.modules
+            ++ [
               ./home.nix
             ];
-            # optionally pass inarguments to module
-            # we migrate this from in-place modules to allow flexibility
-            # in this case, we can add "home" to input arglist of home.nix
-            extraSpecialArgs = mkModuleArgs {
-              inherit pkgs;
-              myHome = {
-                username = "hungtr";
-                homeDirectory = "/home/hungtr";
-              };
+          # optionally pass inarguments to module
+          # we migrate this from in-place modules to allow flexibility
+          # in this case, we can add "home" to input arglist of home.nix
+          extraSpecialArgs = mkModuleArgs {
+            inherit pkgs;
+            myHome = {
+              username = "hungtr";
+              homeDirectory = "/home/hungtr";
             };
           };
-          "hungtr@bao" = home-manager.lib.homeManagerConfiguration {
-            inherit pkgs;
-            modules = base.modules ++ [
+        };
+        "hungtr@bao" = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules =
+            base.modules
+            ++ [
               ./home.nix
               nerd_font_module
               ./base/productive_desktop.nix
@@ -131,21 +137,23 @@
                 base.graphics.useNixGL.enable = true;
               }
             ];
-            # optionally pass inarguments to module
-            # we migrate this from in-place modules to allow flexibility
-            # in this case, we can add "home" to input arglist of home.nix
-            extraSpecialArgs = mkModuleArgs {
-              inherit pkgs;
-              myHome = {
-                username = "hungtr";
-                homeDirectory = "/home/hungtr";
-              };
+          # optionally pass inarguments to module
+          # we migrate this from in-place modules to allow flexibility
+          # in this case, we can add "home" to input arglist of home.nix
+          extraSpecialArgs = mkModuleArgs {
+            inherit pkgs;
+            myHome = {
+              username = "hungtr";
+              homeDirectory = "/home/hungtr";
             };
           };
-          # Personal darwin, effectively serves as the Darwin edge channel
-          "hungtran" = home-manager.lib.homeManagerConfiguration {
-            inherit pkgs;
-            modules = base.modules ++ [
+        };
+        # Personal darwin, effectively serves as the Darwin edge channel
+        "hungtran" = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules =
+            base.modules
+            ++ [
               ./home.nix
               {
                 base.graphics.enable = false;
@@ -166,18 +174,20 @@
                 ];
               }
             ];
-            extraSpecialArgs = mkModuleArgs {
-              inherit pkgs;
-              myHome = {
-                username = "hungtran";
-                homeDirectory = "/Users/hungtran";
-              };
+          extraSpecialArgs = mkModuleArgs {
+            inherit pkgs;
+            myHome = {
+              username = "hungtran";
+              homeDirectory = "/Users/hungtran";
             };
           };
-          # Work darwin
-          "htran" = home-manager.lib.homeManagerConfiguration {
-            inherit pkgs;
-            modules = base.modules ++ [
+        };
+        # Work darwin
+        "htran" = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules =
+            base.modules
+            ++ [
               ./home.nix
               ./base/productive_desktop.nix
               ./base/darwin-spotlight.nix
@@ -198,42 +208,46 @@
                   pkgs.postman
                 ];
               }
-              { base.keepass.enable = pkgs.lib.mkForce false; }
+              {base.keepass.enable = pkgs.lib.mkForce false;}
             ];
-            extraSpecialArgs = mkModuleArgs {
-              inherit pkgs;
-              myHome = {
-                username = "htran";
-                homeDirectory = "/Users/htran";
-              };
+          extraSpecialArgs = mkModuleArgs {
+            inherit pkgs;
+            myHome = {
+              username = "htran";
+              homeDirectory = "/Users/htran";
             };
           };
-          "nixos@Felia" = home-manager.lib.homeManagerConfiguration {
-            inherit pkgs;
-            modules = [
-              ./home.nix
-              {
-                base.shells = {
-                  shellInitExtra = ''
-                '' + x11_wsl;
-                };
-              }
-            ];
-            # optionally pass inarguments to module
-            # we migrate this from in-place modules to allow flexibility
-            # in this case, we can add "home" to input arglist of home.nix
-            extraSpecialArgs = mkModuleArgs {
-              inherit pkgs;
-              myHome = {
-                username = "nixos";
-                homeDirectory = "/home/nixos";
+        };
+        "nixos@Felia" = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [
+            ./home.nix
+            {
+              base.shells = {
+                shellInitExtra =
+                  ''
+                  ''
+                  + x11_wsl;
               };
+            }
+          ];
+          # optionally pass inarguments to module
+          # we migrate this from in-place modules to allow flexibility
+          # in this case, we can add "home" to input arglist of home.nix
+          extraSpecialArgs = mkModuleArgs {
+            inherit pkgs;
+            myHome = {
+              username = "nixos";
+              homeDirectory = "/home/nixos";
             };
           };
-          # Personal laptop
-          hwtr = home-manager.lib.homeManagerConfiguration {
-            inherit pkgs;
-            modules = base.modules ++ [
+        };
+        # Personal laptop
+        hwtr = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules =
+            base.modules
+            ++ [
               ./home.nix
               ./base/graphics.nix
               {
@@ -244,17 +258,17 @@
               ./base/productive_desktop.nix
             ];
 
-            extraSpecialArgs = mkModuleArgs {
-              inherit pkgs;
-              myHome = {
-                username = "hwtr";
-                homeDirectory = "/home/hwtr";
-                packages = [
-                  pkgs.postman
-                ];
-              };
+          extraSpecialArgs = mkModuleArgs {
+            inherit pkgs;
+            myHome = {
+              username = "hwtr";
+              homeDirectory = "/home/hwtr";
+              packages = [
+                pkgs.postman
+              ];
             };
           };
         };
+      };
     });
 }

@@ -1,8 +1,8 @@
-{ config
-, myLib
-, ...
-}:
-let
+{
+  config,
+  myLib,
+  ...
+}: let
   cfg = config.base.git;
   baseAliases = {
     a = "add";
@@ -15,12 +15,11 @@ let
     co = "checkout";
     b = "branch";
   };
-in
-{
+in {
   options.base.git = {
     aliases = myLib.mkOption {
       type = myLib.types.attrs;
-      default = { };
+      default = {};
       example = baseAliases;
       description = ''
         Additional git aliases. This settings comes with base configuration.
@@ -50,7 +49,7 @@ in
         .gitignore patterns that are applied in every repository.
         This is useful for IDE-specific settings.
       '';
-      example = [ ".direnv" "node_modules" ];
+      example = [".direnv" "node_modules"];
     };
     enable = myLib.mkOption {
       type = myLib.types.bool;

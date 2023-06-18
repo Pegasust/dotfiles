@@ -1,6 +1,4 @@
-{ proj_root
-, ...
-}: {
+{proj_root, ...}: {
   age.secrets.s3fs = {
     file = "${proj_root.secrets.path}/s3fs.age";
     # mode = "600";  # owner + group only

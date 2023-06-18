@@ -13,6 +13,7 @@
 in {
   fromYAML = yamlContent: bulitins.fromJSON (builtins.readFile (yamlToJsonDrv inputs.nixpkgs yamlContent "fromYaml.json"));
 
+  # NOTE: Deprecate
   # ctor
   opt-some = a: [a];
   opt-none = [];
