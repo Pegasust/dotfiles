@@ -5,6 +5,10 @@ Contains my configurations for the software I use.
 I'm looking to move forward to configuration with NixOS, but until I get
 a bit more experiment on NixOS, I'll keep this repository as simple as possible.
 
+- As of 2023-06-07, I have little interest in keeping configurations 
+([`init.lua`](./native_configs/neovim/init.lua), [`sshconfig`](./native_configs/ssh/config),...) 
+to be idempotent for Nix and non-Nix targets.
+
 ## Nix
 
 Monorepo that contains my commonly used personal environments.
@@ -13,8 +17,7 @@ onto this repo for quick env setup (especially devel) on new machines.
 
 ## How do I apply these config
 
-- I will always first clone this repository, preferably from local source before
-going from the github. `git clone https://github.com/pegasust/dotfiles`
+- Clone and nixify
 
 ### neovim
 
@@ -26,7 +29,6 @@ My main text editor. It's based on `vim`, but stays loyal to `lua` ecosystem
 #### Notes
 
 - Ensure that neovim is installed and invocable by `nvim`.
-- My config based on rather experimental version of`nvim` (>=0.7.2)
 - For information on installing neovim, visit their [github page](https://github.com/neovim/neovim/wiki/Installing-Neovim)
 
 ### tmux
@@ -40,7 +42,7 @@ from one terminal.
 
 #### Notes
 
-- Unsure if the minimum version of tmux. I have had an ancient HPC server
+- Unsure of the minimum version of tmux. I have had an ancient HPC server
 that does not respond well to one of the config lines.
 
 ### zk
@@ -56,5 +58,24 @@ text-editor agnostically.
 
 - Templates: `zk/templates/`
 - Command: `ln -s $PWD/zk/templates ~/.config/zk/templates`
+
+Note (2023-06-07): I'm now using a mix of nvim-zk with Notion. I'm still figuring out
+a centralize place to put my notes and use it to do some knowledge graph magic
+
+## Troubleshoots
+
+### My MacOS just updated, `nix` is no-longer here
+
+- An easy fix is to add the following  to the **bottom** of `/etc/zshrc`
+
+```sh
+# Nix {{{
+if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+  . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+fi
+# }}} 
+```
+
+- Otherwise, consult [`gh-gist:meeech/a_help-osx-borked-my-nix.md`](https://gist.github.com/meeech/0b97a86f235d10bc4e2a1116eec38e7e)
 
 

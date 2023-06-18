@@ -1,6 +1,3 @@
-Host *
-    IdentityFile ~/.ssh/id_rsa
-
 # felia mirror on windows
 Host felia-win
     HostName felia.coati-celsius.ts.net
@@ -51,4 +48,95 @@ Host noami
     HostName 10.100.200.230
     User htran
     Port 22
+
+Host sr1
+    HostName 10.30.76.46
+    User htran
+    Port 22
+    StrictHostKeyChecking no
+    HostKeyAlgorithms=+ssh-dss,ssh-rsa
+    KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1
+
+Host bgp1
+    HostName 10.111.100.113
+    User htran
+    Port 22
+    StrictHostKeyChecking no
+    HostKeyAlgorithms=+ssh-dss,ssh-rsa
+    KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1
+
+Host bgp2
+    HostName 10.111.100.114
+    User htran
+    Port 22
+    StrictHostKeyChecking no
+    HostKeyAlgorithms=+ssh-dss,ssh-rsa
+    KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1
+Host d1-30
+    HostName 10.111.103.60
+    User htran
+    Port 22
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+    IdentityFile ~/.ssh/id_ed25519
+    IdentityFile ~/.ssh/id_rsa 
+
+Host d3l-3
+    HostName 10.111.103.65
+    User htran
+    Port 22
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+    IdentityFile ~/.ssh/id_ed25519
+    IdentityFile ~/.ssh/id_rsa 
+
+Host dev0
+    HostName 10.100.200.230
+    User htran
+    Port 22
+
+Host dev2
+    HostName 10.100.200.210
+    User htran
+    Port 22
+
+Host dev1
+    HostName 10.100.200.220
+    User htran
+    Port 22
+
+
+Host ztp-egi
+    HostName 10.23.27.201
+    User root
+    Port 22
+    
+Host goat
+    HostName 10.133.32.100
+    User "EGN NOC"
+    Port 22
+
+Host portal2
+    HostName portal2.egihosting.com
+    User root
+    Port 22
+
+Host egn-rest-api
+    HostName egn-rest-api.egihosting.com
+    User root
+    Port 22
+
+Host gl-egi
+    HostName gitlab.egihosting.com
+    User git
+    Port 22
+    IdentityFile ~/.ssh/id_ed25519
+
+Host 10.111.103.*
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+
+Host *
+    IdentityFile ~/.ssh/id_ed25519
+    IdentityFile ~/.ssh/id_rsa 
 

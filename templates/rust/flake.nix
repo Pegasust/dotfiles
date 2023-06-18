@@ -6,23 +6,29 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
-  outputs = { self, nixpkgs, utils, naersk, rust-overlay }:
-    utils.lib.eachDefaultSystem (system:
-      let
-        overlays = [ rust-overlay.overlays.default ];
-        pkgs = import nixpkgs { inherit system overlays; };
-        rust_pkgs = (pkgs.rust-bin.selectLatestNightlyWith
-          (
-            toolchain:
+  outputs = {
+    self,
+    nixpkgs,
+    utils,
+    naersk,
+    rust-overlay,
+  }:
+    utils.lib.eachDefaultSystem (system: let
+      overlays = [rust-overlay.overlays.default];
+      pkgs = import nixpkgs {inherit system overlays;};
+      rust_pkgs =
+        pkgs.rust-bin.selectLatestNightlyWith
+        (
+          toolchain:
             toolchain.default.override {
-              extensions = [ "rust-src" "rust-analyzer" "rust-docs" "clippy" "miri" ];
+              extensions = ["rust-src" "rust-analyzer" "rust-docs" "clippy" "miri"];
             }
-          ));
-        naersk-lib = pkgs.callPackage naersk { };
-      in
-      {
-        defaultPackage = naersk-lib.buildPackage ./.;
-        devShell = with pkgs; mkShell {
+        );
+      naersk-lib = pkgs.callPackage naersk {};
+    in {
+      defaultPackage = naersk-lib.buildPackage ./.;
+      devShell = with pkgs;
+        mkShell {
           buildInputs = [
             rust_pkgs
             # rust's compiler is quite powerful enough to the point where
@@ -37,5 +43,5 @@
             # nix flake update # is this even needed?
           '';
         };
-      });
+    });
 }

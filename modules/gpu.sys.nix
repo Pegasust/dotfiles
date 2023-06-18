@@ -1,8 +1,8 @@
-{ pkgs, ... }: {
-  environment.systemPackages = [ pkgs.clinfo pkgs.lshw pkgs.glxinfo pkgs.pciutils pkgs.vulkan-tools ];
+{pkgs, ...}: {
+  environment.systemPackages = [pkgs.clinfo pkgs.lshw pkgs.glxinfo pkgs.pciutils pkgs.vulkan-tools];
   hardware.opengl = {
     enable = true;
-    extraPackages = [ pkgs.rocm-opencl-icd pkgs.rocm-opencl-runtime ];
+    extraPackages = [pkgs.rocm-opencl-icd pkgs.rocm-opencl-runtime];
     # Vulkan
     driSupport = true;
     driSupport32Bit = true;

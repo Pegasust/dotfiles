@@ -1,6 +1,4 @@
-{nix-index-database
-,...
-}@inputs:{
+{nix-index-database, ...} @ inputs: {
   mkModuleArgs = import ./mkModuleArgs.nix;
   modules = [
     ./alacritty.nix

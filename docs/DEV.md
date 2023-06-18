@@ -28,7 +28,7 @@ documentations and defaults
 
 - `nativeBuildInputs` is supposed to be built by a deployment machine (not target)
 
-- `buildInputs` gives you access during runtime
+- `buildInputs` gives you access during runtime (if the package goes path build filter)
 
 - `nativeBulidInputs` gives you access to packages during build time
 

@@ -1,3 +1,4 @@
+
 {
     "256.25": {
         "url": "https://download.nvidia.com/XFree86/Linux-x86_64/256.25/NVIDIA-Linux-x86_64-256.25.run",
@@ -539,6 +540,10 @@
         "url": "https://download.nvidia.com/XFree86/Linux-x86_64/470.161.03/NVIDIA-Linux-x86_64-470.161.03.run",
         "sha256": "5da82a7f8c76e781e7d7f0be7b798db4d344f26bd4facf9abcf3c71c71fe7640"
     },
+    "470.182.03": {
+        "url": "https://download.nvidia.com/XFree86/Linux-x86_64/470.182.03/NVIDIA-Linux-x86_64-470.182.03.run",
+        "sha256": "3dbc1408fc48b865d3ddacefc45f4a3fc13b90b83a628ee546b0082ab2c3fc79"
+    },
     "510.108.03": {
         "url": "https://download.nvidia.com/XFree86/Linux-x86_64/510.108.03/NVIDIA-Linux-x86_64-510.108.03.run",
         "sha256": "410a515e78df29c2cba4ac0b497889ce0ff1b04cfc711ff889e2dfc80f0da0d8"
@@ -546,6 +551,10 @@
     "515.86.01": {
         "url": "https://download.nvidia.com/XFree86/Linux-x86_64/515.86.01/NVIDIA-Linux-x86_64-515.86.01.run",
         "sha256": "141777e1ca2f11e97d8d33260213f1be327eb73922ae22f4ddab404bb2ef4664"
+    },
+    "515.105.01": {
+        "url": "https://download.nvidia.com/XFree86/Linux-x86_64/515.105.01/NVIDIA-Linux-x86_64-515.105.01.run",
+        "sha256": "9dd2221f26c847c864dfe80cc8533f322c5f4dfaa2939cf54a934b8f7a2f6a0d"
     },
     "525.53": {
         "url": "https://download.nvidia.com/XFree86/Linux-x86_64/525.53/NVIDIA-Linux-x86_64-525.53.run",
@@ -563,8 +572,28 @@
         "url": "https://download.nvidia.com/XFree86/Linux-x86_64/525.78.01/NVIDIA-Linux-x86_64-525.78.01.run",
         "sha256": "43da42d2bf69bc37ea9c7c0fa02f52db0dcc483c272f52edacad89a5cb495a93"
     },
+    "525.85.05": {
+        "url": "https://download.nvidia.com/XFree86/Linux-x86_64/525.85.05/NVIDIA-Linux-x86_64-525.85.05.run",
+        "sha256": "ea63b4253403b224bb7313a8977a920dfe9d203d661dd5f6fc26585a70179140"
+    },
+    "525.89.02": {
+        "url": "https://download.nvidia.com/XFree86/Linux-x86_64/525.89.02/NVIDIA-Linux-x86_64-525.89.02.run",
+        "sha256": "0e412c88c5bd98f842a839a6f64614f20e4c0950ef7cffb12b158a71633593e9"
+    },
+    "525.105.17": {
+        "url": "https://download.nvidia.com/XFree86/Linux-x86_64/525.105.17/NVIDIA-Linux-x86_64-525.105.17.run",
+        "sha256": "c635a21a282c9b53485f19ebb64a0f4b536a968b94d4d97629e0bc547a58142a"
+    },
+    "530.30.02": {
+        "url": "https://download.nvidia.com/XFree86/Linux-x86_64/530.30.02/NVIDIA-Linux-x86_64-530.30.02.run",
+        "sha256": "47fddbbd7a22ba661923dbce6e7f51eec54df68050c406cc0490c3bfbede7963"
+    },
+    "530.41.03": {
+        "url": "https://download.nvidia.com/XFree86/Linux-x86_64/530.41.03/NVIDIA-Linux-x86_64-530.41.03.run",
+        "sha256": "ae27a16a968c85503f5d161dda343c1602612b025f4aee15f92e2ea0acb784b1"
+    },
     "latest": {
-        "url": "https://download.nvidia.com/XFree86/Linux-x86_64/525.78.01/NVIDIA-Linux-x86_64-525.78.01.run",
-        "sha256": "43da42d2bf69bc37ea9c7c0fa02f52db0dcc483c272f52edacad89a5cb495a93"
+        "url": "https://download.nvidia.com/XFree86/Linux-x86_64/530.41.03/NVIDIA-Linux-x86_64-530.41.03.run",
+        "sha256": "ae27a16a968c85503f5d161dda343c1602612b025f4aee15f92e2ea0acb784b1"
     }
 }

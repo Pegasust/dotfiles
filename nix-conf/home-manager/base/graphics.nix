@@ -1,11 +1,14 @@
-{ pkgs, config, lib, ... }:
-let
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}: let
   cfg = config.base.graphics;
   cfgEnable = cfg.enable or (cfg.useNixGL.defaultPackage != null);
   types = lib.types;
-in
-{
-  imports = [ ./shells.nix ];
+in {
+  imports = [./shells.nix];
   options.base.graphics = {
     enable = lib.mkEnableOption "graphics";
     _enable = lib.mkOption {
@@ -23,14 +26,14 @@ in
         ];
       };
       defaultPackage = lib.mkOption {
-        type = types.nullOr (types.enum [ "nixGLIntel" "nixGLNvidia" "nixGLNvidiaBumblebee" ]);
+        type = types.nullOr (types.enum ["nixGLIntel" "nixGLNvidia" "nixGLNvidiaBumblebee"]);
         description = "Which nixGL package to be aliased as `nixGL` on the shell";
         default = null;
         example = "nixGLIntel";
       };
     };
   };
-  # importing shells does not mean we're enabling everything, if we do mkDefault false
+  # NOTE: importing shells does not mean we're enabling everything, if we do mkDefault false
   # but the dilemma is, if the user import BOTH graphics.nix and shells.nix
   # they will also need to do `config.base.shells.enable`
   # generally, we want the behavior: import means enable
@@ -41,6 +44,6 @@ in
         nixGL = cfg.useNixGL.defaultPackage;
       };
     };
-    home.packages = [ cfg.useNixGL.package ];
+    home.packages = [cfg.useNixGL.package];
   };
 }

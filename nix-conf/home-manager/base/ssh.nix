@@ -1,11 +1,11 @@
-{ config
-, proj_root
-, myLib
-, ...
-}:
-let cfg = config.base.ssh;
-in
 {
+  config,
+  proj_root,
+  myLib,
+  ...
+}: let
+  cfg = config.base.ssh;
+in {
   options.base.ssh.enable = myLib.mkOption {
     type = myLib.types.bool;
     default = true;
@@ -17,7 +17,6 @@ in
   config.programs.ssh = {
     inherit (cfg) enable;
     forwardAgent = true;
-    extraConfig = builtins.readFile "${proj_root.config.path}/ssh/config";
+    includes = ["${proj_root.config.path}/ssh/config"];
   };
 }
-
