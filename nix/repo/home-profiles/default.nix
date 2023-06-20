@@ -148,7 +148,6 @@ in {
   };
 
   git-htran = {
-    imports = [inputs.cells.repo.home-profiles.git];
     config."${namespace}".profile.git = {
       name = "htran";
       email = "htran@egihosting.com";
@@ -156,7 +155,6 @@ in {
   };
 
   git-pegasust = {
-    imports = [inputs.cells.repo.home-profiles.git];
     config."${namespace}".profile.git = {
       email = "pegasucksgg@gmail.com";
       name = "pegasust";

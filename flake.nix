@@ -31,6 +31,9 @@
       # Should show the latest nixpkgs whenever possible
       inputs.nixpkgs.follows = "nixpkgs-latest";
     };
+    sg-nvim = {
+      url = "git+https://git.pegasust.com/pegasust/sg.nvim?ref=cody-init";
+    };
   };
 
   outputs = {
@@ -42,9 +45,9 @@
     {
       # boilerplate
       inherit inputs;
-      # All cell blocks are under ./nix/cells/<cell>/<cellblock> as `<cellblock>.nix`
+      # All cell blocks are under ./nix/<cell>/<cellblock> as `<cellblock>.nix`
       # or `<cellblock/default.nix`
-      cellsFrom = ./nix/cells;
+      cellsFrom = ./nix;
       # modules = ./nix/modules;
 
       cellBlocks = let

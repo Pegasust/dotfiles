@@ -1,5 +1,4 @@
 # TODO: vim-plug and Mason supports laziness. Probably worth it to explore incremental dependencies based on the project TODO: just install these things, then symlink to mason's bin directory
-#
 # One thing to consider, though, /nix/store of `nix-shell` or `nix-develop`
 # might be different from `home-manager`'s (~/.nix_profile/bin/jq)
 {
@@ -32,6 +31,7 @@
       inputs.nix-boost.packages."${system}".rust4cargo
       pkgs.nickel
       pkgs.nls
+      inputs.sg-nvim.packages.${system}.default
 
       pkgs.go # doesn't work, Mason installs from runtime path
 
@@ -126,7 +126,9 @@ in {
           vim-dispatch-neovim
           vim-fugitive
           vim-jack-in
+          nui-nvim
           ;
+        inherit (inputs.cells.dotfiles.packages) sg-nvim;
       in [
         plenary-nvim
         nvim-treesitter.withAllGrammars
@@ -171,6 +173,16 @@ in {
         vim-dispatch-neovim
         vim-fugitive
         vim-jack-in
+        ({ 
+          plugin = sg-nvim;
+          # Wait, this mean the plugin is only lua only since package.cpath is Lua API
+          config = ''
+            package.cpath = package.cpath .. ";${sg-nvim}/lib/*.so;${sg-nvim}/lib/*.dylib"
+          '';
+          type = "lua";
+          
+        })
+        nui-nvim
       ];
     };
     # home.packages = nvim_pkgs;

@@ -41,7 +41,9 @@ end
 vim.call('plug#begin')
 
 -- libs and dependencies
--- Plug('nvim-lua/plenary.nvim') -- The base of all plugins
+WPlug('nvim-lua/plenary.nvim')   -- The base of all plugins
+WPlug('MunifTanjim/nui.nvim')    -- For some .so or .dylib neovim UI action
+
 
 -- plugins
 WPlug('tjdevries/nlua.nvim')                                 -- adds symbols of vim stuffs in init.lua
@@ -94,6 +96,7 @@ WPlug('radenling/vim-dispatch-neovim')     -- Add support for neovim's terminal 
 WPlug('gennaro-tedesco/nvim-jqx')          -- JSON formatter (use :Jqx*)
 WPlug('kylechui/nvim-surround')            -- surrounds with tags/parenthesis
 WPlug('simrat39/rust-tools.nvim')          -- config rust-analyzer and nvim integration
+WPlug('tjdevries/sg.nvim')                 -- Cody and other cool sourcegraph stuffs
 
 -- UI & colorscheme
 WPlug('simrat39/inlay-hints.nvim')              -- type-hints with pseudo-virtual texts
@@ -667,6 +670,10 @@ local on_attach = function(client, bufnr)
   -- enable inlay hints if available
   require('inlay-hints').on_attach(client, bufnr)
 end
+
+require("sg").setup {
+  on_attach = on_attach,
+}
 -- nvim-cmp
 
 local cmp = require 'cmp'
@@ -1401,3 +1408,5 @@ require("colorizer").setup {
   -- all the sub-options of filetypes apply to buftypes
   buftypes = {},
 }
+
+

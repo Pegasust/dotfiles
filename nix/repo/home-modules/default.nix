@@ -11,6 +11,7 @@ in {
   git = {
     config,
     lib,
+    options,
     ...
   }: let
     cfg = config."${namespace}".git;

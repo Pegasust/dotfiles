@@ -19,7 +19,7 @@
   nvim_pkgs =
     [
       # pkgs.gccStdenv
-      pkgs.tree-sitter
+      # pkgs.tree-sitter
       pkgs.fzf # file name fuzzy search
       pkgs.ripgrep # content fuzzy search
       pkgs.fd # Required by a Telescope plugin (?)
@@ -131,6 +131,7 @@ in {
           vim-dispatch-neovim
           vim-fugitive
           vim-jack-in
+          sg-nvim
           ;
       in [
         plenary-nvim
@@ -176,6 +177,7 @@ in {
         vim-dispatch-neovim
         vim-fugitive
         vim-jack-in
+        sg-nvim
       ];
     };
     # home.packages = nvim_pkgs;

@@ -21,7 +21,7 @@
 
   base-modules = [
     home-profiles.alacritty
-    # home-profiles.git
+    home-profiles.git
     home-profiles.ssh
     home-profiles.shells
     {config.programs.home-manager.enable = true;}
