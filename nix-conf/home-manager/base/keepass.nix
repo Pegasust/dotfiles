@@ -9,7 +9,7 @@ in
     enable = lib.mkEnableOption "keepass";
     use_gui = lib.mkOption {
       type = lib.types.bool;
-      description = "wheter to enable keepass GUI (the original one)";
+      description = "Whether to enable keepass GUI (the original one)";
       default = false;
       example = "true";
     };
@@ -47,12 +47,13 @@ in
     ] ++ (if cfg.use_gui or config.base.graphics._enable then [
       pkgs.keepass # Personal secret management
     ] else [ ]);
+    # TODO: an alternative is to symlink safely-stored password onto here
     home.file.".kp/config.ini".text = lib.generators.toINI { } (trimNull {
       default = {
         KEEPASSDB = cfg.path;
         KEEPASSDB_KEYFILE = cfg.keyfile_path;
         STORE_ENCRYPTED_PASSWORD = cfg.store_encrypted_password;
-        KEEPASSDB_PASSWORD = null; # No good way yet to store the password
+        KEEPASSDB_PASSWORD = null; # TODO: There is no way to store via file. This field expects plain-text
         KEEPASSDB_TIMEOUT = cfg.copy_timeout_secs;
       };
     });

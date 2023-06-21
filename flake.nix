@@ -9,8 +9,8 @@
     nixpkgs.url = "nixpkgs/nixos-unstable";
     # continously merged & rebased lightweight .lib. Basically a huge extension to c_.
     nixlib.url = "github:nix-community/nixpkgs.lib";
-    agenix = {
-      url = "github:ryantm/agenix";
+    ragenix = {
+      url = "github:yaxitech/ragenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
@@ -43,7 +43,7 @@
 
   outputs =
     { nixpkgs
-    , agenix
+    , ragenix
     , home-manager
     , flake-utils
     , nixgl
@@ -110,7 +110,7 @@
       inherit (users) homeConfigurations;
       inherit lib proj_root;
       devShells = forEachSystem (system:
-        {default = (import ./dev-shell.nix final_inputs.${system});}
+        { default = (import ./dev-shell.nix final_inputs.${system}); }
       );
       templates = forEachSystem (system: import ./templates final_inputs.${system});
       secrets = {
