@@ -17,6 +17,8 @@
     neovim-nightly-overlay = {
       # need to pin this until darwin build is successful again.
       url = "github:nix-community/neovim-nightly-overlay?rev=88a6c749a7d126c49f3374f9f28ca452ea9419b8";
+      # url = "github:nix-community/neovim-nightly-overlay";
+
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-boost = {
@@ -32,7 +34,7 @@
       inputs.nixpkgs.follows = "nixpkgs-latest";
     };
     sg-nvim = {
-      url = "git+https://git.pegasust.com/pegasust/sg.nvim?ref=cody-init";
+      url = "git+https://github.com/pegasust/sg.nvim?ref=sg-cody-discover";
     };
   };
 

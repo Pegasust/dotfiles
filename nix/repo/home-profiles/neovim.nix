@@ -1,4 +1,5 @@
-# TODO: vim-plug and Mason supports laziness. Probably worth it to explore incremental dependencies based on the project TODO: just install these things, then symlink to mason's bin directory
+# TODO: vim-plug and Mason supports laziness. Probably worth it to explore incremental dependencies based on the project 
+# TODO: just install these things, then symlink to mason's bin directory
 # One thing to consider, though, /nix/store of `nix-shell` or `nix-develop`
 # might be different from `home-manager`'s (~/.nix_profile/bin/jq)
 {
@@ -11,13 +12,15 @@
   config,
   ...
 }: let
+  inherit (inputs.nixpkgs) system;
   # NOTE: Add packages to nvim_pkgs instead, so that it's available at userspace
   # and is added to the path after wrapping.
   # check: nix repl `homeConfigurations.hungtr.config.programs.neovim.finalPackage.buildCommand`
   # see: :/--suffix.*PATH
   # there should be mentions of additional packages
-  my_neovim = pkgs.neovim-unwrapped;
-  inherit (inputs.nixpkgs) system;
+  # my_neovim = pkgs.neovim-unwrapped;
+
+  my_neovim = inputs.neovim-nightly-overlay.packages.${system}.neovim;
   nvim_pkgs =
     [
       # pkgs.gccStdenv
