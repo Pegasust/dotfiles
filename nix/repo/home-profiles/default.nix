@@ -89,8 +89,7 @@ in {
     ];
     config."${namespace}".kitty = {
       enable = true;
-      font.size = 11.0;
-      config = ../../../native_configs/kitty/kitty.conf;
+      conf = "${inputs.self}/native_configs/kitty/kitty.conf";
     };
   };
 

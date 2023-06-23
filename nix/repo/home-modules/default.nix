@@ -159,36 +159,21 @@ in {
     cfg = config."${namespace}".kitty;
   in {
     options."${namespace}".kitty = {
-      font.family = lib.mkOption {
-        type = lib.types.nullOr lib.types.singleLineStr;
-        default = null;
-        description = "Font family for Kitty";
-      };
-      font.size = lib.mkOption {
-        type = lib.types.nullOr lib.types.number;
-        default = 11.0;
-        description = ''
-          The default font size for Kitty. This is probably measured in px.
-        '';
-        example = 7.0;
-      };
       enable = lib.mkOption {
         type = lib.types.bool;
         default = false;
         description = "Enables kitty";
       };
-      config = lib.mkOption {
+      conf = lib.mkOption {
         type = lib.types.nullOr lib.types.path;
         default = null;
         description = "Path to kitty.conf. See https://sw.kovidgoyal.net/kitty/conf.html";
-        example = ../../../native_configs/kitty/kitty.conf;
+        example = "../../../native_configs/kitty/kitty.conf";
       };
     };
     config.programs.kitty = {
       enable = cfg.enable;
-      font.name = lib.mkIf (cfg.font.family != null) cfg.font.family;
-      font.size = cfg.font.size;
-      setings = lib.mkIf (cfg.config != null) (builtins.readFile cfg.config);
+      extraConfig = lib.mkIf (cfg.conf != null) (builtins.readFile cfg.conf);
     };
   };
 
