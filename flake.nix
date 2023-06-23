@@ -9,7 +9,10 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-latest.url = "github:nixos/nixpkgs";
     # deploy-rs.url = "github:serokell/deploy-rs";
-    std.url = "github:divnix/std";
+    std = {
+      url = "github:divnix/std";
+      inputs.devshell.url = "github:numtide/devshell";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";

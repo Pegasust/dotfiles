@@ -67,9 +67,7 @@ in {
     config,
     lib,
     ...
-  }: let
-    cfg = config."${namespace}".alacritty;
-  in {
+  }: {
     imports = [
       inputs.cells.repo.home-modules.alacritty
     ];
@@ -78,6 +76,21 @@ in {
       config-path = "${inputs.self}//native_configs/alacritty/alacritty.yml";
       font.size = 11.0;
       font.family = "Hack Nerd Font Mono";
+    };
+  };
+
+  kitty = {
+    config,
+    lib,
+    ...
+  }: {
+    imports = [
+      inputs.cells.repo.home-modules.kitty
+    ];
+    config."${namespace}".kitty = {
+      enable = true;
+      font.size = 11.0;
+      config = ../../../native_configs/kitty/kitty.conf;
     };
   };
 

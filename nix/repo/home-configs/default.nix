@@ -21,6 +21,7 @@
 
   base-modules = [
     home-profiles.alacritty
+    home-profiles.kitty
     home-profiles.git
     home-profiles.ssh
     home-profiles.shells
