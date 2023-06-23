@@ -72,6 +72,7 @@ Host bgp2
     StrictHostKeyChecking no
     HostKeyAlgorithms=+ssh-dss,ssh-rsa
     KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1
+
 Host d1-30
     HostName 10.111.103.60
     User htran
@@ -131,12 +132,21 @@ Host gl-egi
     User git
     Port 22
     IdentityFile ~/.ssh/id_ed25519
+    IdentityFile ~/.ssh/id_rsa 
 
 Host 10.111.103.*
     StrictHostKeyChecking no
     UserKnownHostsFile /dev/null
+    IdentityFile ~/.ssh/id_ed25519
+    IdentityFile ~/.ssh/id_rsa 
 
 Host *
     IdentityFile ~/.ssh/id_ed25519
     IdentityFile ~/.ssh/id_rsa 
+
+Host *.egihosting.com
+    StrictHostKeyChecking no
+    IdentityFile ~/.ssh/id_ed25519
+    IdentityFile ~/.ssh/id_rsa 
+
 
