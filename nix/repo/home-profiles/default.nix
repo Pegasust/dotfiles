@@ -209,4 +209,10 @@ in {
       inputs.nixpkgs.zk
     ];
   };
+
+  passman = {
+    # Bruh, keepassxc on Darwin doesn't contain cli
+    # On Linux, however, it correctly gives `keepassxc-cli`
+    home.packages = [cell.packages.kpxc];
+  };
 }

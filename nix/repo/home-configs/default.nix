@@ -49,6 +49,7 @@ in {
             home.homeDirectory = "/Users/htran";
             home.stateVersion = "23.11";
           }
+          home-profiles.passman
         ];
     };
   };
