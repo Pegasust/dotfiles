@@ -1,4 +1,4 @@
-# TODO: vim-plug and Mason supports laziness. Probably worth it to explore incremental dependencies based on the project 
+# TODO: vim-plug and Mason supports laziness. Probably worth it to explore incremental dependencies based on the project
 # TODO: just install these things, then symlink to mason's bin directory
 # One thing to consider, though, /nix/store of `nix-shell` or `nix-develop`
 # might be different from `home-manager`'s (~/.nix_profile/bin/jq)
@@ -176,15 +176,14 @@ in {
         vim-dispatch-neovim
         vim-fugitive
         vim-jack-in
-        ({ 
+        {
           plugin = sg-nvim;
-          # Wait, this mean the plugin is only lua only since package.cpath is Lua API
+          # NOTE: Wait, this mean the plugin is exclusively lua only since package.cpath is Lua API
           config = ''
             package.cpath = package.cpath .. ";${sg-nvim}/lib/*.so;${sg-nvim}/lib/*.dylib"
           '';
           type = "lua";
-          
-        })
+        }
         nui-nvim
       ];
     };

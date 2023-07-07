@@ -2,8 +2,9 @@ let
   # user-specific (~/.ssh/id_ed25519.pub)
   users = {
     "hungtr@bao" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK+1+gps6phbZboIb9fH51VNPUCkhSSOAbkI3tq3Ou0Z";
+    "htran@Hungs-MacBook-Pro.local" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJvOCZ4nyFiiKK7gkwzP4hXJ6NmtgbdUJdWgIzUL0GMA";
   };
-  # System-specific settings (/etc/ssh/ssh_hsot_ed25519_key.pub)
+  # System-specific settings (/etc/ssh/ssh_host_ed25519_key.pub)
   systems = {
     "bao" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIBuAaAE7TiQmMH300VRj/pYCri1qPmHjd+y9aX2J0Fs";
   };
