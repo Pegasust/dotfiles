@@ -41,8 +41,8 @@ end
 vim.call('plug#begin')
 
 -- libs and dependencies
-WPlug('nvim-lua/plenary.nvim')   -- The base of all plugins
-WPlug('MunifTanjim/nui.nvim')    -- For some .so or .dylib neovim UI action
+WPlug('nvim-lua/plenary.nvim') -- The base of all plugins
+WPlug('MunifTanjim/nui.nvim')  -- For some .so or .dylib neovim UI action
 
 
 -- plugins
@@ -244,18 +244,18 @@ colorscheme gruvbox
 require('hlargs').setup()
 require('nvim-web-devicons').setup()
 require('trouble').setup {
-  position = "bottom",              -- position of the list can be: bottom, top, left, right
-  height = 10,                      -- height of the trouble list when position is top or bottom
-  width = 50,                       -- width of the list when position is left or right
-  icons = true,                     -- use devicons for filenames
-  mode = "workspace_diagnostics",   -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
-  severity = nil,                   -- nil (ALL) or vim.diagnostic.severity.ERROR | WARN | INFO | HINT
-  fold_open = "",                -- icon used for open folds
-  fold_closed = "",              -- icon used for closed folds
-  group = true,                     -- group results by file
-  padding = true,                   -- add an extra new line on top of the list
+  position = "bottom",            -- position of the list can be: bottom, top, left, right
+  height = 10,                    -- height of the trouble list when position is top or bottom
+  width = 50,                     -- width of the list when position is left or right
+  icons = true,                   -- use devicons for filenames
+  mode = "workspace_diagnostics", -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
+  severity = nil,                 -- nil (ALL) or vim.diagnostic.severity.ERROR | WARN | INFO | HINT
+  fold_open = "",              -- icon used for open folds
+  fold_closed = "",            -- icon used for closed folds
+  group = true,                   -- group results by file
+  padding = true,                 -- add an extra new line on top of the list
   action_keys = {
-                                    -- key mappings for actions in the trouble list
+    -- key mappings for actions in the trouble list
     -- map to {} to remove a mapping, for example:
     -- close = {},
     close = "q",                     -- close the list
@@ -291,7 +291,7 @@ require('trouble').setup {
     information = "",
     other = "",
   },
-  use_diagnostic_signs = false   -- enabling this will use the signs defined in your lsp client
+  use_diagnostic_signs = false -- enabling this will use the signs defined in your lsp client
 }
 
 
@@ -1063,6 +1063,8 @@ require('mason-lspconfig').setup_handlers({
     }
   end,
 })
+
+require('lspconfig')["nil_ls"].setup {}
 require("rust-tools").setup {
   tools = {
     -- rust-tools options
@@ -1408,5 +1410,3 @@ require("colorizer").setup {
   -- all the sub-options of filetypes apply to buftypes
   buftypes = {},
 }
-
-
