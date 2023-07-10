@@ -63,7 +63,7 @@ in {
         base-modules
         ++ [
           home-profiles.nerd_font_module
-          home-profiles.git-htran
+          home-profiles.git-pegasust
           home-profiles.dev-packages
           home-profiles.zk
           home-modules.darwin-spotlight

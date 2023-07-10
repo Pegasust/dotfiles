@@ -933,6 +933,32 @@ local inlay_hint_tsjs = {
   includeInlayVariableTypeHints = true,
 };
 
+local setup = {
+  ["nil_ls"] = function()
+    require('lspconfig').nil_ls.setup {
+      on_attach = on_attach,
+      capabilities = capabilities,
+      --- refer to https://github.com/oxalica/nil/blob/main/docs/configuration.md
+      --- for the list of configurations available for `nil_ls`
+      settings = {
+        ["nil"] = {
+          formatting = {
+            command = { "nix", "run", "nixpkgs#alejandra" },
+          },
+          nix = {
+            flake = {
+              -- calls `nix flake archive` to put a flake and its output to store
+              autoArchive = true,
+              -- auto eval flake inputs for improved completion
+              autoEvalInputs = true,
+            },
+          },
+        },
+      },
+    }
+  end,
+}
+
 require('mason-lspconfig').setup_handlers({
   -- default handler
   function(server_name)
@@ -1039,32 +1065,9 @@ require('mason-lspconfig').setup_handlers({
       },
     }
   end,
-  ["nil_ls"] = function()
-    require('lspconfig').nil_ls.setup {
-      on_attach = on_attach,
-      capabilities = capabilities,
-      --- refer to https://github.com/oxalica/nil/blob/main/docs/configuration.md
-      --- for the list of configurations available for `nil_ls`
-      settings = {
-        ["nil"] = {
-          formatting = {
-            command = { "nix", "run", "nixpkgs#alejandra" },
-          },
-          nix = {
-            flake = {
-              -- calls `nix flake archive` to put a flake and its output to store
-              autoArchive = true,
-              -- auto eval flake inputs for improved completion
-              autoEvalInputs = true,
-            },
-          },
-        },
-      },
-    }
-  end,
 })
 
-require('lspconfig')["nil_ls"].setup {}
+setup["nil_ls"]()
 require("rust-tools").setup {
   tools = {
     -- rust-tools options
