@@ -1107,6 +1107,7 @@ require('mason-lspconfig').setup_handlers({
 })
 
 setup["nil_ls"]()
+setup["gopls"]()
 require("rust-tools").setup {
   tools = {
     -- rust-tools options
