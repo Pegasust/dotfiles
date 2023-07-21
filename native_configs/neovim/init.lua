@@ -961,8 +961,8 @@ local setup = {
     local util = require 'lspconfig.util'
     local mod_cache = nil
 
-    return {
-      default_config = {
+    require('lspconfig').gopls.setup {
+      {
         -- NOTE: might just change to `nix run nixpkgs#gopls` for simplicity here
         cmd = { 'gopls' },
         filetypes = { 'go', 'gomod', 'gowork', 'gotmpl' },
@@ -993,7 +993,7 @@ Google's lsp server for golang.
         default_config = {
           root_dir = [[root_pattern("go.work", "go.mod", ".git")]],
         },
-      },
+      }
     }
   end
 }
