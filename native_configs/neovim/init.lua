@@ -18,12 +18,13 @@ endif
 local Plug = vim.fn['plug#']
 
 -- prepare a list of installed plugins from rtp
+--- @type table<string, boolean>
 local installed_plugins = {}
 -- NOTE: nvim_list_runtime_paths will expand wildcard paths for us.
 for _, path in ipairs(vim.api.nvim_list_runtime_paths()) do
   local last_folder_start = path:find("/[^/]*$")
   if last_folder_start then
-    local plugin_name = path:sub(last_folder_start + 1)
+    local plugin_name = string.lower(path:sub(last_folder_start + 1))
     installed_plugins[plugin_name] = true
   end
 end
@@ -31,12 +32,22 @@ end
 local wplug_log = require('plenary.log').new({ plugin = 'wplug_log', level = 'debug', use_console = false })
 -- Do Plug if plugin not yet linked in `rtp`. This takes care of Nix-compatibility
 local function WPlug(plugin_path, ...)
+  -- hrsh7th/cmp-nvim -> cmp-nvim
   local plugin_name = string.lower(plugin_path:match("/([^/]+)$"))
   if not installed_plugins[plugin_name] then
-    wplug_log.info("Plugging " .. plugin_path)
+    wplug_log.info("Missing in rtp: " .. plugin_name .. " path: " .. plugin_path)
     Plug(plugin_path, ...)
   end
+  installed_plugins[plugin_name] = false
 end
+
+-- Borked, reason unknown
+-- for plugin, plugged in pairs(installed_plugins) do
+--   if plugged ~= false then
+--     wplug_log.info("Plugin " .. plugin .. " added to rtp but not WPlug-ed")
+--   end
+-- end
+
 
 vim.call('plug#begin')
 
@@ -943,7 +954,12 @@ local setup = {
       settings = {
         ["nil"] = {
           formatting = {
-            command = { "nix", "run", "nixpkgs#alejandra" },
+            -- NOTE: nil_ls automatically adds the specific path to the filename
+            -- at the end, so we couldn't really have a fallback mechanism without
+            -- wrapping.
+            command = {
+              "nix", "run", "nixpkgs#alejandra"
+            },
           },
           nix = {
             flake = {

@@ -3,7 +3,7 @@
 The current [`scripts/vim.dsl`](../scripts/vim.dsl) grabs the upstream supported vim plugins
 onto a sqlite database to be stored in memory. We could perform some data exploration via this database 
 
-## Explore which plugins should be added to `neovim.nix`
+## Example: Explore which plugins should be added to `neovim.nix`
 
 Gather list of plugins need to be added. This can be done simply by adding 
 a print statement on `WPlug` in `../native_configs/neovim/init.lua` then run neovim

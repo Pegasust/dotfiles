@@ -84,6 +84,16 @@ in {
       # NOTE: this adds path to the wrapped version of neovim
       extraPackages = nvim_pkgs;
       extraLuaConfig = builtins.readFile "${inputs.self}/native_configs/neovim/init.lua";
+      /*
+      * type: (either derivation pluginWithConfigType)
+      * pluginWithConfigType {
+      *   config: nullOr lines,
+      *   type: enum[],
+      *   optional: (mkType (mkDefault false) bool), # Don't load by default (:packadd)
+      *   plugin: package,
+      *   runtime: (mkType (mkDefault {}) {?})
+      * }
+      */
       plugins = let
         inherit
           (inputs.nixpkgs-latest.legacyPackages.${system}.vimPlugins)

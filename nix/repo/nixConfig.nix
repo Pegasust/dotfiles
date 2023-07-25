@@ -1,4 +1,7 @@
-{inputs, cell}: let
+{
+  inputs,
+  cell,
+}: let
   # decorator for now, for data collecting :)
   nix-conf = a: a;
 in {
@@ -9,7 +12,7 @@ in {
     trusted-users = root htran hungtran hwtr
     max-jobs = 8
     cores = 12
-    # default is true for Linux, false for every one else 
+    # default is true for Linux, false for every one else
     # https://nixos.org/manual/nix/stable/command-ref/conf-file.html#conf-sandbox
     sandbox = true
   '';
@@ -20,7 +23,7 @@ in {
     trusted-users = root htran hungtran hwtr
     max-jobs = 7
     cores = 8
-    # default is true for Linux, false for every one else 
+    # default is true for Linux, false for every one else
     # https://nixos.org/manual/nix/stable/command-ref/conf-file.html#conf-sandbox
     sandbox = true
   '';

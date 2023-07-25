@@ -1,4 +1,7 @@
-#!/usr/bin/env python3 # A simple playground to explore vim plugins that are available in nixpkgs
+#!/usr/bin/env python3
+"""
+A simple playground to explore vim plugins that are available in nixpkgs
+"""
 
 import csv
 import urllib.request
@@ -45,11 +48,11 @@ class VimPlugins:
         return self.conn.cursor().execute(query).fetchall()
 
 
-def vim_plugin_slug(name: str):
+def vim_plugin_slug(name: str) -> str:
     return name.replace(".", "-").lower()
 
 
-def name_from_repo(repo: str):
+def name_from_repo(repo: str) -> str:
     spl = repo.split("/")
     return vim_plugin_slug(spl[-1] or spl[-2])
 
@@ -86,7 +89,8 @@ L3MON4D3/LuaSnip
 arthurxavierx/vim-caser
 ~/local_repos/ts-ql
     """.split()
-    need_install_plugins = [plugin.strip() for plugin in need_install_plugins if plugin.strip()]
+    need_install_plugins = [plugin.strip()
+                            for plugin in need_install_plugins if plugin.strip()]
 
     # Create the GitHub URL list
     need_install_plugins_gh = [
@@ -104,7 +108,7 @@ arthurxavierx/vim-caser
 
     # Check if the repo is not in the list
     repos = [repo for repo, _ in values]
-    not_in_repo = [name_from_repo(gh) for gh in need_install_plugins_gh if gh not in repos]
-    print("not in repo", not_in_repo) # nvim-yati, yang-vim, Comment-nvim, inlay-hints-nvim, hlargs-nvim, vim-caser, gruvbox-community
-    
-
+    not_in_repo = [name_from_repo(
+        gh) for gh in need_install_plugins_gh if gh not in repos]
+    # nvim-yati, yang-vim, Comment-nvim, inlay-hints-nvim, hlargs-nvim, vim-caser, gruvbox-community
+    print("not in repo", not_in_repo)

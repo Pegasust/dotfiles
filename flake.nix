@@ -56,7 +56,7 @@
       # modules = ./nix/modules;
 
       cellBlocks = let
-        inherit (std.blockTypes) devshells functions anything installables;
+        inherit (std.blockTypes) devshells functions anything installables runnables;
       in [
         (devshells "devshells")
         (devshells "userShells")
@@ -65,6 +65,7 @@
         (anything "home-configs")
         (installables "packages")
         (anything "lib")
+        (runnables "formatter")
       ];
     }
     {
@@ -76,5 +77,6 @@
 
       # TODO: Debug only
       homeProfiles = std.pick self [["repo" "home-profiles"]];
+      formatter = std.harvest self [["repo" "formatter"]];
     };
 }
