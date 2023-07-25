@@ -21,6 +21,8 @@
   # my_neovim = pkgs.neovim-unwrapped;
 
   my_neovim = inputs.neovim-nightly-overlay.packages.${system}.neovim;
+  # These are added to the wrapper. Which means `which zk` is likely to show only
+  # within neovim's environment
   nvim_pkgs =
     [
       # pkgs.gccStdenv
@@ -32,8 +34,6 @@
       pkgs.stdenv.cc.cc.lib
       pkgs.nil # oxalica's better nix language server
       inputs.nix-boost.packages."${system}".rust4cargo
-      pkgs.nickel
-      pkgs.nls
       inputs.sg-nvim.packages.${system}.default
 
       pkgs.go # doesn't work, Mason installs from runtime path

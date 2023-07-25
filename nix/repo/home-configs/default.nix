@@ -38,6 +38,7 @@ in {
       modules =
         base-modules
         ++ [
+          home-profiles.darwin-patches
           home-profiles.nerd_font_module
           home-profiles.git-htran
           home-profiles.dev-packages
@@ -62,6 +63,7 @@ in {
       modules =
         base-modules
         ++ [
+          home-profiles.darwin-patches
           home-profiles.nerd_font_module
           home-profiles.git-pegasust
           home-profiles.dev-packages

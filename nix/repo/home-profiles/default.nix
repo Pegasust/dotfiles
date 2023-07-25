@@ -215,4 +215,10 @@ in {
     # On Linux, however, it correctly gives `keepassxc-cli`
     home.packages = [cell.packages.kpxc];
   };
+
+  darwin-patches = {
+    # This should ideally be as empty as possible. Though, home-manager is
+    # a community-driven project. Things fail to build all the time.
+    manual.manpages.enable = false;
+  };
 }

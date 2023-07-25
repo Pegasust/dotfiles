@@ -62,6 +62,8 @@ Host bgp1
     User htran
     Port 22
     StrictHostKeyChecking no
+    IdentityFile ~/.ssh/id_ed25519
+    IdentityFile ~/.ssh/id_rsa 
     HostKeyAlgorithms=+ssh-dss,ssh-rsa
     KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1
 
@@ -70,6 +72,18 @@ Host bgp2
     User htran
     Port 22
     StrictHostKeyChecking no
+    IdentityFile ~/.ssh/id_ed25519
+    IdentityFile ~/.ssh/id_rsa 
+    HostKeyAlgorithms=+ssh-dss,ssh-rsa
+    KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1
+
+Host huaweil3
+    HostName 10.111.100.*
+    User htran
+    Port 22
+    StrictHostKeyChecking no
+    IdentityFile ~/.ssh/id_ed25519
+    IdentityFile ~/.ssh/id_rsa 
     HostKeyAlgorithms=+ssh-dss,ssh-rsa
     KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1
 

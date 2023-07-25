@@ -84,11 +84,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1688062416,
-        "narHash": "sha256-6Mp0sJvxVxPhP/JYz0c85GdiFezv2TuLUZhPu2BgF30=",
+        "lastModified": 1688063586,
+        "narHash": "sha256-ywshC598IZ31UoP04vHSAR5OT6T8Z8Lsz/MRNQkJiOs=",
         "owner": "pegasust",
         "repo": "crane",
-        "rev": "05e1ed1ada4a820212a87c3aad0f1a1470e3633c",
+        "rev": "cb14ad86d991493dfdc439772d7959e6f50bf46b",
         "type": "github"
       },
       "original": {
@@ -674,11 +674,11 @@
     "gnmic": {
       "flake": false,
       "locked": {
-        "lastModified": 1687960854,
-        "narHash": "sha256-nBRHuKg+5vlxm/SSfznbn/idssThBTf+2yb8wBG+p58=",
+        "lastModified": 1688058431,
+        "narHash": "sha256-IMX2LT9FQwz5u0XJh1COmPWeWqqEBIunNUXlLsE1CYM=",
         "owner": "openconfig",
         "repo": "gnmic",
-        "rev": "9772618306ab6836f452464515dbe68108aa552e",
+        "rev": "8e7d054623c4f7594cf09c64655f0baf307ee6ff",
         "type": "github"
       },
       "original": {
@@ -811,11 +811,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1688552611,
-        "narHash": "sha256-pV/1/AU1l5CNFeKmdJ1jofcaKHhtKAbxY4gazeCyoSo=",
+        "lastModified": 1689495092,
+        "narHash": "sha256-yZu2j5FpLZEPhJQQutMCPTxa1VMigLPabLYvLTq6ASM=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "b23c7501f7e0a001486c9a5555a6c53ac7b08e85",
+        "rev": "2f84579a70b8c74e5ebb37299a0c3ba279f09382",
         "type": "github"
       },
       "original": {
@@ -967,11 +967,11 @@
         "std": "std"
       },
       "locked": {
-        "lastModified": 1688064765,
-        "narHash": "sha256-yoEeM8dIxE+UrVO2KkG9MBbo8oMe2CKBajOmCI/CLwY=",
+        "lastModified": 1689005484,
+        "narHash": "sha256-9UpR36YpwU9246rfPOnWI1qyIMjzoOv81IEARaPyuYw=",
         "ref": "bleed",
-        "rev": "20e4618d378686526c1a525eee3ebfd4758c5006",
-        "revCount": 95,
+        "rev": "296de75f052d88880414a72c6df6fe3b6a3f603d",
+        "revCount": 105,
         "type": "git",
         "url": "https://git.pegasust.com/pegasust/nix-boost"
       },
@@ -1011,11 +1011,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1688680913,
-        "narHash": "sha256-jo/RDXXL7Zx6M36m0f0F+tQPJRzs31Y7gaDiTqqh4Ns=",
+        "lastModified": 1689479461,
+        "narHash": "sha256-Ak+PTYdmfOQEmcOsOEnrwqdP0HP20PLraRwpjSAzSeE=",
         "owner": "mic92",
         "repo": "nix-index-database",
-        "rev": "44337c30729a3616c7a71d485af70d231b29675a",
+        "rev": "22fa44b7f14684d184733fb26a628f3878ff7aaf",
         "type": "github"
       },
       "original": {
@@ -1168,11 +1168,11 @@
     },
     "nixpkgs-latest": {
       "locked": {
-        "lastModified": 1688715196,
-        "narHash": "sha256-6m2PI/aBHxmTYN4EZbTECgYRi9xQuSAST5PYMNcw/D8=",
+        "lastModified": 1689615243,
+        "narHash": "sha256-FbR3tYDggqSekDd2Yv+t/mY6n1F+2JOCpYBB0HVH38M=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "457beb8d79b2127aa84154f26bf2a76b762e9927",
+        "rev": "14ef6934ca5cdf2a17c0dda30d4bf3d3e8ecff23",
         "type": "github"
       },
       "original": {
@@ -1267,11 +1267,11 @@
     },
     "nixpkgs_11": {
       "locked": {
-        "lastModified": 1688590700,
-        "narHash": "sha256-ZF055rIUP89cVwiLpG5xkJzx00gEuuGFF60Bs/LM3wc=",
+        "lastModified": 1689534811,
+        "narHash": "sha256-jnSUdzD/414d94plCyNlvTJJtiTogTep6t7ZgIKIHiE=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "f292b4964cb71f9dfbbd30dc9f511d6165cd109b",
+        "rev": "6cee3b5893090b0f5f0a06b4cf42ca4e60e5d222",
         "type": "github"
       },
       "original": {
@@ -1924,11 +1924,11 @@
         "yants": "yants_2"
       },
       "locked": {
-        "lastModified": 1688450460,
-        "narHash": "sha256-/42q81j9/ZKFrXY3YvOjrg3M4V70aZnxhu/YsuEHVl4=",
+        "lastModified": 1689337213,
+        "narHash": "sha256-qa0B38ihDW1MuAshwgvlbkk3CgheWlvYr35oMpDrxJs=",
         "owner": "divnix",
         "repo": "std",
-        "rev": "3e623646d47ec277947c9626d595f43042b94ab9",
+        "rev": "17dc4eb9587517397dad00617b020769fece3cfe",
         "type": "github"
       },
       "original": {

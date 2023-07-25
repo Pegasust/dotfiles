@@ -92,7 +92,7 @@ in {
     programs.zsh = {
       enable = true;
       enableCompletion = true;
-      enableAutosuggestions = true;
+      # enableAutosuggestions = true;
       shellAliases =
         {
           nix-rebuild = "sudo nixos-rebuild switch";
@@ -107,8 +107,11 @@ in {
         enable = true;
         plugins = [
           "git" # git command aliases: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git#aliases
-          "command-not-found" # suggests which package to install; does not support nixos (we have solution already)
-          "gitignore" # `gi list` -> `gi java >>.gitignore`
+          # DEPRECATION: potentially smelly plugin with nix
+          # "command-not-found" # suggests which package to install; does not support nixos (we have solution already)
+
+          # DEPRECATION: 0 usage, mostly because I don't have a use for it
+          # "gitignore" # `gi list` -> `gi java >>.gitignore`
           "ripgrep" # adds completion for `rg`
           "rust" # compe for rustc/cargo
           "poetry" # compe for poetry - Python's cargo
@@ -120,6 +123,7 @@ in {
         # VI_MODE_SET_CURSOR = true;
         # ZVM_VI_ESCAPE_BINDKEY = "";
         ZVM_READKEY_ENGINE = "$ZVM_READKEY_ENGINE_NEX";
+        # lowest possible: 0.004s
         ZVM_KEYTIMEOUT = 0.004; # 40ms, or subtly around 25 FPS. I'm a gamer :)
         ZVM_ESCAPE_KEYTIMEOUT = 0.004; # 40ms, or subtly around 25 FPS. I'm a gamer :)
       };
