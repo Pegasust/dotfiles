@@ -166,6 +166,7 @@ Host *.egihosting.com
     IdentityFile ~/.ssh/id_rsa 
 
 Host gh
+    HostName github.com
     User git
     Port 22
     IdentityFile ~/.ssh/id_ed25519
