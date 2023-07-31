@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "pixi"
+version = "0.0.1"
+description = "Toy project to investigate about apple photos synced iphone -> mac"
+authors = ["Pegasust <pegasucksgg@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.3.1"
+
+[[tool.poetry.packages]]
+include = "repl"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+

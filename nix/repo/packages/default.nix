@@ -34,4 +34,6 @@ in {
           description = "Wrapper for keepassxc and keepassxc-cli with additional Darwin-specific fixes";
         };
     };
+
+  pixi-edit = inputs.cells.dev.packages.pixi-edit;
 }
