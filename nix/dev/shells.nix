@@ -8,7 +8,7 @@ in {
   pixi = inputs.nixpkgs.mkShell {
     buildInputs = [
       pixi-deps
-      pixi-edit
+      # pixi-edit
       inputs.std.packages.${system}.default
     ];
   };

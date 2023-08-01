@@ -9,6 +9,9 @@
 in {
   pixi-deps = poetry2nix.mkPoetryEnv {
     projectDir = pixi-src;
+    editablePackageSources = {
+      pixi = pixi-src;
+    };
   };
   pixi-edit = poetry2nix.mkPoetryEditablePackage {
     projectDir = pixi-src;

@@ -58,6 +58,7 @@
       cellBlocks = let
         inherit (std.blockTypes) devshells functions anything installables runnables;
       in [
+        (installables "shells")
         (devshells "devshells")
         (devshells "userShells")
         (functions "home-profiles")
@@ -69,9 +70,12 @@
       ];
     }
     {
-      devShells = std.harvest self [["dotfiles" "devshells"]];
+      devShells = std.harvest self [["dotfiles" "devshells"] ["dev" "shells"]];
       homeModules = std.pick self [["repo" "home-modules"]];
-      packages = std.harvest self [["repo" "packages"]];
+      packages = std.harvest self [
+        ["repo" "packages"]
+        ["dev" "packages"]
+      ];
       legacyPackages = std.harvest self [["repo" "home-configs"]];
       lib = std.pick self [["repo" "lib"]];
 

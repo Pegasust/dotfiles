@@ -87,6 +87,23 @@ def main():
     cexts = candidate_exts(fexts)
     print(f"{photos_exts(fexts)=}")
     print(f"{cexts=}")
+
+    ext_counts = {ext: len(files)for ext, files in cexts.items()}
+    print(ext_counts)
+    # stdout>
+    """
+{'jpeg': 6023, 'mov': 2769, 'heic': 2354, 'thm': 197, 'png': 168, 'plist': 163,
+'log': 1, 'aae': 102, 'kgdb': 3, 'mp4': 26, 'data': 3, 'db': 3, 'xml': 26,
+'cmap': 2, 'plj': 16, 'kgdb-wal': 3, 'sqlite-shm': 11, 'cloudphotodb-wal': 1,
+'kgdb-shm': 3, '00001]': 1, 'frag': 2, 'ithmb': 3, 'sqlite': 15, 'lock': 1,
+'sqlite-wal': 11, 'aoi': 3, '0': 1,
+'m3u8-8f37dbfb-b3a6-4d52-beca-d17aaed01606': 2, 'jpg': 2, 'roi': 3, 'poi': 3,
+'db-shm': 1, 'm3u8-37f64716-0b2d-4a82-854a-5a6c78ce505a': 1, 'descriptor': 3,
+'bin': 2, 'm3u8': 5, 'cloudphotodb': 1, 'db-wal': 1, 'nature': 3,
+'m3u8-d8faad08-4fcc-4161-a600-1562d755c97b': 1, 'initfrag': 2, '20201]': 1,
+'cloudphotodb-shm': 1}
+    """
+
     movs = cexts['mov']
     heics = cexts['heic']
     heic_name_set = {heic.name.lower() for heic in heics}
