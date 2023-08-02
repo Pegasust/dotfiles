@@ -9,6 +9,25 @@ a bit more experiment on NixOS, I'll keep this repository as simple as possible.
 ([`init.lua`](./native_configs/neovim/init.lua), [`sshconfig`](./native_configs/ssh/config),...) 
 to be idempotent for Nix and non-Nix targets.
 
+## Bleed-first development
+
+NOTE: this is extremely bleeding edge with many different branches that are probably
+stale. This is because I'm breaking all the time and wanted my `master` branch
+to be simply "minimally" available, regardless of what features I implemented later
+on.
+
+Currently, `master` is probably not as stable as we all want it to be.
+
+`bleed` was created as I moved onto using [`gh:divnix/std`](https://github.com/divnix/std)
+which introduced more explorations to make it backward compatible
+
+`lean` was created in the process of merging `bleed` back onto `master`. Couple 
+of my infra on Linode are spun down due to Akamai's increased cost, so I try 
+to keep everything lean, while having an available branch (`bleed`) to look 
+back to if I need to do anything fancy. `lean` here means it's minimal to the
+best of its ability by having only functional code.
+
+
 ## Nix
 
 Monorepo that contains my commonly used personal environments.
