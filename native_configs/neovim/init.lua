@@ -903,7 +903,7 @@ local function ensure_ungrammar_lspconfig()
   if not configs['ungrammar_lsp'] then
     configs['ungrammar_lsp'] = {
       default_config = {
-        cmd = { "nix", "run", "github:pegasust/zork#ungrammar_lsp" },
+        cmd = { "nix", "run", "git+https://git.pegasust.com/pegasust/zork?ref=ungrammar-lsp#ungrammar_lsp" },
         filetypes = { "ungrammar", "ungram" },
         root_dir = lspconfig.util.root_pattern(".git", ".ungram"),
         settings = {
