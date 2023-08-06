@@ -894,6 +894,39 @@ cmp.setup.cmdline(':', {
 
 -- nvim-cmp supports additional completion capabilities
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+-- NOTE: extend nvim-lspconfig locally for development
+local function ensure_ungrammar_lspconfig()
+  local lspconfig = require('lspconfig')
+  local configs = require('lspconfig.configs')
+
+  if not configs['ungrammar_lsp'] then
+    configs['ungrammar_lsp'] = {
+      default_config = {
+        cmd = { "nix", "run", "github:pegasust/zork#ungrammar_lsp" },
+        filetypes = { "ungrammar", "ungram" },
+        root_dir = lspconfig.util.root_pattern(".git", ".ungram"),
+        settings = {
+          -- Your LSP-specific settings
+        },
+      },
+    }
+  end
+end
+
+ensure_ungrammar_lspconfig()
+
+local function setup_ungrammar_handler()
+  -- NOTE: requires `lspconfig.configs.ungrammar_lsp.default_config` to exists
+  require('lspconfig').ungrammar_lsp.setup {
+    on_attach = on_attach,
+    capabilities = capabilities,
+    settings = {
+      -- ungrammar lsp settings to be determined
+    },
+  }
+end
+
 -- local tabnine = require('cmp_tabnine.config')
 -- tabnine.setup({
 -- max_lines = 1000,
@@ -989,8 +1022,12 @@ local setup = {
       on_attach = on_attach,
       capabilities = capabilities,
     }
-  end
+  end,
 }
+
+
+setup_ungrammar_handler()
+
 
 require('mason-lspconfig').setup_handlers({
   -- default handler
