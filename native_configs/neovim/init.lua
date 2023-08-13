@@ -584,7 +584,7 @@ for i = 1, 10 do
   -- harpoon: navigate terms by numbers
   remap('n', '<leader>t' .. tostring(i % 10), function()
     require('harpoon.term').gotoTerminal(i)
-  end)
+  end, { desc = "Terminal " .. i })
 end
 
 -- neogit: easy-to-see git status. Provides only productivity on staging/unstage
@@ -903,7 +903,9 @@ local function ensure_ungrammar_lspconfig()
   if not configs['ungrammar_lsp'] then
     configs['ungrammar_lsp'] = {
       default_config = {
-        cmd = { "nix", "run", "git+https://git.pegasust.com/pegasust/zork?ref=ungrammar-lsp#ungrammar_lsp" },
+        cmd = {
+          "ungrammar_lsp"
+        },
         filetypes = { "ungrammar", "ungram" },
         root_dir = lspconfig.util.root_pattern(".git", ".ungram"),
         settings = {
